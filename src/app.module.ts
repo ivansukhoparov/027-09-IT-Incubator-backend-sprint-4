@@ -15,7 +15,10 @@ import { UsersRepository } from './features/users/users.repository';
 import { BlogsService } from './features/blogs/application/blogs.service';
 import { BlogsRepository } from './features/blogs/infrastructure/blogs.repository';
 import { BlogsQueryRepository } from './features/blogs/infrastructure/blogs.query.repository';
-import { ViewModel } from './features/common/view.model';
+import { Post, PostSchema } from './features/posts/infrastructure/posts.schema';
+import { PostsService } from './features/posts/application/posts.service';
+import { PostsRepository } from './features/posts/infrastructure/posts.repository';
+import { PostsQueryRepository } from './features/posts/infrastructure/posts.query.repository';
 
 const controllers = [
   AuthController,
@@ -25,9 +28,9 @@ const controllers = [
   CommentsController,
   TestingController,
 ];
-const services = [UsersService, BlogsService];
-const repositories = [UsersRepository, BlogsRepository];
-const queryRepositories = [BlogsQueryRepository];
+const services = [UsersService, BlogsService, PostsService];
+const repositories = [UsersRepository, BlogsRepository, PostsRepository];
+const queryRepositories = [BlogsQueryRepository, PostsQueryRepository];
 
 @Module({
   imports: [
@@ -36,6 +39,10 @@ const queryRepositories = [BlogsQueryRepository];
       {
         name: Blog.name,
         schema: BlogSchema,
+      },
+      {
+        name: Post.name,
+        schema: PostSchema,
       },
     ]),
   ],
