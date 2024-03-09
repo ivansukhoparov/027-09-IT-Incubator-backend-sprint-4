@@ -8,7 +8,7 @@ import { PostsController } from './features/posts/posts.controller';
 import { CommentsController } from './features/comments/comments.controller';
 import { AuthController } from './features/auth/auth.controller';
 import { MongooseModule } from '@nestjs/mongoose';
-import { Blog, BlogSchema } from './features/blogs/types/blogs.schema';
+import { Blog, BlogSchema } from './features/blogs/infrastructure/blogs.schema';
 import { appSettings } from './settings/app.settings';
 import { UsersService } from './features/users/users.service';
 import { UsersRepository } from './features/users/users.repository';

@@ -1,7 +1,8 @@
 import { BlogsRepository } from '../infrastructure/blogs.repository';
 import { Injectable } from '@nestjs/common';
 import { BlogCreateDto, BlogUpdateDto } from '../types/input';
-import { Blog } from '../types/blogs.schema';
+import { Blog } from '../infrastructure/blogs.schema';
+import { blogMapper } from '../types/mapper';
 
 @Injectable()
 export class BlogsService {
@@ -18,7 +19,9 @@ export class BlogsService {
       isMembership: false,
     };
 
-    return await this.blogsRepository.createBlog(newBlogData);
+    const newBlogId = await this.blogsRepository.createBlog(newBlogData);
+    const newBlog = await this.blogsRepository.getBlogById(newBlogId);
+    return blogMapper(newBlog);
   }
 
   async updateBlog(blogId: string, data: BlogUpdateDto) {

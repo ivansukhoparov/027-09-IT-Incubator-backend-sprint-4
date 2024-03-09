@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Blog, BlogDocument } from '../types/blogs.schema';
+import { Blog, BlogDocument } from './blogs.schema';
 import { ObjectId } from 'mongodb';
 import { Model } from 'mongoose';
 import { blogMapper } from '../types/mapper';
@@ -12,7 +12,6 @@ export class BlogsRepository {
 
   async createBlog(newBlog: Blog) {
     const result = await this.blogModel.create(newBlog);
-    await result.save();
     return result._id.toString();
   }
 
