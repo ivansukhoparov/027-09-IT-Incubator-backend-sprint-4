@@ -1,3 +1,5 @@
+import { HttpStatus } from '@nestjs/common';
+
 export class ViewModelResponse {
   static emptyBody = {
     pagesCount: 0,
@@ -39,7 +41,7 @@ export const blogsDataset = {
       createdAt: expect.any(String),
       isMembership: false,
     },
-    responseCode: 201,
+    responseCode: HttpStatus.CREATED,
   },
   invalid: {
     empty: {
@@ -49,7 +51,7 @@ export const blogsDataset = {
         websiteUrl: '',
       },
       responseModel: errorsResponse(['name', 'description', 'websiteUrl']),
-      responseCode: 400,
+      responseCode: HttpStatus.BAD_REQUEST,
     },
     overlength: {
       createModel: {
@@ -58,7 +60,7 @@ export const blogsDataset = {
         websiteUrl: 'http://www.' + createOverLength(100) + '.com',
       },
       responseModel: errorsResponse(['name', 'description', 'websiteUrl']),
-      responseCode: 400,
+      responseCode: HttpStatus.BAD_REQUEST,
     },
     websiteUrlPattern: {
       createModel: {
@@ -67,7 +69,7 @@ export const blogsDataset = {
         websiteUrl: 'foo_web_site',
       },
       responseModel: errorsResponse(['websiteUrl']),
-      responseCode: 400,
+      responseCode: HttpStatus.BAD_REQUEST,
     },
     spaces: {
       createModel: {
@@ -76,7 +78,7 @@ export const blogsDataset = {
         websiteUrl: '          ',
       },
       responseModel: errorsResponse(['name', 'description', 'websiteUrl']),
-      responseCode: 400,
+      responseCode: HttpStatus.BAD_REQUEST,
     },
     name: {
       createModel: {
@@ -85,7 +87,7 @@ export const blogsDataset = {
         websiteUrl: 'http://www.validurl.com',
       },
       responseModel: errorsResponse(['name']),
-      responseCode: 400,
+      responseCode: HttpStatus.BAD_REQUEST,
     },
     nameAndDescription: {
       createModel: {
@@ -94,7 +96,7 @@ export const blogsDataset = {
         websiteUrl: 'http://www.validurl.com',
       },
       responseModel: errorsResponse(['name', 'description']),
-      responseCode: 400,
+      responseCode: HttpStatus.BAD_REQUEST,
     },
   },
 };

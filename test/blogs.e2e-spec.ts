@@ -1,13 +1,13 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AppModule } from '../src/app.module';
 
-import { INestApplication } from '@nestjs/common';
+import { HttpCode, HttpStatus, INestApplication } from '@nestjs/common';
 import mongoose from 'mongoose';
 import { appSettings } from '../src/settings/app.settings';
 import { MongooseModule } from '@nestjs/mongoose';
 import { BlogsTestManager } from './utils/test.manager.blogs';
 import { blogsDataset } from './datasets/blogs.dataset';
-import { ViewModel } from './datasets/view.model';
+import { TestViewModel } from './datasets/view.model';
 import { BlogOutputType } from '../src/features/blogs/types/output';
 
 const db = appSettings.dbUri + '/' + appSettings.dbName;
@@ -80,8 +80,8 @@ describe('Blogs test', () => {
       createdBlog.body.id,
     );
 
-    expect(updatedBlog.statusCode).toBe(204);
-    expect(updatedBlog.body).toEqual({ ...createdBlog.body, ...updateModel });
+    expect(updatedBlog.statusCode).toBe(HttpStatus.NO_CONTENT);
+    expect(updatedBlog.body).toEqual({});
   });
 
   it.only(' + PUT should update a lot of fields of the blog with correct data', async () => {
@@ -102,14 +102,14 @@ describe('Blogs test', () => {
       createdBlog.body.id,
     );
 
-    expect(updatedBlog.statusCode).toBe(204);
-    expect(updatedBlog.body).toEqual({ ...createdBlog.body, ...updateModel });
+    expect(updatedBlog.statusCode).toBe(HttpStatus.NO_CONTENT);
+    expect(updatedBlog.body).toEqual({});
   });
 
   // GET requests
 
   it.only(' + GET request without ID should return and empty array if no blogs', async () => {
-    const viewModel = new ViewModel();
+    const viewModel = new TestViewModel();
     const res = await blogsTestManager.getBlogs();
     expect(res.statusCode).toBe(200);
     expect(res.body).toEqual(viewModel);
@@ -117,7 +117,7 @@ describe('Blogs test', () => {
 
   it.only(' + GET request without ID should return array with length equal 5', async () => {
     const blogs = await blogsTestManager.createBlogs(5);
-    const viewModel = new ViewModel(1, 1, 10, 5, blogs);
+    const viewModel = new TestViewModel(1, 1, 10, 5, blogs);
 
     const res = await blogsTestManager.getBlogs();
     expect(res.statusCode).toBe(200);
@@ -125,7 +125,7 @@ describe('Blogs test', () => {
   });
 
   it.only(' + GET with invalid ID should return 404', async () => {
-    const res = await blogsTestManager.getOneBlog('100%invalidId');
+    const res = await blogsTestManager.getOneBlog('100invalidId');
     expect(res.statusCode).toBe(404);
   });
 
@@ -150,25 +150,31 @@ describe('Blogs test', () => {
     const res = await blogsTestManager.delOneBlog('blogToDelete.id');
     expect(res.statusCode).toBe(404);
 
-    const viewModel = new ViewModel(1, 1, 10, 10, blogs);
-    expect(res.body).toBe(viewModel);
+    const viewModel = new TestViewModel(1, 1, 10, 10, blogs);
+    const checkRes = await blogsTestManager.getBlogs();
+    expect(checkRes.statusCode).toBe(HttpStatus.OK);
+    expect(checkRes.body).toEqual(viewModel);
   });
 
   it(' - delete with invalid authorization should return 401', async () => {});
 
-  it.only(' + delete with valid ID should return 204 and array with length with specify length', async () => {
+  it.only(' + delete with valid ID should return 204', async () => {
     const blogs = await blogsTestManager.createBlogs(10);
     const blogToDelete = blogs.find(
       (el: BlogOutputType) => el.name === 'Blog_7',
     );
     expect(blogToDelete).not.toBeUndefined();
+
     const res = await blogsTestManager.delOneBlog(blogToDelete.id);
-    expect(res.statusCode).toBe(201);
+    expect(res.statusCode).toBe(HttpStatus.NO_CONTENT);
 
     const blogsAfterDelete = blogs.filter(
       (el: BlogOutputType) => el.name !== 'Blog_7',
     );
-    const viewModel = new ViewModel(1, 1, 10, 9, blogsAfterDelete);
-    expect(res.body).toBe(viewModel);
+
+    const viewModel = new TestViewModel(1, 1, 10, 9, blogsAfterDelete);
+    const checkRes = await blogsTestManager.getBlogs();
+    expect(checkRes.statusCode).toBe(HttpStatus.OK);
+    expect(checkRes.body).toEqual(viewModel);
   });
 });
