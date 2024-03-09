@@ -15,6 +15,7 @@ import { UsersRepository } from './features/users/users.repository';
 import { BlogsService } from './features/blogs/application/blogs.service';
 import { BlogsRepository } from './features/blogs/infrastructure/blogs.repository';
 import { BlogsQueryRepository } from './features/blogs/infrastructure/blogs.query.repository';
+import { ViewModel } from './features/common/view.model';
 
 const controllers = [
   AuthController,

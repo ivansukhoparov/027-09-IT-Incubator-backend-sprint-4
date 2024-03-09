@@ -3,6 +3,8 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
+  HttpStatus,
   Param,
   Post,
   Put,
@@ -20,8 +22,8 @@ export class BlogsController {
   ) {}
 
   @Get()
-  getAll(@Query() query: { term: string }) {
-    return 'blogs';
+  async getAll(@Query() query: { term: string }) {
+    return await this.blogsQueryRepository.getAllBlogs(query);
   }
 
   @Get(':id')
@@ -41,8 +43,12 @@ export class BlogsController {
   createPostToBlog(@Body() inputModel: any) {}
 
   @Put(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
   updateById(@Param('id') userId: string, @Body() inputModel: any) {}
 
   @Delete(':id')
-  deleteById(@Param('id') userId: string) {}
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async deleteById(@Param('id') userId: string) {
+    return await this.blogsService.deleteBlog(userId);
+  }
 }

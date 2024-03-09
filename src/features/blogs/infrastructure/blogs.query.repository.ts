@@ -1,13 +1,32 @@
-import { Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Blog, BlogDocument } from './blogs.schema';
 import { Model } from 'mongoose';
 import { BlogOutputType } from '../types/output';
 import { blogMapper } from '../types/mapper';
+import { ViewModel } from '../../common/view.model';
+import { NotFoundError } from 'rxjs';
 
 @Injectable()
 export class BlogsQueryRepository {
   constructor(@InjectModel(Blog.name) private blogModel: Model<BlogDocument>) {}
+
+  async getAllBlogs(query: any) {
+    const viewModel = new ViewModel();
+    const blogs = await this.blogModel.find({}).lean();
+
+    viewModel.totalCount = await this.blogModel.countDocuments({}); // Receive total count of blogs
+    viewModel.pagesCount = Math.ceil(viewModel.totalCount / viewModel.pageSize); // Calculate total pages count according to page size
+    viewModel.items = [...blogs.map(blogMapper)];
+
+    return viewModel;
+  }
 
   // async getAllBlogs(sortData: QuerySortType, searchData: QuerySearchType): Promise<ViewModelType<BlogOutputType>> {
   //     let searchKey = {};
@@ -37,10 +56,12 @@ export class BlogsQueryRepository {
   // }
 
   async getBlogById(blogId: string): Promise<BlogOutputType> {
-    const blog: BlogDocument = await this.blogModel.findById(blogId);
-    blog.description = 'ssss';
-    await blog.save();
-    if (!blog) throw new Error();
-    return blogMapper(blog);
+    try {
+      const blog: BlogDocument = await this.blogModel.findById(blogId);
+      if (!blog) throw new NotFoundException();
+      return blogMapper(blog);
+    } catch {
+      throw new NotFoundException();
+    }
   }
 }
