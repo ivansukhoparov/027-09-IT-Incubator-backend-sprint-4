@@ -4,7 +4,7 @@ import { AppService } from './app.service';
 import { TestingController } from './features/testing/testing.controller';
 import { UsersController } from './features/users/users.controller';
 import { BlogsController } from './features/blogs/api/blogs.controller';
-import { PostsController } from './features/posts/posts.controller';
+import { PostsController } from './features/posts/api/posts.controller';
 import { CommentsController } from './features/comments/comments.controller';
 import { AuthController } from './features/auth/auth.controller';
 import { MongooseModule } from '@nestjs/mongoose';
