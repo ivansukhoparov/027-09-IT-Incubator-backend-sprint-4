@@ -11,7 +11,7 @@ export class BlogsTestManager {
     },
   ) {}
 
-  createBlogs = async (numberOfBlogs: number) => {
+  createMany = async (numberOfBlogs: number) => {
     const blogs: Array<BlogOutputType> = [];
 
     for (let i = 1; i <= numberOfBlogs; i++) {
@@ -21,36 +21,36 @@ export class BlogsTestManager {
         websiteUrl: 'http://www.validurl.com',
       };
 
-      const res = await this.createBlog(createBlogData);
+      const res = await this.createOne(createBlogData);
 
       blogs.push(res.body);
     }
     return blogs;
   };
 
-  async createBlog(createBlogDto: any) {
+  async createOne(createBlogDto: any) {
     return await request(this.app.getHttpServer())
       .post('/blogs/')
       .auth(this.accessData.value, this.accessData.options)
       .send(createBlogDto);
   }
 
-  async updateBlog(updateBlogDto: any, blogId: string) {
+  async updateOne(updateBlogDto: any, blogId: string) {
     return await request(this.app.getHttpServer())
       .put('/blogs/' + blogId)
       .auth(this.accessData.value, this.accessData.options)
       .send(updateBlogDto);
   }
 
-  async getOneBlog(blogId: string) {
+  async getOne(blogId: string) {
     return await request(this.app.getHttpServer()).get('/blogs/' + blogId);
   }
 
-  async getBlogs() {
+  async getAll() {
     return await request(this.app.getHttpServer()).get('/blogs/');
   }
 
-  async delOneBlog(blogId: string) {
+  async deleteOne(blogId: string) {
     return await request(this.app.getHttpServer()).delete('/blogs/' + blogId);
   }
 }

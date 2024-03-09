@@ -48,7 +48,7 @@ describe('Blogs test', () => {
 
   it.only(' + POST should be create the blog with correct data', async () => {
     const testModel = blogsDataset.valid;
-    const res = await blogsTestManager.createBlog(testModel.createModel);
+    const res = await blogsTestManager.createOne(testModel.createModel);
     expect(res.statusCode).toBe(testModel.responseCode);
     expect(res.body).toEqual(testModel.responseModel);
   });
@@ -66,16 +66,14 @@ describe('Blogs test', () => {
 
   it.only(' + PUT should update one field of the blog with correct data', async () => {
     const testModel = blogsDataset.valid;
-    const createdBlog = await blogsTestManager.createBlog(
-      testModel.createModel,
-    );
+    const createdBlog = await blogsTestManager.createOne(testModel.createModel);
     expect(createdBlog.statusCode).toBe(testModel.responseCode);
 
     const updateModel = {
       name: 'Blog_2',
     };
 
-    const updatedBlog = await blogsTestManager.updateBlog(
+    const updatedBlog = await blogsTestManager.updateOne(
       updateModel,
       createdBlog.body.id,
     );
@@ -86,9 +84,7 @@ describe('Blogs test', () => {
 
   it.only(' + PUT should update a lot of fields of the blog with correct data', async () => {
     const testModel = blogsDataset.valid;
-    const createdBlog = await blogsTestManager.createBlog(
-      testModel.createModel,
-    );
+    const createdBlog = await blogsTestManager.createOne(testModel.createModel);
     expect(createdBlog.statusCode).toBe(testModel.responseCode);
 
     const updateModel = {
@@ -97,7 +93,7 @@ describe('Blogs test', () => {
       websiteUrl: 'http://www.updated.com',
     };
 
-    const updatedBlog = await blogsTestManager.updateBlog(
+    const updatedBlog = await blogsTestManager.updateOne(
       updateModel,
       createdBlog.body.id,
     );
@@ -110,33 +106,31 @@ describe('Blogs test', () => {
 
   it.only(' + GET request without ID should return and empty array if no blogs', async () => {
     const viewModel = new TestViewModel();
-    const res = await blogsTestManager.getBlogs();
+    const res = await blogsTestManager.getAll();
     expect(res.statusCode).toBe(200);
     expect(res.body).toEqual(viewModel);
   });
 
   it.only(' + GET request without ID should return array with length equal 5', async () => {
-    const blogs = await blogsTestManager.createBlogs(5);
+    const blogs = await blogsTestManager.createMany(5);
     const viewModel = new TestViewModel(1, 1, 10, 5, blogs);
 
-    const res = await blogsTestManager.getBlogs();
+    const res = await blogsTestManager.getAll();
     expect(res.statusCode).toBe(200);
     expect(res.body).toEqual(viewModel);
   });
 
   it.only(' + GET with invalid ID should return 404', async () => {
-    const res = await blogsTestManager.getOneBlog('100invalidId');
+    const res = await blogsTestManager.getOne('100invalidId');
     expect(res.statusCode).toBe(404);
   });
 
   it.only(' + GET with valid ID should return 200 and object', async () => {
     const testModel = blogsDataset.valid;
-    const createdBlog = await blogsTestManager.createBlog(
-      testModel.createModel,
-    );
+    const createdBlog = await blogsTestManager.createOne(testModel.createModel);
     expect(createdBlog.statusCode).toBe(201);
 
-    const res = await blogsTestManager.getOneBlog(createdBlog.body.id);
+    const res = await blogsTestManager.getOne(createdBlog.body.id);
     expect(res.statusCode).toBe(200);
     expect(res.body).toEqual(createdBlog.body);
   });
@@ -145,13 +139,13 @@ describe('Blogs test', () => {
 
   // DELETE request
   it.only(' - delete with invalid ID should return 404', async () => {
-    const blogs = await blogsTestManager.createBlogs(10);
+    const blogs = await blogsTestManager.createMany(10);
 
-    const res = await blogsTestManager.delOneBlog('blogToDelete.id');
+    const res = await blogsTestManager.deleteOne('blogToDelete.id');
     expect(res.statusCode).toBe(404);
 
     const viewModel = new TestViewModel(1, 1, 10, 10, blogs);
-    const checkRes = await blogsTestManager.getBlogs();
+    const checkRes = await blogsTestManager.getAll();
     expect(checkRes.statusCode).toBe(HttpStatus.OK);
     expect(checkRes.body).toEqual(viewModel);
   });
@@ -159,13 +153,13 @@ describe('Blogs test', () => {
   it(' - delete with invalid authorization should return 401', async () => {});
 
   it.only(' + delete with valid ID should return 204', async () => {
-    const blogs = await blogsTestManager.createBlogs(10);
+    const blogs = await blogsTestManager.createMany(10);
     const blogToDelete = blogs.find(
       (el: BlogOutputType) => el.name === 'Blog_7',
     );
     expect(blogToDelete).not.toBeUndefined();
 
-    const res = await blogsTestManager.delOneBlog(blogToDelete.id);
+    const res = await blogsTestManager.deleteOne(blogToDelete.id);
     expect(res.statusCode).toBe(HttpStatus.NO_CONTENT);
 
     const blogsAfterDelete = blogs.filter(
@@ -173,7 +167,7 @@ describe('Blogs test', () => {
     );
 
     const viewModel = new TestViewModel(1, 1, 10, 9, blogsAfterDelete);
-    const checkRes = await blogsTestManager.getBlogs();
+    const checkRes = await blogsTestManager.getAll();
     expect(checkRes.statusCode).toBe(HttpStatus.OK);
     expect(checkRes.body).toEqual(viewModel);
   });
