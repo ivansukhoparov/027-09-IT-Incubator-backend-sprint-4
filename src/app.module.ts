@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { TestingController } from './features/testing/testing.controller';
+import { TestingController } from './features/testing/api/testing.controller';
 import { UsersController } from './features/users/users.controller';
 import { BlogsController } from './features/blogs/api/blogs.controller';
 import { PostsController } from './features/posts/api/posts.controller';
@@ -19,6 +19,7 @@ import { Post, PostSchema } from './features/posts/infrastructure/posts.schema';
 import { PostsService } from './features/posts/application/posts.service';
 import { PostsRepository } from './features/posts/infrastructure/posts.repository';
 import { PostsQueryRepository } from './features/posts/infrastructure/posts.query.repository';
+import { TestingRepository } from './features/testing/infrastucture/testing.repository';
 
 const controllers = [
   AuthController,
@@ -29,7 +30,12 @@ const controllers = [
   TestingController,
 ];
 const services = [UsersService, BlogsService, PostsService];
-const repositories = [UsersRepository, BlogsRepository, PostsRepository];
+const repositories = [
+  UsersRepository,
+  BlogsRepository,
+  PostsRepository,
+  TestingRepository,
+];
 const queryRepositories = [BlogsQueryRepository, PostsQueryRepository];
 
 @Module({
