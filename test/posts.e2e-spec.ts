@@ -98,9 +98,12 @@ describe('Posts test', () => {
       updateModel,
       createdPost.body.id,
     );
-
     expect(updatedPost.statusCode).toBe(HttpStatus.NO_CONTENT);
-    expect(updatedPost.body).toEqual({ ...createdPost, ...updateModel });
+
+    // check updated post content
+    const check = await postsTestManager.getOne(createdPost.body.id);
+    expect(check.statusCode).toBe(HttpStatus.OK);
+    expect(check.body).toEqual({ ...createdPost.body, ...updateModel });
   });
 
   it.only(' + PUT should update a lot of fields of the one with correct data', async () => {
@@ -125,9 +128,12 @@ describe('Posts test', () => {
       updateModel,
       createdPost.body.id,
     );
-
     expect(updatedPost.statusCode).toBe(HttpStatus.NO_CONTENT);
-    expect(updatedPost.body).toEqual({ ...createdPost, ...updateModel });
+
+    // check updated post content
+    const check = await postsTestManager.getOne(createdPost.body.id);
+    expect(check.statusCode).toBe(HttpStatus.OK);
+    expect(check.body).toEqual({ ...createdPost.body, ...updateModel });
   });
 
   // GET requests
@@ -202,7 +208,7 @@ describe('Posts test', () => {
     const blogId = blog.body.id;
     const posts = await postsTestManager.createMany(10, blogId);
     const postToDelete = posts.find(
-      (el: PostOutputDto) => el.title === 'Post_7',
+      (el: PostOutputDto) => el.title === 'Post_title_7',
     );
     expect(postToDelete).not.toBeUndefined();
 
@@ -210,7 +216,7 @@ describe('Posts test', () => {
     expect(res.statusCode).toBe(HttpStatus.NO_CONTENT);
 
     const postsAfterDelete = posts.filter(
-      (el: PostOutputDto) => el.title !== 'Post_7',
+      (el: PostOutputDto) => el.title !== 'Post_title_7',
     );
 
     const viewModel = new TestViewModel(1, 1, 10, 9, postsAfterDelete);

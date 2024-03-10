@@ -18,7 +18,7 @@ export class PostsTestManager {
 
     for (let i = 1; i <= numberOfEntities; i++) {
       const createPostData = {
-        title: 'Post_title',
+        title: 'Post_title_' + i,
         shortDescription: 'a very short description',
         content: 'some content',
         blogId: parentId,

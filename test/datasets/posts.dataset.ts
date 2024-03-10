@@ -14,14 +14,14 @@ export class ViewModelResponse {
 export class PostsDataset extends TestsDataset {
   valid = {
     createModel: {
-      title: 'Post_title',
+      title: 'Post_title_',
       shortDescription: 'a very short description',
       content: 'some content',
       blogId: '',
     },
     responseModel: {
       id: expect.any(String),
-      title: 'Post_title',
+      title: 'Post_title_',
       shortDescription: 'a very short description',
       content: 'some content',
       blogId: expect.any(String),
