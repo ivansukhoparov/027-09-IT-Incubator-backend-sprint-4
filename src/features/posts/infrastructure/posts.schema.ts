@@ -1,20 +1,27 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
 
-export type BlogDocument = HydratedDocument<Blog>;
+export type PostDocument = HydratedDocument<Post>;
 
 @Schema()
-export class Blog {
+export class Post {
   @Prop()
-  name: string;
+  title: string;
+
   @Prop()
-  description: string;
+  shortDescription: string;
+
   @Prop()
-  websiteUrl: string;
+  content: string;
+
+  @Prop()
+  blogId: string;
+
+  @Prop()
+  blogName: string;
+
   @Prop()
   createdAt: string;
-  @Prop()
-  isMembership: boolean;
 }
 
-export const BlogSchema = SchemaFactory.createForClass(Blog);
+export const PostSchema = SchemaFactory.createForClass(Post);

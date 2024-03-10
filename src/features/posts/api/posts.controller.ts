@@ -3,34 +3,54 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
+  HttpStatus,
   Param,
   Post,
   Put,
   Query,
 } from '@nestjs/common';
+import { PostsService } from '../application/posts.service';
+import { PostsQueryRepository } from '../infrastructure/posts.query.repository';
 
 @Controller('posts')
 export class PostsController {
-  constructor() {}
+  constructor(
+    protected postsService: PostsService,
+    protected postQueryRepository: PostsQueryRepository,
+  ) {}
 
   @Get()
-  getAll(@Query() query: { term: string }) {}
+  async getAllPosts(@Query() query: { term: string }) {
+    return await this.postQueryRepository.getAllPosts(query);
+  }
 
   @Get(':id')
-  getById(@Param('id') userId: string) {}
+  async getPostById(@Param('id') id: string) {
+    return await this.postQueryRepository.getPostById(id);
+  }
 
   @Get(':id/comments')
-  getAllPostComments(@Param('id') userId: string) {}
+  async getAllPostComments(@Param('id') id: string) {}
 
   @Post()
-  createNew(@Body() inputModel: any) {}
+  async createNewPost(@Body() inputModel: any) {
+    return await this.postsService.createNewPost(inputModel);
+  }
 
   @Post(':id/comments')
-  createNewCommentToPost(@Body() inputModel: any) {}
-
-  @Delete(':id')
-  deleteById(@Param('id') postId: string) {}
+  async createNewCommentToPost(@Body() inputModel: any) {}
 
   @Put(':id')
-  updateById(@Param('id') postId: string, @Body() inputModel: any) {}
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async updateById(@Param('id') id: string, @Body() inputModel: any) {
+    await this.postsService.updatePost(id, inputModel);
+    return {};
+  }
+  @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async deleteById(@Param('id') id: string) {
+    await this.postsService.deletePost(id);
+    return;
+  }
 }

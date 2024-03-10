@@ -1,29 +1,22 @@
-import {
-  HttpException,
-  HttpStatus,
-  Inject,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Blog, BlogDocument } from './posts.schema';
+import { Post, PostDocument } from './posts.schema';
 import { Model } from 'mongoose';
-import { BlogOutputType } from '../types/output';
-import { blogMapper } from '../types/mapper';
+import { PostOutputDto } from '../types/output';
+import { postMapper } from '../types/mapper';
 import { ViewModel } from '../../common/view.model';
-import { NotFoundError } from 'rxjs';
 
 @Injectable()
 export class PostsQueryRepository {
-  constructor(@InjectModel(Blog.name) private blogModel: Model<BlogDocument>) {}
+  constructor(@InjectModel(Post.name) private postModel: Model<PostDocument>) {}
 
-  async getAllBlogs(query: any) {
+  async getAllPosts(query: any) {
     const viewModel = new ViewModel();
-    const blogs = await this.blogModel.find({}).lean();
+    const posts = await this.postModel.find({}).lean();
 
-    viewModel.totalCount = await this.blogModel.countDocuments({}); // Receive total count of blogs
+    viewModel.totalCount = await this.postModel.countDocuments({}); // Receive total count of blogs
     viewModel.pagesCount = Math.ceil(viewModel.totalCount / viewModel.pageSize); // Calculate total pages count according to page size
-    viewModel.items = [...blogs.map(blogMapper)];
+    viewModel.items = [...posts.map(postMapper)];
 
     return viewModel;
   }
@@ -55,11 +48,11 @@ export class PostsQueryRepository {
   //     };
   // }
 
-  async getBlogById(blogId: string): Promise<BlogOutputType> {
+  async getPostById(id: string): Promise<PostOutputDto> {
     try {
-      const blog: BlogDocument = await this.blogModel.findById(blogId);
-      if (!blog) throw new NotFoundException();
-      return blogMapper(blog);
+      const post: PostDocument = await this.postModel.findById(id);
+      if (!post) throw new NotFoundException();
+      return postMapper(post);
     } catch {
       throw new NotFoundException();
     }
