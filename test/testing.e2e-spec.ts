@@ -55,7 +55,7 @@ describe('Posts test', () => {
 
     // make DELETE request to testing/all-data
     const deleteAll = await request(app.getHttpServer()).delete(
-      'testing/delete-all',
+      '/testing/all-data',
     );
     expect(deleteAll.statusCode).toBe(HttpStatus.NO_CONTENT);
 
