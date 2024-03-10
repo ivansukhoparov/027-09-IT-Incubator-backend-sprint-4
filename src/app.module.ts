@@ -20,6 +20,7 @@ import { PostsService } from './features/posts/application/posts.service';
 import { PostsRepository } from './features/posts/infrastructure/posts.repository';
 import { PostsQueryRepository } from './features/posts/infrastructure/posts.query.repository';
 import { TestingRepository } from './features/testing/infrastucture/testing.repository';
+import { TestingService } from './features/testing/application/testing.service';
 
 const controllers = [
   AuthController,
@@ -29,7 +30,7 @@ const controllers = [
   CommentsController,
   TestingController,
 ];
-const services = [UsersService, BlogsService, PostsService];
+const services = [UsersService, BlogsService, PostsService, TestingService];
 const repositories = [
   UsersRepository,
   BlogsRepository,
