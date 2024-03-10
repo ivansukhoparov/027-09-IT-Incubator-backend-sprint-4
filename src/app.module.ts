@@ -5,7 +5,7 @@ import { TestingController } from './features/testing/api/testing.controller';
 import { UsersController } from './features/users/users.controller';
 import { BlogsController } from './features/blogs/api/blogs.controller';
 import { PostsController } from './features/posts/api/posts.controller';
-import { CommentsController } from './features/comments/comments.controller';
+import { CommentsController } from './features/comments/api/comments.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Blog, BlogSchema } from './features/blogs/infrastructure/blogs.schema';
 import { appSettings } from './settings/app.settings';
@@ -20,6 +20,11 @@ import { PostsRepository } from './features/posts/infrastructure/posts.repositor
 import { PostsQueryRepository } from './features/posts/infrastructure/posts.query.repository';
 import { TestingRepository } from './features/testing/infrastucture/testing.repository';
 import { TestingService } from './features/testing/application/testing.service';
+import { CommentsQueryRepository } from './features/comments/infrastructure/comments.query.repository';
+import {
+  CommentSch,
+  CommentSchema,
+} from './features/comments/infrastructure/comments.schema';
 
 const controllers = [
   UsersController,
@@ -34,8 +39,13 @@ const repositories = [
   BlogsRepository,
   PostsRepository,
   TestingRepository,
+  CommentsQueryRepository,
 ];
-const queryRepositories = [BlogsQueryRepository, PostsQueryRepository];
+const queryRepositories = [
+  BlogsQueryRepository,
+  PostsQueryRepository,
+  CommentsQueryRepository,
+];
 
 @Module({
   imports: [
@@ -48,6 +58,10 @@ const queryRepositories = [BlogsQueryRepository, PostsQueryRepository];
       {
         name: Post.name,
         schema: PostSchema,
+      },
+      {
+        name: CommentSch.name,
+        schema: CommentSchema,
       },
     ]),
   ],
