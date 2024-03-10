@@ -1,11 +1,11 @@
-export type PostReqBodyCreateType = {
+export type PostCreateDto = {
   title: string;
   shortDescription: string;
   content: string;
   blogId: string;
 };
 
-export type UpdatePostDto = {
+export type PostUpdateDto = {
   title: string;
   shortDescription: string;
   content: string;
