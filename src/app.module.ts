@@ -6,7 +6,6 @@ import { UsersController } from './features/users/users.controller';
 import { BlogsController } from './features/blogs/api/blogs.controller';
 import { PostsController } from './features/posts/api/posts.controller';
 import { CommentsController } from './features/comments/comments.controller';
-import { AuthController } from './features/auth/auth.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Blog, BlogSchema } from './features/blogs/infrastructure/blogs.schema';
 import { appSettings } from './settings/app.settings';
@@ -23,7 +22,6 @@ import { TestingRepository } from './features/testing/infrastucture/testing.repo
 import { TestingService } from './features/testing/application/testing.service';
 
 const controllers = [
-  AuthController,
   UsersController,
   BlogsController,
   PostsController,
