@@ -2,15 +2,15 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TestingController } from './features/testing/api/testing.controller';
-import { UsersController } from './features/users/users.controller';
+import { UsersController } from './features/users/api/users.controller';
 import { BlogsController } from './features/blogs/api/blogs.controller';
 import { PostsController } from './features/posts/api/posts.controller';
 import { CommentsController } from './features/comments/api/comments.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Blog, BlogSchema } from './features/blogs/infrastructure/blogs.schema';
 import { appSettings } from './settings/app.settings';
-import { UsersService } from './features/users/users.service';
-import { UsersRepository } from './features/users/users.repository';
+import { UsersService } from './features/users/application/users.service';
+import { UsersRepository } from './features/users/infrastructure/users.repository';
 import { BlogsService } from './features/blogs/application/blogs.service';
 import { BlogsRepository } from './features/blogs/infrastructure/blogs.repository';
 import { BlogsQueryRepository } from './features/blogs/infrastructure/blogs.query.repository';
@@ -22,9 +22,11 @@ import { TestingRepository } from './features/testing/infrastucture/testing.repo
 import { TestingService } from './features/testing/application/testing.service';
 import { CommentsQueryRepository } from './features/comments/infrastructure/comments.query.repository';
 import {
-  CommentSch,
+  Comments,
   CommentSchema,
 } from './features/comments/infrastructure/comments.schema';
+import { User, UserSchema } from './features/users/infrastructure/users.schema';
+import { UsersQueryRepository } from './features/users/infrastructure/users.query.repository';
 
 const controllers = [
   UsersController,
@@ -42,6 +44,7 @@ const repositories = [
   CommentsQueryRepository,
 ];
 const queryRepositories = [
+  UsersQueryRepository,
   BlogsQueryRepository,
   PostsQueryRepository,
   CommentsQueryRepository,
@@ -60,8 +63,12 @@ const queryRepositories = [
         schema: PostSchema,
       },
       {
-        name: CommentSch.name,
+        name: Comments.name,
         schema: CommentSchema,
+      },
+      {
+        name: User.name,
+        schema: UserSchema,
       },
     ]),
   ],
