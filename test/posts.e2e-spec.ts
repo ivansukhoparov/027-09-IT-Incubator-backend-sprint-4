@@ -8,7 +8,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { BlogsTestManager } from './utils/test.manager.blogs';
 import { blogsDataset } from './datasets/blogs.dataset';
 import { TestViewModel } from './datasets/view.model';
-import { BlogOutputType } from '../src/features/blogs/types/output';
+import { BlogOutputDto } from '../src/features/blogs/types/output';
 import { PostsTestManager } from './utils/test.manager.posts';
 import { PostsDataset } from './datasets/posts.dataset';
 import { PostOutputDto } from '../src/features/posts/types/output';

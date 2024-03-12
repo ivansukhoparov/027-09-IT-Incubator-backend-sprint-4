@@ -8,7 +8,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { BlogsTestManager } from './utils/test.manager.blogs';
 import { blogsDataset } from './datasets/blogs.dataset';
 import { TestViewModel } from './datasets/view.model';
-import { BlogOutputType } from '../src/features/blogs/types/output';
+import { BlogOutputDto } from '../src/features/blogs/types/output';
 
 const db = appSettings.dbUri + '/' + appSettings.dbName;
 
@@ -155,7 +155,7 @@ describe('Blogs test', () => {
   it.only(' + delete with valid ID should return 204', async () => {
     const blogs = await blogsTestManager.createMany(10);
     const blogToDelete = blogs.find(
-      (el: BlogOutputType) => el.name === 'Blog_7',
+      (el: BlogOutputDto) => el.name === 'Blog_7',
     );
     expect(blogToDelete).not.toBeUndefined();
 
@@ -163,7 +163,7 @@ describe('Blogs test', () => {
     expect(res.statusCode).toBe(HttpStatus.NO_CONTENT);
 
     const blogsAfterDelete = blogs.filter(
-      (el: BlogOutputType) => el.name !== 'Blog_7',
+      (el: BlogOutputDto) => el.name !== 'Blog_7',
     );
 
     const viewModel = new TestViewModel(1, 1, 10, 9, blogsAfterDelete);
