@@ -5,6 +5,7 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  NotFoundException,
   Param,
   Post,
   Put,
@@ -13,17 +14,25 @@ import {
 import { BlogsService } from '../application/blogs.service';
 import { BlogCreateDto } from '../types/input';
 import { BlogsQueryRepository } from '../infrastructure/blogs.query.repository';
+import { createQuery } from '../../common/create.query';
+import { QueryUsersRequestType } from '../../users/types/input';
+import { PostsService } from '../../posts/application/posts.service';
+import { PostsQueryRepository } from '../../posts/infrastructure/posts.query.repository';
+import { PostCreateDto } from '../../posts/types/input';
 
 @Controller('blogs')
 export class BlogsController {
   constructor(
     protected blogsService: BlogsService,
     protected blogsQueryRepository: BlogsQueryRepository,
+    protected postsService: PostsService,
+    protected postsQueryRepository: PostsQueryRepository,
   ) {}
 
   @Get()
-  async getAll(@Query() query: { term: string }) {
-    return await this.blogsQueryRepository.getAllBlogs(query);
+  async getAll(@Query() query: QueryUsersRequestType) {
+    const { sortData, searchData } = createQuery(query);
+    return await this.blogsQueryRepository.getAllBlogs(sortData, searchData);
   }
 
   @Get(':id')
@@ -32,7 +41,13 @@ export class BlogsController {
   }
 
   @Get(':id/posts')
-  getAllBlogPosts(@Param('id') userId: string) {}
+  async getAllBlogPosts(
+    @Param('id') id: string,
+    @Query() query: QueryUsersRequestType,
+  ) {
+    const { sortData, searchData } = createQuery(query);
+    return await this.postsQueryRepository.getAllPosts(sortData, id);
+  }
 
   @Post()
   async createNew(@Body() inputModel: BlogCreateDto) {
@@ -40,11 +55,24 @@ export class BlogsController {
   }
 
   @Post(':id/posts')
-  createPostToBlog(@Body() inputModel: any) {}
+  @HttpCode(HttpStatus.CREATED)
+  async createPostToBlog(@Param('id') id: string, @Body() inputModel: any) {
+    const PostCreateDto: PostCreateDto = {
+      title: inputModel.title,
+      shortDescription: inputModel.shortDescription,
+      content: inputModel.content,
+      blogId: id,
+    };
+    const newPostId = await this.postsService.createNewPost(PostCreateDto);
+    return await this.postsQueryRepository.getPostById(newPostId);
+  }
 
   @Put(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  updateById(@Param('id') userId: string, @Body() inputModel: any) {}
+  async updateById(@Param('id') id: string, @Body() inputModel: any) {
+    await this.blogsService.updateBlog(id, inputModel);
+    return;
+  }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
