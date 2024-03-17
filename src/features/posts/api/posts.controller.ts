@@ -12,30 +12,38 @@ import {
 } from '@nestjs/common';
 import { PostsService } from '../application/posts.service';
 import { PostsQueryRepository } from '../infrastructure/posts.query.repository';
+import { CommentsQueryRepository } from '../../comments/infrastructure/comments.query.repository';
+import { QueryUsersRequestType } from '../../users/types/input';
+import { createQuery } from '../../common/create.query';
 
 @Controller('posts')
 export class PostsController {
   constructor(
     protected postsService: PostsService,
-    protected postQueryRepository: PostsQueryRepository,
+    protected postsQueryRepository: PostsQueryRepository,
+    protected commentsQueryRepository: CommentsQueryRepository,
   ) {}
 
   @Get()
-  async getAllPosts(@Query() query: { term: string }) {
-    return await this.postQueryRepository.getAllPosts(query);
+  async getAllPosts(@Query() query: QueryUsersRequestType) {
+    const { sortData, searchData } = createQuery(query);
+    return await this.postsQueryRepository.getAllPosts(sortData);
   }
 
   @Get(':id')
   async getPostById(@Param('id') id: string) {
-    return await this.postQueryRepository.getPostById(id);
+    return await this.postsQueryRepository.getPostById(id);
   }
 
   @Get(':id/comments')
-  async getAllPostComments(@Param('id') id: string) {}
+  async getAllPostComments(@Param('id') id: string) {
+    return await this.commentsQueryRepository.getById(id);
+  }
 
   @Post()
   async createNewPost(@Body() inputModel: any) {
-    return await this.postsService.createNewPost(inputModel);
+    const newPostId = await this.postsService.createNewPost(inputModel);
+    return await this.postsQueryRepository.getPostById(newPostId);
   }
 
   @Post(':id/comments')
