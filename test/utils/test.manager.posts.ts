@@ -1,4 +1,4 @@
-import { BlogOutputType } from '../../src/features/blogs/types/output';
+import { BlogOutputDto } from '../../src/features/blogs/types/output';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { PostOutputDto } from '../../src/features/posts/types/output';
