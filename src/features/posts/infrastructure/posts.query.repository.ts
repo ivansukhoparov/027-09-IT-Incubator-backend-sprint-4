@@ -3,58 +3,113 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Post, PostDocument } from './posts.schema';
 import { Model } from 'mongoose';
 import { PostOutputDto } from '../types/output';
-import { postMapper } from '../types/mapper';
-import { ViewModel } from '../../common/view.model';
+import { postMapper, PostsLikesInfoType } from '../types/mapper';
+import { QuerySortType } from '../../common/types';
+import { SORT } from '../../common/common';
+import { LikeStatusType } from '../../comments/types/input';
+import { BlogsQueryRepository } from '../../blogs/infrastructure/blogs.query.repository';
 
 @Injectable()
 export class PostsQueryRepository {
-  constructor(@InjectModel(Post.name) private postModel: Model<PostDocument>) {}
+  constructor(
+    @InjectModel(Post.name) private postModel: Model<PostDocument>,
+    protected blogsQueryRepository: BlogsQueryRepository,
+  ) {}
 
-  async getAllPosts(query: any) {
-    const viewModel = new ViewModel();
-    const posts = await this.postModel.find({}).lean();
+  async getAllPosts(
+    sortData: QuerySortType,
+    blogId?: string | null,
+    userId?: string | null,
+  ) {
+    let searchKey = {};
 
-    viewModel.totalCount = await this.postModel.countDocuments({}); // Receive total count of blogs
-    viewModel.pagesCount = Math.ceil(viewModel.totalCount / viewModel.pageSize); // Calculate total pages count according to page size
-    viewModel.items = [...posts.map(postMapper)];
+    if (blogId) {
+      searchKey = { blogId: blogId };
+      await this.blogsQueryRepository.getBlogById(blogId);
+    }
 
-    return viewModel;
+    // calculate limits for DB request
+    const documentsTotalCount = await this.postModel.countDocuments(searchKey); // Receive total count of blogs
+    const pageCount = Math.ceil(documentsTotalCount / +sortData.pageSize); // Calculate total pages count according to page size
+    const skippedDocuments = (+sortData.pageNumber - 1) * +sortData.pageSize;
+
+    // Get documents from DB
+    const posts = await this.postModel
+      .find(searchKey)
+      .sort({ [sortData.sortBy]: sortData.sortDirection })
+      .skip(+skippedDocuments)
+      .limit(+sortData.pageSize)
+      .lean();
+
+    const mappedPosts: PostOutputDto[] = [];
+
+    for (let i = 0; i < posts.length; i++) {
+      const likes = await this.getLikes(posts[i]._id.toString(), userId);
+      mappedPosts.push(postMapper(posts[i], likes));
+    }
+
+    return {
+      pagesCount: pageCount,
+      page: +sortData.pageNumber,
+      pageSize: +sortData.pageSize,
+      totalCount: documentsTotalCount,
+      items: mappedPosts,
+    };
   }
 
-  // async getAllBlogs(sortData: QuerySortType, searchData: QuerySearchType): Promise<ViewModelType<BlogOutputType>> {
-  //     let searchKey = {};
+  // async getAllPosts(query: any) {
+  //   const viewModel = new ViewModel();
+  //   const posts = await this.postModel.find({}).lean();
   //
-  //     // check if have searchNameTerm create search key
-  //     if (searchData.searchNameTerm) searchKey = {name: {$regex: searchData.searchNameTerm, $options: "i"}};
+  //   viewModel.totalCount = await this.postModel.countDocuments({}); // Receive total count of blogs
+  //   viewModel.pagesCount = Math.ceil(viewModel.totalCount / viewModel.pageSize); // Calculate total pages count according to page size
+  //   viewModel.items = [...posts.map(postMapper)];
   //
-  //     // calculate limits for DB request
-  //     const documentsTotalCount = await blogCollection.countDocuments(searchKey); // Receive total count of blogs
-  //     const pageCount = Math.ceil(documentsTotalCount / +sortData.pageSize); // Calculate total pages count according to page size
-  //     const skippedDocuments = (+sortData.pageNumber - 1) * +sortData.pageSize; // Calculate count of skipped docs before requested page
-  //
-  //     // Get documents from DB
-  //     const blogs: WithId<BlogType>[] = await BlogModel.find(searchKey)
-  //         .sort(sortData.sortBy + " " + SORT[sortData.sortDirection])
-  //         .skip(+skippedDocuments)
-  //         .limit(+sortData.pageSize)
-  //         .lean();
-  //
-  //     return {
-  //         pagesCount: pageCount,
-  //         page: +sortData.pageNumber,
-  //         pageSize: +sortData.pageSize,
-  //         totalCount: documentsTotalCount,
-  //         items: blogs.map(blogMapper)
-  //     };
+  //   return viewModel;
   // }
 
-  async getPostById(id: string): Promise<PostOutputDto> {
+  async getPostById(
+    id: string,
+    userId: string | null = null,
+  ): Promise<PostOutputDto> {
     try {
-      const post: PostDocument = await this.postModel.findById(id);
+      const post: PostDocument | null = await this.postModel.findById(id);
       if (!post) throw new NotFoundException();
-      return postMapper(post);
+      const likes = await this.getLikes(id, userId);
+      return postMapper(post, likes);
     } catch {
       throw new NotFoundException();
     }
+  }
+
+  async getLikes(
+    postId: string,
+    userId: string | null = null,
+  ): Promise<PostsLikesInfoType> {
+    const likeStatus: LikeStatusType = 'None';
+
+    // if (userId) {
+    //   const userLike = await PostLikeModel.findOne({$and: [{postId: postId}, {likedUserId: userId}]}).lean();
+    //   if (userLike) {
+    //     likeStatus = userLike.status;
+    //   }
+    // }
+    //
+    // const likesCount = await PostLikeModel.countDocuments({$and: [{postId: postId}, {status: "Like"}]});
+    // const dislikesCount = await PostLikeModel.countDocuments({$and: [{postId: postId}, {status: "Dislike"}]});
+    // const newestLikes: Array<WithId<PostLikeDto>> = await PostLikeModel.find({$and: [{postId: postId}, {status: "Like"}]}).sort({"addedAt": "desc"}).limit(3).lean();
+
+    // return {
+    //   likesCount: likesCount,
+    //   dislikesCount: dislikesCount,
+    //   myStatus: likeStatus,
+    //   newestLikes: newestLikes.map(postLikesMapper)
+    // };
+    return {
+      likesCount: 0,
+      dislikesCount: 0,
+      myStatus: 'None',
+      newestLikes: [],
+    };
   }
 }
