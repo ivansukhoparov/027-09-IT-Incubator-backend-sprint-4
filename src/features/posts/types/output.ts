@@ -1,4 +1,6 @@
 import { Schema } from '@nestjs/mongoose';
+import { LikeStatusType } from '../../comments/types/input';
+import { PostsLikesInfoType } from './mapper';
 
 export class PostOutputDto {
   id: string;
@@ -8,6 +10,7 @@ export class PostOutputDto {
   blogId: string;
   blogName: string;
   createdAt: string;
+  extendedLikesInfo: PostsLikesInfoType;
 }
 
 @Schema()
@@ -19,3 +22,11 @@ export class PostType {
   blogName: string;
   createdAt: string;
 }
+
+export type PostLikeDto = {
+  postId: string;
+  likedUserId: string;
+  likedUserName: string;
+  addedAt: string;
+  status: LikeStatusType;
+};
