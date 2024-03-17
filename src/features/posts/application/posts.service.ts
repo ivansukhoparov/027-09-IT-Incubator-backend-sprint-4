@@ -1,12 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PostsRepository } from '../infrastructure/posts.repository';
 import { BlogsRepository } from '../../blogs/infrastructure/blogs.repository';
-import { BlogCreateDto, BlogUpdateDto } from '../../blogs/types/input';
-import { Blog } from '../../blogs/infrastructure/blogs.schema';
-import { blogMapper } from '../../blogs/types/mapper';
 import { PostCreateDto, PostUpdateDto } from '../types/input';
 import { Post } from '../infrastructure/posts.schema';
 import { postMapper } from '../types/mapper';
+import { BlogDocument } from '../../blogs/infrastructure/blogs.schema';
 
 @Injectable()
 export class PostsService {
@@ -15,25 +13,26 @@ export class PostsService {
     protected blogsRepository: BlogsRepository,
   ) {}
 
-  async createNewPost(inputModel: PostCreateDto) {
+  async createNewPost(PostCreateDto: PostCreateDto) {
     const createdAt = new Date();
 
-    const parentBlog = await this.blogsRepository.getBlogById(
-      inputModel.blogId,
+    const parentBlog: BlogDocument = await this.blogsRepository.getBlogById(
+      PostCreateDto.blogId,
     );
 
+    if (!parentBlog) throw new NotFoundException();
+
     const newPostDto: Post = {
-      title: inputModel.title,
-      shortDescription: inputModel.shortDescription,
-      content: inputModel.content,
-      blogId: inputModel.blogId,
+      title: PostCreateDto.title,
+      shortDescription: PostCreateDto.shortDescription,
+      content: PostCreateDto.content,
+      blogId: PostCreateDto.blogId,
       blogName: parentBlog.name,
       createdAt: createdAt.toISOString(),
     };
 
     const newPostId = await this.postsRepository.createPost(newPostDto);
-    const newPost = await this.postsRepository.getPostById(newPostId);
-    return postMapper(newPost);
+    return newPostId;
   }
 
   async updatePost(id: string, updateDto: PostUpdateDto) {
