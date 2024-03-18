@@ -1,4 +1,4 @@
-import { BlogOutputType } from '../../src/features/blogs/types/output';
+import { BlogOutputDto } from '../../src/features/blogs/types/output';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 
@@ -12,7 +12,7 @@ export class BlogsTestManager {
   ) {}
 
   createMany = async (numberOfBlogs: number) => {
-    const blogs: Array<BlogOutputType> = [];
+    const blogs: Array<BlogOutputDto> = [];
 
     for (let i = 1; i <= numberOfBlogs; i++) {
       const createBlogData = {
