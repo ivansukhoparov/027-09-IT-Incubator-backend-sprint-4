@@ -1,6 +1,6 @@
 import { Schema } from '@nestjs/mongoose';
 
-export class BlogOutputType {
+export class BlogOutputDto {
   id: string;
   name: string;
   description: string;
