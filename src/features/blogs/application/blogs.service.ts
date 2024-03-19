@@ -1,5 +1,5 @@
 import { BlogsRepository } from '../infrastructure/blogs.repository';
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { BlogCreateDto, BlogUpdateDto } from '../types/input';
 import { Blog } from '../infrastructure/blogs.schema';
 import { blogMapper } from '../types/mapper';
@@ -24,10 +24,8 @@ export class BlogsService {
     return blogMapper(newBlog);
   }
 
-  async updateBlog(blogId: string, data: BlogUpdateDto) {
-    const blog = await this.blogsRepository.getBlogById(blogId);
-    blog.description = data.description;
-    await this.blogsRepository.saveBlog(blog);
+  async updateBlog(blogId: string, blogUpdateDto: BlogUpdateDto) {
+    const result = await this.blogsRepository.updateBlog(blogId, blogUpdateDto);
   }
 
   async deleteBlog(blogId: string) {
