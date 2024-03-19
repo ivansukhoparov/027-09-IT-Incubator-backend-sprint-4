@@ -20,9 +20,9 @@ export class BlogsRepository {
     return blogs.map(blogMapper);
   }
 
-  async getBlogById(blogId: string) {
+  async getBlogById(blogId: string): Promise<BlogDocument> {
     const blog: BlogDocument = await this.blogModel.findById(blogId);
-    if (!blog) throw new Error();
+    if (!blog) throw new NotFoundException();
     return blog;
   }
 
@@ -32,14 +32,18 @@ export class BlogsRepository {
   }
 
   // update existing blog
-  async updateBlog(id: string, updateData: BlogUpdateDto) {
-    const result = await this.blogModel.updateOne(
-      { _id: new ObjectId(id) },
-      {
-        $set: updateData,
-      },
-    );
-    return result.matchedCount === 1;
+  async updateBlog(id: string, updateDto: BlogUpdateDto) {
+    try {
+      const result = await this.blogModel.findOneAndUpdate(
+        { _id: new ObjectId(id) },
+        {
+          $set: updateDto,
+        },
+      );
+      if (!result) throw new NotFoundException();
+    } catch {
+      throw new NotFoundException();
+    }
   }
 
   async deleteBlog(id: string) {
