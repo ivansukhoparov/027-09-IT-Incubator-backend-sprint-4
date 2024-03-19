@@ -11,11 +11,7 @@ export class Comments {
   @Prop()
   postId: string;
 
-  @Prop()
-  commentatorInfo: {
-    userId: string;
-    userLogin: string;
-  };
+  commentatorInfo: { userId: string; userLogin: string };
 
   @Prop()
   createdAt: string;
