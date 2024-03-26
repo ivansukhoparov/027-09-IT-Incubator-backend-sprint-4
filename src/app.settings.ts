@@ -49,6 +49,7 @@ class APISettings {
   SEND_EMAIL_FROM: string = '"Pan-Pal" <no-reply@panpal.com>';
 
   // Tokens
+  JWT_SECRET_KEY: string;
   REFRESH_TOKEN_EXPIRATION_TIME = '30d';
   ACCESS_TOKEN_EXPIRATION_TIME = '30d';
   RECOVERY_TOKEN_EXPIRATION_TIME = '30d';
@@ -64,6 +65,7 @@ class APISettings {
     // Email sender
     this.EMAIL_LOGIN = envVariables.EMAIL_LOGIN;
     this.EMAIL_PASSWORD = envVariables.EMAIL_PASSWORD;
+    this.JWT_SECRET_KEY = envVariables.JWT_SECRET_KEY;
   }
 
   private getNumberOrDefault(value: string, defaultValue: number): number {
