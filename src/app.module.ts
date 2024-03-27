@@ -8,7 +8,6 @@ import { PostsController } from './features/posts/api/posts.controller';
 import { CommentsController } from './features/comments/api/comments.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Blog, BlogSchema } from './features/blogs/infrastructure/blogs.schema';
-import { appSettings } from './settings/app.settings';
 import { UsersService } from './features/users/application/users.service';
 import { UsersRepository } from './features/users/infrastructure/users.repository';
 import { BlogsService } from './features/blogs/application/blogs.service';
@@ -27,6 +26,16 @@ import {
 } from './features/comments/infrastructure/comments.schema';
 import { User, UserSchema } from './features/users/infrastructure/users.schema';
 import { UsersQueryRepository } from './features/users/infrastructure/users.query.repository';
+import { RefreshToken } from './common/refresh.token';
+import { PasswordRecoveryToken } from './common/password.recovery.token';
+import { EmailConfirmationCode } from './common/email.confirmation.code';
+import { AccessToken } from './common/access.token';
+import { EmailService } from './common/email/email.service';
+import { EmailMessagesManager } from './common/email/email.messages.manager';
+import { NodemailerAdapter } from './common/adapters/nodemailer.adaper';
+import { JwtTokenAdapter } from './common/adapters/jwt.token.adapter';
+import { BcryptAdapter } from './common/adapters/bcrypt.adapter';
+import { appSettings } from './app.settings';
 
 const controllers = [
   UsersController,
@@ -35,7 +44,13 @@ const controllers = [
   CommentsController,
   TestingController,
 ];
-const services = [UsersService, BlogsService, PostsService, TestingService];
+const services = [
+  UsersService,
+  BlogsService,
+  PostsService,
+  UsersService,
+  TestingService,
+];
 const repositories = [
   UsersRepository,
   BlogsRepository,
@@ -49,10 +64,25 @@ const queryRepositories = [
   PostsQueryRepository,
   CommentsQueryRepository,
 ];
+const providers = [
+  RefreshToken,
+  PasswordRecoveryToken,
+  EmailConfirmationCode,
+  AccessToken,
+  EmailService,
+  EmailMessagesManager,
+  NodemailerAdapter,
+  JwtTokenAdapter,
+  BcryptAdapter,
+];
 
 @Module({
   imports: [
-    MongooseModule.forRoot(appSettings.dbUri + '/' + appSettings.dbName),
+    MongooseModule.forRoot(
+      appSettings.api.MONGO_CONNECTION_URI +
+        '/' +
+        appSettings.api.MONGO_DB_NAME,
+    ),
     MongooseModule.forFeature([
       {
         name: Blog.name,
@@ -73,6 +103,12 @@ const queryRepositories = [
     ]),
   ],
   controllers: [AppController, ...controllers],
-  providers: [AppService, ...queryRepositories, ...repositories, ...services],
+  providers: [
+    AppService,
+    ...queryRepositories,
+    ...repositories,
+    ...services,
+    ...providers,
+  ],
 })
 export class AppModule {}
