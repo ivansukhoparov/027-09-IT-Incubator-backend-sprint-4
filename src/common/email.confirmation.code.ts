@@ -1,7 +1,7 @@
 import { add } from 'date-fns/add';
 import { v4 as uuidv4 } from 'uuid';
 import { Injectable } from '@nestjs/common';
-import { appSettings } from '../app.settings';
+import { appSettings } from '../settings/app.settings';
 
 @Injectable()
 export class EmailConfirmationCode {

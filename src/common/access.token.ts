@@ -1,7 +1,7 @@
 import { JwtTokenAdapter } from './adapters/jwt.token.adapter';
 import { Injectable } from '@nestjs/common';
 import { IToken } from '../base/interfaces/token.interface';
-import { appSettings } from '../app.settings';
+import { appSettings } from '../settings/app.settings';
 
 @Injectable()
 export class AccessToken implements IToken {

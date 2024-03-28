@@ -35,7 +35,7 @@ import { EmailMessagesManager } from './common/email/email.messages.manager';
 import { NodemailerAdapter } from './common/adapters/nodemailer.adaper';
 import { JwtTokenAdapter } from './common/adapters/jwt.token.adapter';
 import { BcryptAdapter } from './common/adapters/bcrypt.adapter';
-import { appSettings } from './app.settings';
+import { appSettings } from './settings/app.settings';
 
 const controllers = [
   UsersController,

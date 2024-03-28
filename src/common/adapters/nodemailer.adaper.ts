@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { IEmailAdapter } from '../../base/interfaces/email.adapter.interface';
-import { appSettings } from '../../app.settings';
+import { appSettings } from '../../settings/app.settings';
 import { EmailMessage } from '../email/email.messages.manager';
 import nodemailer from 'nodemailer';
 
