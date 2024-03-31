@@ -4,30 +4,41 @@ import { IToken } from '../base/interfaces/token.interface';
 import { appSettings } from '../settings/app.settings';
 
 @Injectable()
-export class AccessToken implements IToken {
-  private secretKey: string;
-  private expiresIn: string;
+export class AccessToken
+  implements IToken<AccessTokenPayloadDto, AccessTokenDecodedDto>
+{
+  private readonly secretKey: string;
+  private readonly expiresIn: string;
+  private token: string;
 
   constructor(private readonly tokenAdapter: JwtTokenAdapter) {
     this.secretKey = appSettings.api.JWT_SECRET_KEY;
     this.expiresIn = appSettings.api.ACCESS_TOKEN_EXPIRATION_TIME;
   }
 
-  create(payload: { userId: string }): string {
-    return this.tokenAdapter.create(
+  create(payload: AccessTokenPayloadDto): void {
+    this.token = this.tokenAdapter.create(
       payload,
       { expiresIn: this.expiresIn },
       this.secretKey,
     );
   }
 
-  async verify(token: string): Promise<boolean> {
-    return this.tokenAdapter.verify(token, this.secretKey);
+  get(): string {
+    return this.token;
   }
 
-  decode(token: string): object | null {
+  set(token: string): void {
+    this.token = token;
+  }
+
+  verify(): boolean {
+    return this.tokenAdapter.verify(this.token, this.secretKey);
+  }
+
+  decode(): AccessTokenDecodedDto | null {
     try {
-      const decodedToken: any = this.tokenAdapter.decode(token);
+      const decodedToken: any = this.tokenAdapter.decode(this.token);
       return {
         userId: decodedToken.userId,
         iat: decodedToken.iat,
@@ -39,3 +50,10 @@ export class AccessToken implements IToken {
     }
   }
 }
+
+export type AccessTokenPayloadDto = { userId: string };
+export type AccessTokenDecodedDto = {
+  userId: string;
+  iat: string;
+  exp: string;
+};
