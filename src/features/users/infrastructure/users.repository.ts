@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User } from './users.schema';
 import { ObjectId } from 'mongodb';
-import { userMapper } from '../types/mapper';
+import { UserUpdateDto } from '../types/input';
 
 @Injectable()
 export class UsersRepository {
@@ -14,10 +14,9 @@ export class UsersRepository {
     return result._id.toString();
   }
 
-  async deleteUser(id: string) {
+  async getUserById(id: string) {
     try {
-      const result = await this.userModel.deleteOne({ _id: new ObjectId(id) });
-      if (result.deletedCount !== 1) throw new NotFoundException();
+      return await this.userModel.findById(id);
     } catch {
       throw new NotFoundException();
     }
@@ -36,11 +35,26 @@ export class UsersRepository {
     }
   }
 
-  async getUserById(id: string) {
+  async deleteUser(id: string) {
     try {
-      return await this.userModel.findById(id);
+      const result = await this.userModel.deleteOne({ _id: new ObjectId(id) });
+      if (result.deletedCount !== 1) throw new NotFoundException();
     } catch {
       throw new NotFoundException();
+    }
+  }
+
+  async updateUser(id: string, userUpdateDto: UserUpdateDto) {
+    try {
+      const isUpdate = await this.userModel.findOneAndUpdate(
+        { _id: new ObjectId(id) },
+        userUpdateDto,
+        { new: true },
+      );
+      if (isUpdate) return true;
+      else return false;
+    } catch (err) {
+      return false;
     }
   }
 }
