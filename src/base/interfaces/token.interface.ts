@@ -1,7 +1,11 @@
-export interface IToken {
-  create(payload: object): string;
+export interface IToken<A, B> {
+  create(payload: A): void;
 
-  verify(token: string): Promise<boolean>;
+  get(): string;
 
-  decode(token: string): object;
+  set(code: string): void;
+
+  verify(): boolean;
+
+  decode(): B;
 }
