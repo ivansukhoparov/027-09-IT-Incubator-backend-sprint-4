@@ -23,13 +23,10 @@ export type SearchUsersRepositoryType = {
   searchEmailTerm: string | null;
 };
 
-export type UserUpdateType = {
+export type UserUpdateDto = {
   login?: string;
   email?: string;
   hash?: string;
   createdAt?: string;
-  emailConfirmation?: {
-    confirmationCode?: string;
-    isConfirmed?: boolean;
-  };
+  isConfirmed?: boolean;
 };
