@@ -1,38 +1,43 @@
-import { add } from 'date-fns/add';
-import { v4 as uuidv4 } from 'uuid';
 import { Injectable } from '@nestjs/common';
 import { appSettings } from '../settings/app.settings';
-import { IToken } from '../base/interfaces/token.interface';
 import { JwtTokenAdapter } from './adapters/jwt.token.adapter';
 
 @Injectable()
 export class EmailConfirmationCode {
   private secretKey: string;
   private expiresIn: string;
+  private confirmationCode: string;
 
   constructor(private readonly tokenAdapter: JwtTokenAdapter) {
     this.secretKey = appSettings.api.JWT_SECRET_KEY;
     this.expiresIn = appSettings.api.EMAIL_CONFIRMATION_EXPIRATION_TIME;
   }
 
-  create(payload: { userId: string; deviceId: string }): string {
-    return this.tokenAdapter.create(
+  create(payload: ConfirmationCodePayload): void {
+    this.confirmationCode = this.tokenAdapter.create(
       payload,
       { expiresIn: this.expiresIn },
       this.secretKey,
     );
   }
 
-  async verify(token: string): Promise<boolean> {
-    return this.tokenAdapter.verify(token, this.secretKey);
+  get(): string {
+    return this.confirmationCode;
   }
 
-  decode(token: string): object | null {
+  set(code: string): void {
+    this.confirmationCode = code;
+  }
+
+  verify(): boolean {
+    return this.tokenAdapter.verify(this.confirmationCode, this.secretKey);
+  }
+
+  decode(): ConfirmationCodeDecoded | null {
     try {
-      const decodedToken: any = this.tokenAdapter.decode(token);
+      const decodedToken: any = this.tokenAdapter.decode(this.confirmationCode);
       return {
-        userId: decodedToken.userId,
-        deviceId: decodedToken.deviceId,
+        email: decodedToken.email,
         iat: decodedToken.iat,
         exp: decodedToken.exp,
       };
@@ -42,3 +47,13 @@ export class EmailConfirmationCode {
     }
   }
 }
+
+export type ConfirmationCodeDecoded = {
+  email: string;
+  iat: string;
+  exp: string;
+};
+
+export type ConfirmationCodePayload = {
+  email: string;
+};
