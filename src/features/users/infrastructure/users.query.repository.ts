@@ -3,7 +3,6 @@ import { InjectModel } from '@nestjs/mongoose';
 import { User } from './users.schema';
 import { Model } from 'mongoose';
 import { QuerySearchType, QuerySortType } from '../../common/types';
-import { SORT } from '../../common/common';
 import { userMapper } from '../types/mapper';
 
 @Injectable()
@@ -39,10 +38,10 @@ export class UsersQueryRepository {
 
     // check have fields exists assign the same one else assign "createdAt" value
     if (sortData.sortBy === 'login')
-      sortKey = { login: SORT[sortData.sortDirection] };
+      sortKey = { login: sortData.sortDirection };
     else if (sortData.sortBy === 'email')
-      sortKey = { email: SORT[sortData.sortDirection] };
-    else sortKey = { createdAt: SORT[sortData.sortDirection] };
+      sortKey = { email: sortData.sortDirection };
+    else sortKey = { createdAt: sortData.sortDirection };
 
     // Get documents from DB
     const users = await this.userModel

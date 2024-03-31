@@ -1,6 +1,6 @@
-import dotenv from 'dotenv';
+import { config } from 'dotenv';
 
-dotenv.config();
+config();
 
 export type EnvironmentVariable = { [key: string]: string | undefined };
 export type EnvironmentsTypes =
@@ -62,7 +62,7 @@ class APISettings {
     // Database
     this.MONGO_CONNECTION_URI =
       envVariables.MONGO_CONNECTION_URI ?? 'mongodb://localhost/nest';
-
+    this.MONGO_DB_NAME = envVariables.MONGO_DB_NAME;
     // Email sender
     this.EMAIL_LOGIN = envVariables.EMAIL_LOGIN;
     this.EMAIL_PASSWORD = envVariables.EMAIL_PASSWORD;

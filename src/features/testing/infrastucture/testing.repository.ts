@@ -12,16 +12,17 @@ export class TestingRepository {
     @InjectModel(Post.name) private postModel: Model<Post>,
   ) {}
 
-  async dropDb() {
-    try {
-      const db = appSettings.dbUri + '/' + appSettings.dbName;
-      await mongoose.connect(db); // Connecting to the database.
-      await mongoose.connection.db.dropDatabase();
-    } catch {
-      console.log('DB dropping does failed');
-      throw new Error('DB dropping did fail');
-    }
-  }
+  // async dropDb() {
+  //   try {
+  //
+  //     const db = appSettings.dbUri + '/' + appSettings.dbName;
+  //     await mongoose.connect(db); // Connecting to the database.
+  //     await mongoose.connection.db.dropDatabase();
+  //   } catch {
+  //     console.log('DB dropping does failed');
+  //     throw new Error('DB dropping did fail');
+  //   }
+  // }
 
   async deleteAll() {
     try {

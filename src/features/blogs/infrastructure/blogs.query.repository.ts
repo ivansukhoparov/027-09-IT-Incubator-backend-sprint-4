@@ -5,7 +5,6 @@ import { Model } from 'mongoose';
 import { BlogOutputDto } from '../types/output';
 import { blogMapper } from '../types/mapper';
 import { QuerySearchType, QuerySortType } from '../../common/types';
-import { SORT } from '../../common/common';
 
 @Injectable()
 export class BlogsQueryRepository {

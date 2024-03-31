@@ -69,8 +69,9 @@ const providers = [
   PasswordRecoveryToken,
   EmailConfirmationCode,
   AccessToken,
-  EmailService,
   EmailMessagesManager,
+  EmailService,
+
   NodemailerAdapter,
   JwtTokenAdapter,
   BcryptAdapter,

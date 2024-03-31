@@ -5,7 +5,6 @@ import { Model } from 'mongoose';
 import { PostOutputDto } from '../types/output';
 import { postMapper, PostsLikesInfoType } from '../types/mapper';
 import { QuerySortType } from '../../common/types';
-import { SORT } from '../../common/common';
 import { LikeStatusType } from '../../comments/types/input';
 import { BlogsQueryRepository } from '../../blogs/infrastructure/blogs.query.repository';
 
