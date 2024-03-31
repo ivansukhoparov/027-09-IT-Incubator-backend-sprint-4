@@ -4,30 +4,41 @@ import { IToken } from '../base/interfaces/token.interface';
 import { appSettings } from '../settings/app.settings';
 
 @Injectable()
-export class RefreshToken implements IToken {
-  private secretKey: string;
-  private expiresIn: string;
+export class RefreshToken
+  implements IToken<RefreshTokenPayloadDto, RefreshTokenDecodedDto>
+{
+  private readonly secretKey: string;
+  private readonly expiresIn: string;
+  private token: string;
 
   constructor(private readonly tokenAdapter: JwtTokenAdapter) {
     this.secretKey = appSettings.api.JWT_SECRET_KEY;
     this.expiresIn = appSettings.api.REFRESH_TOKEN_EXPIRATION_TIME;
   }
 
-  create(payload: { userId: string; deviceId: string }): string {
-    return this.tokenAdapter.create(
+  create(payload: RefreshTokenPayloadDto): void {
+    this.token = this.tokenAdapter.create(
       payload,
       { expiresIn: this.expiresIn },
       this.secretKey,
     );
   }
 
-  async verify(token: string): Promise<boolean> {
-    return this.tokenAdapter.verify(token, this.secretKey);
+  get(): string {
+    return this.token;
   }
 
-  decode(token: string): object | null {
+  set(token: string): void {
+    this.token = token;
+  }
+
+  verify(): boolean {
+    return this.tokenAdapter.verify(this.token, this.secretKey);
+  }
+
+  decode(): RefreshTokenDecodedDto | null {
     try {
-      const decodedToken: any = this.tokenAdapter.decode(token);
+      const decodedToken: any = this.tokenAdapter.decode(this.token);
       return {
         userId: decodedToken.userId,
         deviceId: decodedToken.deviceId,
@@ -40,3 +51,11 @@ export class RefreshToken implements IToken {
     }
   }
 }
+
+export type RefreshTokenPayloadDto = { userId: string; deviceId: string };
+export type RefreshTokenDecodedDto = {
+  userId: string;
+  deviceId: string;
+  iat: string;
+  exp: string;
+};
