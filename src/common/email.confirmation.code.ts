@@ -9,7 +9,7 @@ export class EmailConfirmationCode
 {
   private readonly secretKey: string;
   private readonly expiresIn: string;
-  private confirmationCode: string;
+  private token: string;
 
   constructor(private readonly tokenAdapter: JwtTokenAdapter) {
     this.secretKey = appSettings.api.JWT_SECRET_KEY;
@@ -17,7 +17,7 @@ export class EmailConfirmationCode
   }
 
   create(payload: ConfirmationCodePayload): void {
-    this.confirmationCode = this.tokenAdapter.create(
+    this.token = this.tokenAdapter.create(
       payload,
       { expiresIn: this.expiresIn },
       this.secretKey,
@@ -25,20 +25,20 @@ export class EmailConfirmationCode
   }
 
   get(): string {
-    return this.confirmationCode;
+    return this.token;
   }
 
-  set(code: string): void {
-    this.confirmationCode = code;
+  set(token: string): void {
+    this.token = token;
   }
 
   verify(): boolean {
-    return this.tokenAdapter.verify(this.confirmationCode, this.secretKey);
+    return this.tokenAdapter.verify(this.token, this.secretKey);
   }
 
   decode(): ConfirmationCodeDecoded | null {
     try {
-      const decodedToken: any = this.tokenAdapter.decode(this.confirmationCode);
+      const decodedToken: any = this.tokenAdapter.decode(this.token);
       return {
         email: decodedToken.email,
         iat: decodedToken.iat,
@@ -51,12 +51,9 @@ export class EmailConfirmationCode
   }
 }
 
+export type ConfirmationCodePayload = { email: string };
 export type ConfirmationCodeDecoded = {
   email: string;
   iat: string;
   exp: string;
-};
-
-export type ConfirmationCodePayload = {
-  email: string;
 };
