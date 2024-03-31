@@ -1,11 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { appSettings } from '../settings/app.settings';
 import { JwtTokenAdapter } from './adapters/jwt.token.adapter';
+import { IToken } from '../base/interfaces/token.interface';
 
 @Injectable()
-export class EmailConfirmationCode {
-  private secretKey: string;
-  private expiresIn: string;
+export class EmailConfirmationCode
+  implements IToken<ConfirmationCodePayload, ConfirmationCodeDecoded>
+{
+  private readonly secretKey: string;
+  private readonly expiresIn: string;
   private confirmationCode: string;
 
   constructor(private readonly tokenAdapter: JwtTokenAdapter) {
