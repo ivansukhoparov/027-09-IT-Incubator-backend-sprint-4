@@ -52,7 +52,7 @@ class APISettings {
   JWT_SECRET_KEY: string;
   REFRESH_TOKEN_EXPIRATION_TIME = '30d';
   ACCESS_TOKEN_EXPIRATION_TIME = '30d';
-  EMAIL_CONFIRMATION_EXPIRATION_TIME = 48;
+  EMAIL_CONFIRMATION_EXPIRATION_TIME = '30h';
   RECOVERY_TOKEN_EXPIRATION_TIME = '30d';
 
   constructor(private readonly envVariables: EnvironmentVariable) {
