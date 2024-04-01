@@ -36,6 +36,7 @@ import { NodemailerAdapter } from './common/adapters/nodemailer.adaper';
 import { JwtTokenAdapter } from './common/adapters/jwt.token.adapter';
 import { BcryptAdapter } from './common/adapters/bcrypt.adapter';
 import { appSettings } from './settings/app.settings';
+import { PasswordService } from './common/password.adapter';
 
 const controllers = [
   UsersController,
@@ -71,7 +72,6 @@ const providers = [
   AccessToken,
   EmailMessagesManager,
   EmailService,
-
   NodemailerAdapter,
   JwtTokenAdapter,
   BcryptAdapter,
