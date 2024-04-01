@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { appSettings } from '../settings/app.settings';
 import { JwtTokenAdapter } from './adapters/jwt.token.adapter';
 import { IToken } from '../base/interfaces/token.interface';
+import { JwtPayload } from 'jsonwebtoken';
 
 @Injectable()
 export class EmailConfirmationCode
@@ -38,7 +39,7 @@ export class EmailConfirmationCode
 
   decode(): ConfirmationCodeDecoded | null {
     try {
-      const decodedToken: any = this.tokenAdapter.decode(this.token);
+      const decodedToken: JwtPayload = this.tokenAdapter.decode(this.token);
       return {
         email: decodedToken.email,
         iat: decodedToken.iat,
@@ -54,6 +55,6 @@ export class EmailConfirmationCode
 export type ConfirmationCodePayload = { email: string };
 export type ConfirmationCodeDecoded = {
   email: string;
-  iat: string;
-  exp: string;
+  iat: number;
+  exp: number;
 };

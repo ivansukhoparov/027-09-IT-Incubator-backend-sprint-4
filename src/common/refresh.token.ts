@@ -2,6 +2,7 @@ import { JwtTokenAdapter } from './adapters/jwt.token.adapter';
 import { Injectable } from '@nestjs/common';
 import { IToken } from '../base/interfaces/token.interface';
 import { appSettings } from '../settings/app.settings';
+import { JwtPayload } from 'jsonwebtoken';
 
 @Injectable()
 export class RefreshToken
@@ -38,7 +39,7 @@ export class RefreshToken
 
   decode(): RefreshTokenDecodedDto | null {
     try {
-      const decodedToken: any = this.tokenAdapter.decode(this.token);
+      const decodedToken: JwtPayload = this.tokenAdapter.decode(this.token);
       return {
         userId: decodedToken.userId,
         deviceId: decodedToken.deviceId,
@@ -53,9 +54,7 @@ export class RefreshToken
 }
 
 export type RefreshTokenPayloadDto = { userId: string; deviceId: string };
-export type RefreshTokenDecodedDto = {
+export type RefreshTokenDecodedDto = JwtPayload & {
   userId: string;
   deviceId: string;
-  iat: string;
-  exp: string;
 };

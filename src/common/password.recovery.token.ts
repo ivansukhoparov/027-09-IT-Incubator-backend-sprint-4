@@ -2,6 +2,7 @@ import { JwtTokenAdapter } from './adapters/jwt.token.adapter';
 import { Injectable } from '@nestjs/common';
 import { IToken } from '../base/interfaces/token.interface';
 import { appSettings } from '../settings/app.settings';
+import { JwtPayload } from 'jsonwebtoken';
 
 @Injectable()
 export class PasswordRecoveryToken
@@ -39,7 +40,7 @@ export class PasswordRecoveryToken
 
   decode(): PasswordRecoveryTokenDecodedDto | null {
     try {
-      const decodedToken: any = this.tokenAdapter.decode(this.token);
+      const decodedToken: JwtPayload = this.tokenAdapter.decode(this.token);
       return {
         userId: decodedToken.userId,
         iat: decodedToken.iat,
@@ -55,6 +56,6 @@ export class PasswordRecoveryToken
 export type PasswordRecoveryTokenPayloadDto = { userId: string };
 export type PasswordRecoveryTokenDecodedDto = {
   userId: string;
-  iat: string;
-  exp: string;
+  iat: number;
+  exp: number;
 };

@@ -1,4 +1,4 @@
-import jwt from 'jsonwebtoken';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
@@ -16,7 +16,7 @@ export class JwtTokenAdapter {
     }
   }
 
-  decode(token: string) {
-    return jwt.decode(token);
+  decode(token: string): JwtPayload {
+    return jwt.decode(token, { json: true });
   }
 }
