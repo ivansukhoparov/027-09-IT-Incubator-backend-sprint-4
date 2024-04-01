@@ -11,3 +11,8 @@ export type UserConfirmationCodeDto = {
 export type UserEmailDto = {
   email: string;
 };
+
+export type UserLoginDto = {
+  loginOrEmail: string;
+  password: string;
+};
