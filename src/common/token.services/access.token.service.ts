@@ -5,13 +5,23 @@ import {
   AccessTokenDecodedDto,
   AccessTokenPayloadDto,
 } from './types/access.token';
+import {
+  createTokenStatusesKeysType,
+  tokenServiceCommands,
+} from './utils/common';
+import { ConfirmationCodePayload } from './types/email.confirmation.code';
 
 export class AccessTokenService extends BaseToken<
   AccessTokenPayloadDto,
   AccessTokenDecodedDto
 > {
-  constructor() {
+  constructor(
+    status: createTokenStatusesKeysType = tokenServiceCommands.empty,
+    payload: AccessTokenPayloadDto | string | null = null,
+  ) {
     super(
+      status,
+      payload,
       appSettings.api.JWT_SECRET_KEY,
       appSettings.api.ACCESS_TOKEN_EXPIRATION_TIME,
     );

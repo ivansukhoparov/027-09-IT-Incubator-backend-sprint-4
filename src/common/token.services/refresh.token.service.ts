@@ -6,13 +6,23 @@ import {
   RefreshTokenDecodedDto,
   RefreshTokenPayloadDto,
 } from './types/refresh.token';
+import {
+  createTokenStatusesKeysType,
+  tokenServiceCommands,
+} from './utils/common';
+import { ConfirmationCodePayload } from './types/email.confirmation.code';
 
 export class RefreshTokenService extends BaseToken<
   RefreshTokenPayloadDto,
   RefreshTokenDecodedDto
 > {
-  constructor() {
+  constructor(
+    status: createTokenStatusesKeysType = tokenServiceCommands.empty,
+    payload: RefreshTokenPayloadDto | string | null = null,
+  ) {
     super(
+      status,
+      payload,
       appSettings.api.JWT_SECRET_KEY,
       appSettings.api.RECOVERY_TOKEN_EXPIRATION_TIME,
     );

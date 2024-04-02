@@ -6,13 +6,23 @@ import {
   PasswordRecoveryTokenDecodedDto,
   PasswordRecoveryTokenPayloadDto,
 } from './types/password.recovery.token';
+import {
+  createTokenStatusesKeysType,
+  tokenServiceCommands,
+} from './utils/common';
+import { ConfirmationCodePayload } from './types/email.confirmation.code';
 
 export class PasswordRecoveryTokenService extends BaseToken<
   PasswordRecoveryTokenPayloadDto,
   PasswordRecoveryTokenDecodedDto
 > {
-  constructor() {
+  constructor(
+    status: createTokenStatusesKeysType = tokenServiceCommands.empty,
+    payload: PasswordRecoveryTokenPayloadDto | string | null = null,
+  ) {
     super(
+      status,
+      payload,
       appSettings.api.JWT_SECRET_KEY,
       appSettings.api.RECOVERY_TOKEN_EXPIRATION_TIME,
     );
