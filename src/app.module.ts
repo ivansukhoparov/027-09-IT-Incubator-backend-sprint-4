@@ -26,18 +26,17 @@ import {
 } from './features/comments/infrastructure/comments.schema';
 import { User, UserSchema } from './features/users/infrastructure/users.schema';
 import { UsersQueryRepository } from './features/users/infrastructure/users.query.repository';
-import { RefreshToken } from './common/refresh.token';
-import { PasswordRecoveryToken } from './common/password.recovery.token';
-import { EmailConfirmationCode } from './common/email.confirmation.code';
-import { AccessToken } from './common/access.token';
 import { EmailService } from './common/email/email.service';
 import { EmailMessagesManager } from './common/email/email.messages.manager';
 import { NodemailerAdapter } from './common/adapters/nodemailer.adaper';
 import { JwtTokenAdapter } from './common/adapters/jwt.token.adapter';
 import { BcryptAdapter } from './common/adapters/bcrypt.adapter';
 import { appSettings } from './settings/app.settings';
+import { AuthController } from './features/auth/api/auth.controller';
+import { AuthService } from './features/auth/application/auth.service';
 
 const controllers = [
+  AuthController,
   UsersController,
   BlogsController,
   PostsController,
@@ -45,6 +44,7 @@ const controllers = [
   TestingController,
 ];
 const services = [
+  AuthService,
   UsersService,
   BlogsService,
   PostsService,
@@ -65,10 +65,6 @@ const queryRepositories = [
   CommentsQueryRepository,
 ];
 const providers = [
-  RefreshToken,
-  PasswordRecoveryToken,
-  EmailConfirmationCode,
-  AccessToken,
   EmailMessagesManager,
   EmailService,
   NodemailerAdapter,
