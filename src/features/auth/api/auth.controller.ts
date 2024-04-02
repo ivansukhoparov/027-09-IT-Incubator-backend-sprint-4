@@ -2,6 +2,7 @@ import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
 import {
   UserConfirmationCodeDto,
   UserEmailDto,
+  UserLoginDto,
   UserRegistrationDto,
 } from '../types/input';
 import { AuthService } from '../application/auth.service';
@@ -32,5 +33,12 @@ export class AuthController {
     const isSuccess =
       await this.authService.resendConfirmationCode(resendingRequestDto);
     if (isSuccess) return;
+  }
+
+  @Post('login')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async login(@Body() loginDto: UserLoginDto) {
+    const accessToken = await this.authService.loginUser(loginDto);
+    return accessToken;
   }
 }
