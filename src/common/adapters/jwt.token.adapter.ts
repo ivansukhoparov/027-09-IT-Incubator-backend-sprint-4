@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class JwtTokenAdapter {
-  create(payload: object, options: object, secretKey: string) {
+  create(payload: any, options: object, secretKey: string) {
     return jwt.sign(payload, secretKey, options);
   }
 
