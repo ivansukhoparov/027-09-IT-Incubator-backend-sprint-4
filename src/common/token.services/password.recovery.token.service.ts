@@ -7,7 +7,6 @@ import {
   PasswordRecoveryTokenPayloadDto,
 } from './types/password.recovery.token';
 
-@Injectable()
 export class PasswordRecoveryTokenService extends BaseToken<
   PasswordRecoveryTokenPayloadDto,
   PasswordRecoveryTokenDecodedDto

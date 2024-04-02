@@ -7,7 +7,6 @@ import {
   RefreshTokenPayloadDto,
 } from './types/refresh.token';
 
-@Injectable()
 export class RefreshTokenService extends BaseToken<
   RefreshTokenPayloadDto,
   RefreshTokenDecodedDto

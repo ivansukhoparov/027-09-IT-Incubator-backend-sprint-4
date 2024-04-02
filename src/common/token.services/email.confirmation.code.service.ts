@@ -7,7 +7,6 @@ import {
   ConfirmationCodePayload,
 } from './types/email.confirmation.code';
 
-@Injectable()
 export class EmailConfirmationCodeService extends BaseToken<
   ConfirmationCodePayload,
   ConfirmationCodeDecoded
