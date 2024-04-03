@@ -1,9 +1,3 @@
-export type UserCreateInputModelType = {
-  login: string;
-  email: string;
-  password: string;
-};
-
 export type QueryUsersRequestType = {
   searchLoginTerm?: string | null;
   searchEmailTerm?: string | null;
