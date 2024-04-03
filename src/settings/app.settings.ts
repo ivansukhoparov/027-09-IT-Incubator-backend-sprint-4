@@ -60,8 +60,7 @@ class APISettings {
     this.APP_PORT = this.getNumberOrDefault(envVariables.APP_PORT, 7840);
 
     // Database
-    this.MONGO_CONNECTION_URI =
-      envVariables.MONGO_CONNECTION_URI ?? 'mongodb://localhost/nest';
+    this.MONGO_CONNECTION_URI = envVariables.MONGO_CONNECTION_URI; //?? 'mongodb://0.0.0.0:27017';
     this.MONGO_DB_NAME = envVariables.MONGO_DB_NAME;
     // Email sender
     this.EMAIL_LOGIN = envVariables.EMAIL_LOGIN;
