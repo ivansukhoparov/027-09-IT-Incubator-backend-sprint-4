@@ -2,6 +2,7 @@ import { JwtTokenAdapter } from '../../common/adapters/jwt.token.adapter';
 import { JwtPayload } from 'jsonwebtoken';
 import {
   createTokenStatusesKeysType,
+  tokenModel,
   tokenServiceCommands,
 } from '../../common/token.services/utils/common';
 
@@ -32,6 +33,10 @@ export abstract class BaseToken<Payload, Decoded> {
     return this.token;
   }
 
+  getModel(): tokenModel {
+    return this.tokenModelMapper(this.token);
+  }
+
   set(token: string): void {
     this.token = token;
   }
@@ -59,4 +64,5 @@ export abstract class BaseToken<Payload, Decoded> {
   }
 
   abstract tokenMapper(decodedToken: JwtPayload): Decoded;
+  abstract tokenModelMapper(token: string): tokenModel;
 }

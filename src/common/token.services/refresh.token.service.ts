@@ -36,4 +36,7 @@ export class RefreshTokenService extends BaseToken<
       exp: decodedToken.exp,
     };
   }
+  tokenModelMapper(token: string): any {
+    return { accessToken: token };
+  }
 }

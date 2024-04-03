@@ -7,6 +7,7 @@ import {
 } from './types/access.token';
 import {
   createTokenStatusesKeysType,
+  tokenModel,
   tokenServiceCommands,
 } from './utils/common';
 import { ConfirmationCodePayload } from './types/email.confirmation.code';
@@ -33,5 +34,9 @@ export class AccessTokenService extends BaseToken<
       iat: decodedToken.iat,
       exp: decodedToken.exp,
     };
+  }
+
+  tokenModelMapper(token: string): tokenModel {
+    return { accessToken: token };
   }
 }
