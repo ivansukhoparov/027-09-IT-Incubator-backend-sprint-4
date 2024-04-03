@@ -1,8 +1,8 @@
 import { UsersRepository } from '../infrastructure/users.repository';
 import { Injectable } from '@nestjs/common';
-import { UserCreateInputModelType } from '../types/input';
 import { UserType } from '../types/output';
 import { BcryptAdapter } from '../../../common/adapters/bcrypt.adapter';
+import { UserCreateInputModel } from '../api/models/user.create.input.model';
 
 @Injectable()
 export class UsersService {
@@ -11,10 +11,7 @@ export class UsersService {
     private readonly cryptAdapter: BcryptAdapter,
   ) {}
 
-  async create(
-    inputModel: UserCreateInputModelType,
-    isConfirmed: boolean = false,
-  ) {
+  async create(inputModel: UserCreateInputModel, isConfirmed: boolean = false) {
     const createdAt = new Date().toISOString();
     const hash = await this.cryptAdapter.createHash(inputModel.password);
 
