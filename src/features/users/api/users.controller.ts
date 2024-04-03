@@ -10,12 +10,10 @@ import {
   Query,
 } from '@nestjs/common';
 import { UsersService } from '../application/users.service';
-import {
-  QueryUsersRequestType,
-  UserCreateInputModelType,
-} from '../types/input';
+import { QueryUsersRequestType } from '../types/input';
 import { createQuery } from '../../common/create.query';
 import { UsersQueryRepository } from '../infrastructure/users.query.repository';
+import { UserCreateInputModel } from './models/user.create.input.model';
 
 @Controller('users')
 export class UsersController {
@@ -32,7 +30,7 @@ export class UsersController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  async createNew(@Body() inputModel: UserCreateInputModelType) {
+  async createNew(@Body() inputModel: UserCreateInputModel) {
     const newUserId = await this.userService.create(inputModel);
     return await this.usersQueryRepository.getUserById(newUserId);
   }

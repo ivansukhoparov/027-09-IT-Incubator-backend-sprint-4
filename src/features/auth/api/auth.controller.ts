@@ -6,6 +6,8 @@ import {
   UserRegistrationDto,
 } from '../types/input';
 import { AuthService } from '../application/auth.service';
+import { UserCreateInputModel } from '../../users/api/models/user.create.input.model';
+import { LoginInputModel } from './models/login.input.model';
 
 @Controller('auth')
 export class AuthController {
@@ -13,7 +15,7 @@ export class AuthController {
 
   @Post('registration')
   @HttpCode(HttpStatus.NO_CONTENT)
-  async registration(@Body() registrationDto: UserRegistrationDto) {
+  async registration(@Body() registrationDto: UserCreateInputModel) {
     const isSuccess = await this.authService.registerUser(registrationDto);
     if (isSuccess) return;
   }
@@ -36,9 +38,10 @@ export class AuthController {
   }
 
   @Post('login')
-  @HttpCode(HttpStatus.NO_CONTENT)
-  async login(@Body() loginDto: UserLoginDto) {
-    const accessToken = await this.authService.loginUser(loginDto);
-    return accessToken;
+  @HttpCode(HttpStatus.OK)
+  async login(@Body() loginDto: LoginInputModel) {
+    const { accessToken, refreshToken } =
+      await this.authService.loginUser(loginDto);
+    return accessToken.getModel();
   }
 }

@@ -13,6 +13,8 @@ import { EmailConfirmationCodeService } from '../../../common/token.services/ema
 import { AccessTokenService } from '../../../common/token.services/access.token.service';
 import { RefreshTokenService } from '../../../common/token.services/refresh.token.service';
 import { tokenServiceCommands } from '../../../common/token.services/utils/common';
+import { UserCreateInputModel } from '../../users/api/models/user.create.input.model';
+import { LoginInputModel } from '../api/models/login.input.model';
 
 @Injectable()
 export class AuthService {
@@ -22,7 +24,7 @@ export class AuthService {
     private readonly cryptAdapter: BcryptAdapter,
   ) {}
 
-  async registerUser(registrationDto: UserRegistrationDto) {
+  async registerUser(registrationDto: UserCreateInputModel) {
     const createdUserId = await this.userService.create(registrationDto, false);
     const createdUser = await this.userService.getUserById(createdUserId);
     if (!createdUser) return false;
@@ -73,7 +75,7 @@ export class AuthService {
     return await this.userService.updateUserConfirmationStatus(user.id);
   }
 
-  async loginUser(loginDto: UserLoginDto) {
+  async loginUser(loginDto: LoginInputModel) {
     const user = await this.userService.getUserByLoginOrEmail(
       loginDto.loginOrEmail,
     );
@@ -94,17 +96,12 @@ export class AuthService {
       deviceId: deviceId,
     });
 
-    const tokens = {
-      accessToken: accessToken.get(),
-      refreshToken: refreshToken.get(),
-    };
-
     // const sessionIsCreate = await this.securityService.createAuthSession(
     //   tokens.refreshToken,
     //   deviceTitle,
     //   ip,
     // );
     // if (!sessionIsCreate) return null;
-    return tokens;
+    return { accessToken, refreshToken };
   }
 }
