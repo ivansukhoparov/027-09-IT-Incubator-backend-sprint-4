@@ -6,31 +6,35 @@ import {
 } from '../types/input';
 import { Injectable } from '@nestjs/common';
 import { UsersService } from '../../users/application/users.service';
-import { EmailConfirmationCode } from '../../../common/email.confirmation.code';
+
 import { EmailService } from '../../../common/email/email.service';
 import { BcryptAdapter } from '../../../common/adapters/bcrypt.adapter';
-import { AccessToken } from '../../../common/access.token';
-import { RefreshToken } from '../../../common/refresh.token';
+import { EmailConfirmationCodeService } from '../../../common/token.services/email.confirmation.code.service';
+import { AccessTokenService } from '../../../common/token.services/access.token.service';
+import { RefreshTokenService } from '../../../common/token.services/refresh.token.service';
+import { tokenServiceCommands } from '../../../common/token.services/utils/common';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly userService: UsersService,
-    private readonly emailConfirmationCode: EmailConfirmationCode,
     private readonly emailService: EmailService,
     private readonly cryptAdapter: BcryptAdapter,
-    private readonly accessToken: AccessToken,
-    private readonly refreshToken: RefreshToken,
   ) {}
 
   async registerUser(registrationDto: UserRegistrationDto) {
     const createdUserId = await this.userService.create(registrationDto, false);
     const createdUser = await this.userService.getUserById(createdUserId);
     if (!createdUser) return false;
-    this.emailConfirmationCode.create({ email: createdUser.email });
+
+    const emailConfirmationCode = new EmailConfirmationCodeService(
+      tokenServiceCommands.create,
+      { email: createdUser.email },
+    );
+
     const isEmailSent = await this.emailService.sendEmailConfirmationEmail(
       createdUser,
-      this.emailConfirmationCode.get(),
+      emailConfirmationCode.get(),
     );
     if (!isEmailSent) {
       await this.userService.delete(createdUser.id);
@@ -40,25 +44,27 @@ export class AuthService {
   }
 
   async resendConfirmationCode(email: UserEmailDto) {
+    const emailConfirmationCode = new EmailConfirmationCodeService();
     const user = await this.userService.getUserByLoginOrEmail(email.email);
     if (!user) return false;
     if (user.isConfirmed) return false;
 
-    this.emailConfirmationCode.create(email);
+    emailConfirmationCode.create(email);
 
     return await this.emailService.reSendEmailConfirmationEmail(
       user,
-      this.emailConfirmationCode.get(),
+      emailConfirmationCode.get(),
     );
   }
 
   async confirmEmail(confirmationCode: UserConfirmationCodeDto) {
-    this.emailConfirmationCode.set(confirmationCode.code);
+    const emailConfirmationCode = new EmailConfirmationCodeService();
+    emailConfirmationCode.set(confirmationCode.code);
 
-    if (!this.emailConfirmationCode.verify()) return false;
+    if (!emailConfirmationCode.verify()) return false;
 
     const user = await this.userService.getUserByLoginOrEmail(
-      this.emailConfirmationCode.decode().email,
+      emailConfirmationCode.decode().email,
     );
 
     if (!user) return false;
@@ -80,16 +86,17 @@ export class AuthService {
     if (!isSuccess) return null;
 
     const deviceId = '100'; //uuidv4();
-
-    this.accessToken.create({ userId: user._id.toString() });
-    this.refreshToken.create({
+    const accessToken = new AccessTokenService();
+    const refreshToken = new RefreshTokenService();
+    accessToken.create({ userId: user._id.toString() });
+    refreshToken.create({
       userId: user._id.toString(),
       deviceId: deviceId,
     });
 
     const tokens = {
-      accessToken: this.accessToken.get(),
-      refreshToken: this.refreshToken.get(),
+      accessToken: accessToken.get(),
+      refreshToken: refreshToken.get(),
     };
 
     // const sessionIsCreate = await this.securityService.createAuthSession(
