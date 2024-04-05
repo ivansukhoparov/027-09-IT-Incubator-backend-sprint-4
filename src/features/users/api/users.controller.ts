@@ -7,13 +7,14 @@ import {
   HttpStatus,
   Param,
   Post,
-  Query,
+  Query, UseGuards,
 } from '@nestjs/common';
 import { UsersService } from '../application/users.service';
 import { QueryUsersRequestType } from '../types/input';
 import { createQuery } from '../../common/create.query';
 import { UsersQueryRepository } from '../infrastructure/users.query.repository';
 import { UserCreateInputModel } from './models/user.create.input.model';
+import {AdminAuthGuard} from "../../../infrastructure/guards/admin-auth-guard.service";
 
 @Controller('users')
 export class UsersController {
@@ -29,6 +30,7 @@ export class UsersController {
   }
 
   @Post()
+  @UseGuards(AdminAuthGuard)
   @HttpCode(HttpStatus.CREATED)
   async createNew(@Body() inputModel: UserCreateInputModel) {
     const newUserId = await this.userService.create(inputModel);
@@ -36,6 +38,7 @@ export class UsersController {
   }
 
   @Delete(':id')
+  @UseGuards(AdminAuthGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   async deleteById(@Param('id') id: string) {
     await this.userService.delete(id);
