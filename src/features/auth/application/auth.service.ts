@@ -1,10 +1,9 @@
 import {
   UserConfirmationCodeDto,
-  UserEmailDto,
   UserLoginDto,
   UserRegistrationDto,
 } from '../types/input';
-import { Injectable } from '@nestjs/common';
+import {BadRequestException, HttpException, HttpStatus, Injectable} from '@nestjs/common';
 import { UsersService } from '../../users/application/users.service';
 
 import { EmailService } from '../../../common/email/email.service';
@@ -14,7 +13,7 @@ import { AccessTokenService } from '../../../common/token.services/access.token.
 import { RefreshTokenService } from '../../../common/token.services/refresh.token.service';
 import { tokenServiceCommands } from '../../../common/token.services/utils/common';
 import { UserCreateInputModel } from '../../users/api/models/user.create.input.model';
-import { LoginInputModel } from '../api/models/login.input.model';
+import {LoginInputModel, UserEmailDto} from '../api/models/login.input.model';
 
 @Injectable()
 export class AuthService {
@@ -25,6 +24,23 @@ export class AuthService {
   ) {}
 
   async registerUser(registrationDto: UserCreateInputModel) {
+    let user = await this.userService.getUserByLoginOrEmail(registrationDto.login)
+    // TODO fix it - change to native Error
+    if (user) throw new BadRequestException({errorsMessages:
+          [{
+            message: "invalid field",
+            field: "login"
+          }]
+    })
+    user = await this.userService.getUserByLoginOrEmail(registrationDto.email)
+    // TODO fix it - change to native Error
+    if (user) throw new BadRequestException({errorsMessages:
+          [{
+            message: "invalid field",
+            field: "email"
+          }]
+    })
+
     const createdUserId = await this.userService.create(registrationDto, false);
     const createdUser = await this.userService.getUserById(createdUserId);
     if (!createdUser) return false;
@@ -46,12 +62,21 @@ export class AuthService {
   }
 
   async resendConfirmationCode(email: UserEmailDto) {
-    const emailConfirmationCode = new EmailConfirmationCodeService();
-    const user = await this.userService.getUserByLoginOrEmail(email.email);
-    if (!user) return false;
-    if (user.isConfirmed) return false;
 
-    emailConfirmationCode.create(email);
+    const user = await this.userService.getUserByLoginOrEmail(email.email);
+    // TODO fix it - change to native Error
+    if (!user || user.isConfirmed) throw new BadRequestException({errorsMessages:
+          [{
+            message: "email exist",
+            field: "email"
+          }]
+    })
+
+    const emailConfirmationCode = new EmailConfirmationCodeService(
+        tokenServiceCommands.create,
+        { email: email.email },
+    );
+
 
     return await this.emailService.reSendEmailConfirmationEmail(
       user,
@@ -60,17 +85,28 @@ export class AuthService {
   }
 
   async confirmEmail(confirmationCode: UserConfirmationCodeDto) {
-    const emailConfirmationCode = new EmailConfirmationCodeService();
-    emailConfirmationCode.set(confirmationCode.code);
+    const emailConfirmationCode = new EmailConfirmationCodeService("set",confirmationCode.code);
 
-    if (!emailConfirmationCode.verify()) return false;
+// TODO fix it - change to native Error
+    if (!emailConfirmationCode.verify()) throw new BadRequestException({errorsMessages:
+      [{
+        message: "email exist",
+        field: "code"
+      }]
+    })
 
     const user = await this.userService.getUserByLoginOrEmail(
       emailConfirmationCode.decode().email,
     );
 
-    if (!user) return false;
-    if (user.isConfirmed) return false;
+
+    // TODO fix it - change to native Error
+    if (!user || user.isConfirmed) throw new BadRequestException({errorsMessages:
+          [{
+            message: "email exist",
+            field: "code"
+          }]
+    })
 
     return await this.userService.updateUserConfirmationStatus(user.id);
   }
@@ -79,13 +115,13 @@ export class AuthService {
     const user = await this.userService.getUserByLoginOrEmail(
       loginDto.loginOrEmail,
     );
-    if (!user) return null;
+    if (!user) throw new HttpException("Bad login or password", HttpStatus.UNAUTHORIZED)
 
     const isSuccess = await this.cryptAdapter.compareHash(
       loginDto.password,
       user.hash,
     );
-    if (!isSuccess) return null;
+    if (!isSuccess) throw new HttpException("Bad login or password", HttpStatus.UNAUTHORIZED)
 
     const deviceId = '100'; //uuidv4();
     const accessToken = new AccessTokenService();
