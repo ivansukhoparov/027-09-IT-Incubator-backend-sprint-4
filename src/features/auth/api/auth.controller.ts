@@ -1,17 +1,19 @@
-import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import {Body, Controller, HttpCode, HttpStatus, Post, UseGuards} from '@nestjs/common';
 import {
   UserConfirmationCodeDto,
-  UserEmailDto,
+
   UserLoginDto,
   UserRegistrationDto,
 } from '../types/input';
 import { AuthService } from '../application/auth.service';
 import { UserCreateInputModel } from '../../users/api/models/user.create.input.model';
-import { LoginInputModel } from './models/login.input.model';
+import {LoginInputModel, UserEmailDto} from './models/login.input.model';
+import {AdminAuthGuard} from "../../../infrastructure/guards/admin-auth-guard.service";
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
+
 
   @Post('registration')
   @HttpCode(HttpStatus.NO_CONTENT)
@@ -40,8 +42,7 @@ export class AuthController {
   @Post('login')
   @HttpCode(HttpStatus.OK)
   async login(@Body() loginDto: LoginInputModel) {
-    const { accessToken, refreshToken } =
-      await this.authService.loginUser(loginDto);
+    const { accessToken, refreshToken } = await this.authService.loginUser(loginDto);
     return accessToken.getModel();
   }
 }

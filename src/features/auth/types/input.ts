@@ -8,9 +8,6 @@ export type UserConfirmationCodeDto = {
   code: string;
 };
 
-export type UserEmailDto = {
-  email: string;
-};
 
 export type UserLoginDto = {
   loginOrEmail: string;
