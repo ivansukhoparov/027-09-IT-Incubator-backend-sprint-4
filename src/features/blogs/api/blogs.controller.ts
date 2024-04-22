@@ -9,7 +9,7 @@ import {
   Param,
   Post,
   Put,
-  Query,
+  Query, UseGuards,
 } from '@nestjs/common';
 import { BlogsService } from '../application/blogs.service';
 import { BlogCreateDto } from '../types/input';
@@ -19,6 +19,7 @@ import { QueryUsersRequestType } from '../../users/types/input';
 import { PostsService } from '../../posts/application/posts.service';
 import { PostsQueryRepository } from '../../posts/infrastructure/posts.query.repository';
 import { PostCreateDto } from '../../posts/types/input';
+import {AdminAuthGuard, AuthGuard} from "../../../infrastructure/guards/admin-auth-guard.service";
 
 @Controller('blogs')
 export class BlogsController {
@@ -50,11 +51,13 @@ export class BlogsController {
   }
 
   @Post()
+  @UseGuards(AdminAuthGuard)
   async createNew(@Body() inputModel: BlogCreateDto) {
     return await this.blogsService.createNewBlog(inputModel);
   }
 
   @Post(':id/posts')
+  @UseGuards(AdminAuthGuard)
   @HttpCode(HttpStatus.CREATED)
   async createPostToBlog(@Param('id') id: string, @Body() inputModel: any) {
     const PostCreateDto: PostCreateDto = {
@@ -68,6 +71,7 @@ export class BlogsController {
   }
 
   @Put(':id')
+  @UseGuards(AdminAuthGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   async updateById(@Param('id') id: string, @Body() inputModel: any) {
     await this.blogsService.updateBlog(id, inputModel);
@@ -75,6 +79,7 @@ export class BlogsController {
   }
 
   @Delete(':id')
+  @UseGuards(AdminAuthGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   async deleteById(@Param('id') userId: string) {
     return await this.blogsService.deleteBlog(userId);
