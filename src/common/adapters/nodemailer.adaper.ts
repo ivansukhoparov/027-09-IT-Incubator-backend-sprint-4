@@ -22,12 +22,12 @@ export class NodemailerAdapter implements IEmailAdapter {
         },
       });
 
-      await transporter.sendMail({
+      const s = await transporter.sendMail({
         ...emailMessage,
         from: this.sendFrom,
         to: mailTo,
       });
-
+console.log(s.accepted)
       return true;
     } catch (err) {
       console.log(err);
