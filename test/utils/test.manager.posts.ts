@@ -1,6 +1,6 @@
 import { BlogOutputDto } from '../../src/features/blogs/types/output';
 import { INestApplication } from '@nestjs/common';
-import * as request from 'supertest';
+import request from 'supertest';
 import { PostOutputDto } from '../../src/features/posts/types/output';
 
 export class PostsTestManager {
@@ -9,6 +9,8 @@ export class PostsTestManager {
     protected readonly app: INestApplication,
     private accessData: any = {
       value: '',
+      user: "admin",
+      password:"qwerty",
       options: { type: 'basic' },
     },
   ) {}
@@ -28,20 +30,20 @@ export class PostsTestManager {
 
       posts.push(res.body);
     }
-    return posts;
+    return posts.reverse();
   };
 
   async createOne(createPostDto: any) {
     return await request(this.app.getHttpServer())
       .post(this.endPoint)
-      .auth(this.accessData.value, this.accessData.options)
+      .auth(this.accessData.user, this.accessData.password)
       .send(createPostDto);
   }
 
   async updateOne(updatePostDto: any, id: string) {
     return await request(this.app.getHttpServer())
       .put(this.endPoint + id)
-      .auth(this.accessData.value, this.accessData.options)
+        .auth(this.accessData.user, this.accessData.password)
       .send(updatePostDto);
   }
 
@@ -54,6 +56,8 @@ export class PostsTestManager {
   }
 
   async deleteOne(id: string) {
-    return await request(this.app.getHttpServer()).delete(this.endPoint + id);
+    return await request(this.app.getHttpServer())
+        .delete(this.endPoint + id)
+        .auth(this.accessData.user, this.accessData.password);
   }
 }

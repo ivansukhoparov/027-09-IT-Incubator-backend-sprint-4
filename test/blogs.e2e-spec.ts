@@ -9,8 +9,7 @@ import { BlogsTestManager } from './utils/test.manager.blogs';
 import { blogsDataset } from './datasets/blogs.dataset';
 import { TestViewModel } from './datasets/view.model';
 import { BlogOutputDto } from '../src/features/blogs/types/output';
-
-const db = appSettings.dbUri + '/' + appSettings.dbName;
+const db = appSettings.api.MONGO_CONNECTION_URI + '/' + appSettings.api.MONGO_DB_NAME
 
 describe('Blogs test', () => {
   let app: INestApplication;

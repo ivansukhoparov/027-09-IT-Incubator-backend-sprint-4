@@ -27,7 +27,14 @@ export class PostsDataset extends TestsDataset {
       blogId: expect.any(String),
       blogName: expect.any(String),
       createdAt: expect.any(String),
-    },
+extendedLikesInfo: {
+dislikesCount: 0,
+likesCount: 0,
+myStatus: "None",
+newestLikes: expect.any(Array),
+},
+
+},
     responseCode: HttpStatus.CREATED,
   };
   invalid = {
