@@ -20,6 +20,7 @@ import { PostsService } from '../../posts/application/posts.service';
 import { PostsQueryRepository } from '../../posts/infrastructure/posts.query.repository';
 import { PostCreateDto } from '../../posts/types/input';
 import {AdminAuthGuard, AuthGuard} from "../../../infrastructure/guards/admin-auth-guard.service";
+import {CreateBlogInputModels, UpdateBlogInputModel} from "./models/blog.input.models";
 
 @Controller('blogs')
 export class BlogsController {
@@ -52,7 +53,7 @@ export class BlogsController {
 
   @Post()
   @UseGuards(AdminAuthGuard)
-  async createNew(@Body() inputModel: BlogCreateDto) {
+  async createNew(@Body() inputModel: CreateBlogInputModels) {
     return await this.blogsService.createNewBlog(inputModel);
   }
 
@@ -73,7 +74,7 @@ export class BlogsController {
   @Put(':id')
   @UseGuards(AdminAuthGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
-  async updateById(@Param('id') id: string, @Body() inputModel: any) {
+  async updateById(@Param('id') id: string, @Body() inputModel: UpdateBlogInputModel) {
     await this.blogsService.updateBlog(id, inputModel);
     return;
   }
