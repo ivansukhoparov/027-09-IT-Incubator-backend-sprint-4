@@ -13,7 +13,8 @@ import { PostsTestManager } from './utils/test.manager.posts';
 import { PostsDataset } from './datasets/posts.dataset';
 import { PostOutputDto } from '../src/features/posts/types/output';
 
-const db = appSettings.api.MONGO_CONNECTION_URI + '/' + appSettings.api.MONGO_DB_NAME
+const db =
+  appSettings.api.MONGO_CONNECTION_URI + '/' + appSettings.api.MONGO_DB_NAME;
 
 describe('Posts test', () => {
   let app: INestApplication;

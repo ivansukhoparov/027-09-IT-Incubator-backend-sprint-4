@@ -5,7 +5,10 @@ import { PostCreateDto, PostUpdateDto } from '../types/input';
 import { Post } from '../infrastructure/posts.schema';
 import { postMapper } from '../types/mapper';
 import { BlogDocument } from '../../blogs/infrastructure/blogs.schema';
-import {CreatePostInputModel, UpdatePostInputModel} from "../api/models/posts.input.models";
+import {
+  CreatePostInputModel,
+  UpdatePostInputModel,
+} from '../api/models/posts.input.models';
 
 @Injectable()
 export class PostsService {

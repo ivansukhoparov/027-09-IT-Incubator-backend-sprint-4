@@ -8,7 +8,6 @@ export type UserConfirmationCodeDto = {
   code: string;
 };
 
-
 export type UserLoginDto = {
   loginOrEmail: string;
   password: string;

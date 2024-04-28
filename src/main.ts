@@ -1,27 +1,33 @@
-import {NestFactory} from '@nestjs/core';
-import {AppModule} from './app.module';
-import {BadRequestException, HttpException, ValidationPipe} from '@nestjs/common';
-import {HttpExceptionFilter} from "./infrastructure/exception-filters/http.exception.filter";
+import { NestFactory } from '@nestjs/core';
+import { AppModule } from './app.module';
+import {
+  BadRequestException,
+  HttpException,
+  ValidationPipe,
+} from '@nestjs/common';
+import { HttpExceptionFilter } from './infrastructure/exception-filters/http.exception.filter';
 
 async function bootstrap() {
-    const app = await NestFactory.create(AppModule);
-    app.useGlobalPipes(new ValidationPipe({
-        transform: true,
-        stopAtFirstError: true,
-        exceptionFactory(validationErrors) {
-            const errorMessages = {errorsMessages: []}
-            validationErrors.forEach(e => {
-                const constraintsKey = Object.keys(e.constraints)
-                errorMessages.errorsMessages.push({
-                    message: e.constraints[constraintsKey[0]],
-                    field: e.property,
-                })
-            })
-            throw new BadRequestException(errorMessages)
-        }
-    }));
-    app.useGlobalFilters(new HttpExceptionFilter());
-    await app.listen(3000);
+  const app = await NestFactory.create(AppModule);
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+      stopAtFirstError: true,
+      exceptionFactory(validationErrors) {
+        const errorMessages = { errorsMessages: [] };
+        validationErrors.forEach((e) => {
+          const constraintsKey = Object.keys(e.constraints);
+          errorMessages.errorsMessages.push({
+            message: e.constraints[constraintsKey[0]],
+            field: e.property,
+          });
+        });
+        throw new BadRequestException(errorMessages);
+      },
+    }),
+  );
+  app.useGlobalFilters(new HttpExceptionFilter());
+  await app.listen(3000);
 }
 
 bootstrap();

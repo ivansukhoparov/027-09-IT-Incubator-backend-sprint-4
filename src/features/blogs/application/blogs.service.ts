@@ -3,7 +3,10 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { BlogCreateDto, BlogUpdateDto } from '../types/input';
 import { Blog } from '../infrastructure/blogs.schema';
 import { blogMapper } from '../types/mapper';
-import {CreateBlogInputModel, UpdateBlogInputModel} from "../api/models/blogs.input.models";
+import {
+  CreateBlogInputModel,
+  UpdateBlogInputModel,
+} from '../api/models/blogs.input.models';
 
 @Injectable()
 export class BlogsService {

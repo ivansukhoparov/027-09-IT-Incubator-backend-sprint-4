@@ -7,8 +7,8 @@ export class BlogsTestManager {
     protected readonly app: INestApplication,
     private accessData: any = {
       value: '',
-      user: "admin",
-      password:"qwerty",
+      user: 'admin',
+      password: 'qwerty',
       options: { type: 'basic' },
     },
   ) {}
@@ -33,14 +33,14 @@ export class BlogsTestManager {
   async createOne(createBlogDto: any) {
     return await request(this.app.getHttpServer())
       .post('/blogs/')
-        .auth(this.accessData.user, this.accessData.password)
+      .auth(this.accessData.user, this.accessData.password)
       .send(createBlogDto);
   }
 
   async updateOne(updateBlogDto: any, blogId: string) {
     return await request(this.app.getHttpServer())
       .put('/blogs/' + blogId)
-        .auth(this.accessData.user, this.accessData.password)
+      .auth(this.accessData.user, this.accessData.password)
       .send(updateBlogDto);
   }
 
@@ -54,7 +54,7 @@ export class BlogsTestManager {
 
   async deleteOne(blogId: string) {
     return await request(this.app.getHttpServer())
-        .delete('/blogs/' + blogId)
-        .auth(this.accessData.user, this.accessData.password);
+      .delete('/blogs/' + blogId)
+      .auth(this.accessData.user, this.accessData.password);
   }
 }

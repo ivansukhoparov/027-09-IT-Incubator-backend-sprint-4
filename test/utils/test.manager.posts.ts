@@ -9,8 +9,8 @@ export class PostsTestManager {
     protected readonly app: INestApplication,
     private accessData: any = {
       value: '',
-      user: "admin",
-      password:"qwerty",
+      user: 'admin',
+      password: 'qwerty',
       options: { type: 'basic' },
     },
   ) {}
@@ -43,7 +43,7 @@ export class PostsTestManager {
   async updateOne(updatePostDto: any, id: string) {
     return await request(this.app.getHttpServer())
       .put(this.endPoint + id)
-        .auth(this.accessData.user, this.accessData.password)
+      .auth(this.accessData.user, this.accessData.password)
       .send(updatePostDto);
   }
 
@@ -57,7 +57,7 @@ export class PostsTestManager {
 
   async deleteOne(id: string) {
     return await request(this.app.getHttpServer())
-        .delete(this.endPoint + id)
-        .auth(this.accessData.user, this.accessData.password);
+      .delete(this.endPoint + id)
+      .auth(this.accessData.user, this.accessData.password);
   }
 }

@@ -9,7 +9,8 @@ import {
   Param,
   Post,
   Put,
-  Query, UseGuards,
+  Query,
+  UseGuards,
 } from '@nestjs/common';
 import { BlogsService } from '../application/blogs.service';
 import { BlogCreateDto } from '../types/input';
@@ -19,8 +20,14 @@ import { QueryUsersRequestType } from '../../users/types/input';
 import { PostsService } from '../../posts/application/posts.service';
 import { PostsQueryRepository } from '../../posts/infrastructure/posts.query.repository';
 import { PostCreateDto } from '../../posts/types/input';
-import {AdminAuthGuard, AuthGuard} from "../../../infrastructure/guards/admin-auth-guard.service";
-import {CreateBlogInputModel, UpdateBlogInputModel} from "./models/blogs.input.models";
+import {
+  AdminAuthGuard,
+  AuthGuard,
+} from '../../../infrastructure/guards/admin-auth-guard.service';
+import {
+  CreateBlogInputModel,
+  UpdateBlogInputModel,
+} from './models/blogs.input.models';
 
 @Controller('blogs')
 export class BlogsController {
@@ -74,7 +81,10 @@ export class BlogsController {
   @Put(':id')
   @UseGuards(AdminAuthGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
-  async updateById(@Param('id') id: string, @Body() inputModel: UpdateBlogInputModel) {
+  async updateById(
+    @Param('id') id: string,
+    @Body() inputModel: UpdateBlogInputModel,
+  ) {
     await this.blogsService.updateBlog(id, inputModel);
     return;
   }

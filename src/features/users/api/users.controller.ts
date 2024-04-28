@@ -7,14 +7,15 @@ import {
   HttpStatus,
   Param,
   Post,
-  Query, UseGuards,
+  Query,
+  UseGuards,
 } from '@nestjs/common';
 import { UsersService } from '../application/users.service';
 import { QueryUsersRequestType } from '../types/input';
 import { createQuery } from '../../common/create.query';
 import { UsersQueryRepository } from '../infrastructure/users.query.repository';
 import { UserCreateInputModel } from './models/user.create.input.model';
-import {AdminAuthGuard} from "../../../infrastructure/guards/admin-auth-guard.service";
+import { AdminAuthGuard } from '../../../infrastructure/guards/admin-auth-guard.service';
 
 @Controller('users')
 export class UsersController {
