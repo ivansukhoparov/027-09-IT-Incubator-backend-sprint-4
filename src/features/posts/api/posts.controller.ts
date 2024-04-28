@@ -16,6 +16,7 @@ import { CommentsQueryRepository } from '../../comments/infrastructure/comments.
 import { QueryUsersRequestType } from '../../users/types/input';
 import { createQuery } from '../../common/create.query';
 import {AdminAuthGuard} from "../../../infrastructure/guards/admin-auth-guard.service";
+import {CreatePostInputModel, UpdatePostInputModel} from "./models/posts.input.models";
 
 @Controller('posts')
 export class PostsController {
@@ -43,7 +44,7 @@ export class PostsController {
 
   @Post()
   @UseGuards(AdminAuthGuard)
-  async createNewPost(@Body() inputModel: any) {
+  async createNewPost(@Body() inputModel: CreatePostInputModel) {
     const newPostId = await this.postsService.createNewPost(inputModel);
     return await this.postsQueryRepository.getPostById(newPostId);
   }
@@ -55,7 +56,7 @@ export class PostsController {
   @Put(':id')
   @UseGuards(AdminAuthGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
-  async updateById(@Param('id') id: string, @Body() inputModel: any) {
+  async updateById(@Param('id') id: string, @Body() inputModel: UpdatePostInputModel) {
     await this.postsService.updatePost(id, inputModel);
     return {};
   }

@@ -1,7 +1,7 @@
 import {IsStringLength} from "../../../../infrastructure/decorators/validate/is.string.length";
 import {IS_URL, IsUrl} from "class-validator";
 
-export class CreateBlogInputModels {
+export class CreateBlogInputModel {
     @IsStringLength(0,15)
     name: string;
 
@@ -13,6 +13,6 @@ export class CreateBlogInputModels {
     websiteUrl: string;
 }
 
-export class UpdateBlogInputModel extends CreateBlogInputModels{
+export class UpdateBlogInputModel extends CreateBlogInputModel{
 
 }
