@@ -3,12 +3,13 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { BlogCreateDto, BlogUpdateDto } from '../types/input';
 import { Blog } from '../infrastructure/blogs.schema';
 import { blogMapper } from '../types/mapper';
+import {CreateBlogInputModels, UpdateBlogInputModel} from "../api/models/blog.input.models";
 
 @Injectable()
 export class BlogsService {
   constructor(protected blogsRepository: BlogsRepository) {}
 
-  async createNewBlog(inputModel: BlogCreateDto) {
+  async createNewBlog(inputModel: CreateBlogInputModels) {
     const createdAt = new Date();
 
     const newBlogData: Blog = {
@@ -24,7 +25,7 @@ export class BlogsService {
     return blogMapper(newBlog);
   }
 
-  async updateBlog(blogId: string, blogUpdateDto: BlogUpdateDto) {
+  async updateBlog(blogId: string, blogUpdateDto: UpdateBlogInputModel) {
     const result = await this.blogsRepository.updateBlog(blogId, blogUpdateDto);
   }
 
