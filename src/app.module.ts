@@ -34,6 +34,8 @@ import { BcryptAdapter } from './common/adapters/bcrypt.adapter';
 import { appSettings } from './settings/app.settings';
 import { AuthController } from './features/auth/api/auth.controller';
 import { AuthService } from './features/auth/application/auth.service';
+import {CommentsService} from "./features/comments/application/comments.service";
+import {CommentsRepository} from "./features/comments/infrastructure/comments.repository";
 
 const controllers = [
   AuthController,
@@ -50,13 +52,14 @@ const services = [
   PostsService,
   UsersService,
   TestingService,
+  CommentsService,
 ];
 const repositories = [
   UsersRepository,
   BlogsRepository,
   PostsRepository,
   TestingRepository,
-  CommentsQueryRepository,
+  CommentsRepository,
 ];
 const queryRepositories = [
   UsersQueryRepository,
