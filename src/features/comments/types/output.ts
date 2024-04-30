@@ -8,7 +8,7 @@ export type CommentOutputDto = {
     userLogin: string;
   };
   createdAt: string;
-  // likesInfo: LikesInfoType;
+  likesInfo: LikesInfoType;
 };
 
 export type CommentType = {
@@ -21,12 +21,15 @@ export type CommentType = {
   createdAt: string;
 };
 
-// export type LikesInfoType = {
-//   likesCount: number;
-//   dislikesCount: number;
-//   myStatus: LikeStatusType;
-// };
-//
+
+export type LikesInfoType = {
+  likesCount: number
+  dislikesCount: number
+  myStatus: LikeStatusType
+}
+
+
+
 // export type CommentLikeDTO = {
 //   commentId: string;
 //   likedUserId: string;
