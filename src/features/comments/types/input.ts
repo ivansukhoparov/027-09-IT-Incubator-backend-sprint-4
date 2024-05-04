@@ -2,12 +2,6 @@ export type CreateCommentDto = {
   content: string;
 };
 
-export type InputCommentLikesType = {
-  likeStatus: LikeStatusType;
-};
-
-export type LikeStatusType = 'None' | 'Like' | 'Dislike';
-
 export type CommentCreateDto = {
   content: string;
   postId: string;
