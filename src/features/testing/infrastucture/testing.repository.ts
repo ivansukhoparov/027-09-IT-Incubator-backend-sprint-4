@@ -5,6 +5,8 @@ import { Blog } from '../../blogs/infrastructure/blogs.schema';
 import { Post } from '../../posts/infrastructure/posts.schema';
 import { appSettings } from '../../../settings/app.settings';
 import { User } from '../../users/infrastructure/users.schema';
+import {Comments} from "../../comments/infrastructure/comments.schema";
+import {CommentLikes, PostsLikes} from "../../likes/infrastructure/likes.schema";
 
 @Injectable()
 export class TestingRepository {
@@ -12,6 +14,9 @@ export class TestingRepository {
     @InjectModel(Blog.name) private blogModel: Model<Blog>,
     @InjectModel(Post.name) private postModel: Model<Post>,
     @InjectModel(User.name) private userModel: Model<User>,
+    @InjectModel(Comments.name) private commentsModel: Model<User>,
+    @InjectModel(PostsLikes.name) private postsLikesModel: Model<PostsLikes>,
+    @InjectModel(CommentLikes.name) private commentLikesModel: Model<CommentLikes>,
   ) {}
 
   // async dropDb() {
@@ -31,6 +36,9 @@ export class TestingRepository {
       await this.blogModel.deleteMany();
       await this.postModel.deleteMany();
       await this.userModel.deleteMany();
+      await this.commentsModel.deleteMany();
+      await this.postsLikesModel.deleteMany();
+      await this.commentLikesModel.deleteMany();
     } catch {
       console.log('Delete all did fail');
       throw new Error('Delete all did fail');
