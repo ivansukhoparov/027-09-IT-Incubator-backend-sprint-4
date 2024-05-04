@@ -46,12 +46,9 @@ export class AdminAuthGuard implements CanActivate {
 @Injectable()
 export class AuthGuard implements CanActivate {
 
-    constructor(protected usersService: UsersService) {
-    }
-
-    async canActivate(
+    canActivate(
         context: ExecutionContext,
-    ): Promise<boolean> {
+    ): boolean | Promise<boolean> | Observable<boolean>{
         try {
             const request = context.switchToHttp().getRequest();
             const authHeader = request.header('authorization')?.split(' '); // Получаем значение поля в заголовке
@@ -62,8 +59,6 @@ export class AuthGuard implements CanActivate {
             );
 
             if (token.verify() && authMethod === AUTH_METHODS.bearer) {
-                const userId = token.decode().userId;
-                request.user = await this.usersService.getUserById(userId)
                 return true;
             } else {
                 throw new HttpException(
@@ -73,33 +68,6 @@ export class AuthGuard implements CanActivate {
             }
         } catch {
             throw new HttpException('Bad login or password', HttpStatus.UNAUTHORIZED);
-        }
-    }
-}
-
-@Injectable()
-export class SoftAuthGuard implements CanActivate {
-
-    constructor(protected usersService: UsersService) {
-    }
-
-    async canActivate(
-        context: ExecutionContext,
-    ): Promise<boolean> {
-        try {
-            const request = context.switchToHttp().getRequest();
-            const authHeader = request.header('authorization')?.split(' '); // Получаем значение поля в заголовке
-            const authMethod = authHeader[0]; // получаем метод из заголовка
-            const token = new AccessTokenService(
-                tokenServiceCommands.set,
-                authHeader[1],
-            );
-
-            const userId = token.decode().userId;
-            request.user = await this.usersService.getUserById(userId)
-            return true;
-        } catch {
-            return true;
         }
     }
 }
