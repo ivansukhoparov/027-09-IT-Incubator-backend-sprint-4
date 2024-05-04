@@ -6,4 +6,7 @@ export class CommentCreateInputModel {
   content: string;
 }
 
-export class UpdateCommentInputModel extends CommentCreateInputModel {}
+export class UpdateCommentInputModel extends CommentCreateInputModel {
+  @IsStringLength(20, 300)
+  content: string;
+}
