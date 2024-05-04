@@ -1,5 +1,7 @@
 import { IsStringLength } from '../../../../infrastructure/decorators/validate/is.string.length';
-import { IsString } from 'class-validator';
+import {IsMongoId, IsNotEmpty, IsString, Length} from 'class-validator';
+import {Trim} from "../../../../infrastructure/decorators/transform/trim";
+import {IsBlogExist} from "../../../../infrastructure/decorators/validate/is.blog.exist";
 
 export class CreatePostInputModel {
   @IsStringLength(0, 30)
@@ -11,8 +13,21 @@ export class CreatePostInputModel {
   @IsStringLength(0, 1000)
   content: string;
 
+  @IsBlogExist({  message: 'Blog doesnt  exists',   })
   @IsString()
+  @IsMongoId()
   blogId: string;
+}
+
+export class CreatePostInputModelByBlog {
+  @IsStringLength(0, 30)
+  title: string;
+
+  @IsStringLength(0, 100)
+  shortDescription: string;
+
+  @IsStringLength(0, 1000)
+  content: string;
 }
 
 export class UpdatePostInputModel extends CreatePostInputModel {}

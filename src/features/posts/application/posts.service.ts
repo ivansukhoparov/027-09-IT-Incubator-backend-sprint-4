@@ -17,20 +17,24 @@ export class PostsService {
     protected blogsRepository: BlogsRepository,
   ) {}
 
-  async createNewPost(CreatePostInputModel: CreatePostInputModel) {
+  async findById(id:string){
+    return await this.postsRepository.getPostById(id)
+  }
+
+  async createNewPost(createPostInputModel: CreatePostInputModel) {
     const createdAt = new Date();
 
     const parentBlog: BlogDocument = await this.blogsRepository.getBlogById(
-      CreatePostInputModel.blogId,
+      createPostInputModel.blogId,
     );
 
     if (!parentBlog) throw new NotFoundException();
 
     const newPostDto: Post = {
-      title: CreatePostInputModel.title,
-      shortDescription: CreatePostInputModel.shortDescription,
-      content: CreatePostInputModel.content,
-      blogId: CreatePostInputModel.blogId,
+      title: createPostInputModel.title,
+      shortDescription: createPostInputModel.shortDescription,
+      content: createPostInputModel.content,
+      blogId: createPostInputModel.blogId,
       blogName: parentBlog.name,
       createdAt: createdAt.toISOString(),
     };

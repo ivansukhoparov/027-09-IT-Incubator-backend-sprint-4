@@ -9,7 +9,7 @@ import {
     Post,
     Put,
     Query,
-    UseGuards, Req
+    UseGuards, Req, BadRequestException
 } from '@nestjs/common';
 import {PostsService} from '../application/posts.service';
 import {PostsQueryRepository} from '../infrastructure/posts.query.repository';
@@ -25,36 +25,81 @@ import {CommentCreateInputModel} from "../../comments/api/models/comments.input.
 import {CommentCreateDto} from "../../comments/types/input";
 import {Request} from "express"
 import {CommentsService} from "../../comments/application/comments.service";
+import {AccessTokenService} from "../../../common/token.services/access.token.service";
+import {tokenServiceCommands} from "../../../common/token.services/utils/common";
+import {UsersService} from "../../users/application/users.service";
+import {CommentsLikesInputModel, PostsLikesInputModel} from "../../likes/api/models/likes.input.models";
+import {CommentsLikesService} from "../../likes/application/comments.likes.service";
+import {PostsLikesService} from "../../likes/application/posts.likes.service";
+import {BlogsService} from "../../blogs/application/blogs.service";
 
 @Controller('posts')
 export class PostsController {
     constructor(
         protected postsService: PostsService,
+        protected blogsService:BlogsService,
         protected postsQueryRepository: PostsQueryRepository,
         protected commentsService: CommentsService,
         protected commentsQueryRepository: CommentsQueryRepository,
+        protected userService:UsersService,
+        protected postsLikesService: PostsLikesService,
     ) {
     }
 
     @Get()
-    async getAllPosts(@Query() query: QueryUsersRequestType) {
+    async getAllPosts(@Query() query: QueryUsersRequestType, @Req() req:Request) {
         const {sortData, searchData} = createQuery(query);
-        return await this.postsQueryRepository.getAllPosts(sortData);
+        try{
+            const authHeader = req.header('authorization')?.split(' ');
+            const token = new AccessTokenService(
+                tokenServiceCommands.set,
+                authHeader[1],
+            );
+            const userId = token.decode().userId;
+            return await this.postsQueryRepository.getAllPosts(sortData, null,userId);
+
+        }catch{
+            return await this.postsQueryRepository.getAllPosts(sortData);
+        }
     }
 
     @Get(':id')
-    async getPostById(@Param('id') id: string) {
-        return await this.postsQueryRepository.getPostById(id);
+    async getPostById(@Param('id') id: string,@Req() req:Request) {
+        try{
+            const authHeader = req.header('authorization')?.split(' ');
+            const token = new AccessTokenService(
+                tokenServiceCommands.set,
+                authHeader[1],
+            );
+            const userId = token.decode().userId;
+            return await this.postsQueryRepository.getPostById(id, userId);
+        }catch{
+            return await this.postsQueryRepository.getPostById(id);
+        }
     }
 
     @Get(':id/comments')
-    async getAllPostComments(@Param('id') id: string) {
-        return await this.commentsQueryRepository.getById(id);
+    async getAllPostComments(@Query() query: QueryUsersRequestType,@Param('id') id: string,@Req() req:Request) {
+        const {sortData, searchData} = createQuery(query);
+        try{
+            const authHeader = req.header('authorization')?.split(' ');
+            const token = new AccessTokenService(
+                tokenServiceCommands.set,
+                authHeader[1],
+            );
+            const userId = token.decode().userId;
+            return await this.commentsQueryRepository.getAllCommentsByPostId(sortData,id, userId);
+        }catch{
+            return await this.commentsQueryRepository.getAllCommentsByPostId(sortData,id);
+        }
+
     }
 
     @Post()
     @UseGuards(AdminAuthGuard)
     async createNewPost(@Body() inputModel: CreatePostInputModel) {
+        const blog = await this.blogsService.getBlogById(inputModel.blogId)
+        if (!blog) throw new BadRequestException()
         const newPostId = await this.postsService.createNewPost(inputModel);
         return await this.postsQueryRepository.getPostById(newPostId);
     }
@@ -65,11 +110,20 @@ export class PostsController {
         @Req() req: any,
         @Param("id") id: string,
         @Body() inputModel: CommentCreateInputModel) {
+
+        const authHeader = req.header('authorization')?.split(' ');
+        const token = new AccessTokenService(
+            tokenServiceCommands.set,
+            authHeader[1],
+        );
+        const userId = token.decode().userId;
+        const user = await this.userService.getUserById(userId)
+
         const commentCreateDto: CommentCreateDto = {
             content: inputModel.content,
             postId: id,
-            userId: req.user.id,
-            userLogin: req.user.login,
+            userId: user.id,
+            userLogin: user.login,
         }
         const commentId: string = await this.commentsService.createComment(commentCreateDto);
         return await this.commentsQueryRepository.getById(commentId)
@@ -85,6 +139,27 @@ export class PostsController {
         await this.postsService.updatePost(id, inputModel);
         return {};
     }
+
+    @Put(':id/like-status')
+    @UseGuards(AuthGuard)
+    @HttpCode(HttpStatus.NO_CONTENT)
+    async updateLikeStatus(
+        @Param('id') id: string,
+        @Body() inputModel: PostsLikesInputModel,
+        @Req() req: any,) {
+
+        const authHeader = req.header('authorization')?.split(' ');
+        const token = new AccessTokenService(
+            tokenServiceCommands.set,
+            authHeader[1],
+        );
+        const userId = token.decode().userId;
+        await this.postsLikesService.updateLike(userId, id, inputModel)
+
+        return
+    }
+
+
 
     @Delete(':id')
     @UseGuards(AdminAuthGuard)

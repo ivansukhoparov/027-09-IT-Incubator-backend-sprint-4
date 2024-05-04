@@ -5,14 +5,16 @@ import { Model } from 'mongoose';
 import { PostOutputDto } from '../types/output';
 import { postMapper, PostsLikesInfoType } from '../types/mapper';
 import { QuerySortType } from '../../common/types';
-import { LikeStatusType } from '../../comments/types/input';
 import { BlogsQueryRepository } from '../../blogs/infrastructure/blogs.query.repository';
+import {LikeStatusType} from "../../likes/types/input";
+import {PostsLikesQueryRepository} from "../../likes/infrastructure/posts.likes.query.repository";
 
 @Injectable()
 export class PostsQueryRepository {
   constructor(
     @InjectModel(Post.name) private postModel: Model<PostDocument>,
     protected blogsQueryRepository: BlogsQueryRepository,
+    protected  postsLikesQueryRepository: PostsLikesQueryRepository,
   ) {}
 
   async getAllPosts(
@@ -43,7 +45,7 @@ export class PostsQueryRepository {
     const mappedPosts: PostOutputDto[] = [];
 
     for (let i = 0; i < posts.length; i++) {
-      const likes = await this.getLikes(posts[i]._id.toString(), userId);
+      const likes = await this.postsLikesQueryRepository.getLikes(posts[i]._id.toString(), userId);
       mappedPosts.push(postMapper(posts[i], likes));
     }
 
@@ -74,41 +76,11 @@ export class PostsQueryRepository {
     try {
       const post: PostDocument | null = await this.postModel.findById(id);
       if (!post) throw new NotFoundException();
-      const likes = await this.getLikes(id, userId);
+      const likes = await this.postsLikesQueryRepository.getLikes(id, userId);
       return postMapper(post, likes);
     } catch {
       throw new NotFoundException();
     }
   }
 
-  async getLikes(
-    postId: string,
-    userId: string | null = null,
-  ): Promise<PostsLikesInfoType> {
-    const likeStatus: LikeStatusType = 'None';
-
-    // if (userId) {
-    //   const userLike = await PostLikeModel.findOne({$and: [{postId: postId}, {likedUserId: userId}]}).lean();
-    //   if (userLike) {
-    //     likeStatus = userLike.status;
-    //   }
-    // }
-    //
-    // const likesCount = await PostLikeModel.countDocuments({$and: [{postId: postId}, {status: "Like"}]});
-    // const dislikesCount = await PostLikeModel.countDocuments({$and: [{postId: postId}, {status: "Dislike"}]});
-    // const newestLikes: Array<WithId<PostLikeDto>> = await PostLikeModel.find({$and: [{postId: postId}, {status: "Like"}]}).sort({"addedAt": "desc"}).limit(3).lean();
-
-    // return {
-    //   likesCount: likesCount,
-    //   dislikesCount: dislikesCount,
-    //   myStatus: likeStatus,
-    //   newestLikes: newestLikes.map(postLikesMapper)
-    // };
-    return {
-      likesCount: 0,
-      dislikesCount: 0,
-      myStatus: 'None',
-      newestLikes: [],
-    };
-  }
 }
