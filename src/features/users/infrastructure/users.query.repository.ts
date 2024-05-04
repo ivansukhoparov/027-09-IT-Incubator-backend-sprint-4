@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { User } from './users.schema';
 import { Model } from 'mongoose';
 import { QuerySearchType, QuerySortType } from '../../common/types';
-import { userMapper } from '../types/mapper';
+import {userMapper, userMeMapper} from '../types/mapper';
 
 @Injectable()
 export class UsersQueryRepository {
@@ -67,6 +67,16 @@ export class UsersQueryRepository {
       return userMapper(user);
     } catch {
       throw new NotFoundException();
+    }
+  }
+
+  async getUserAuthMe(id:string){
+    try {
+      const user = await this.userModel.findById(id);
+      if (!user) throw new NotFoundException();
+      return userMeMapper(user);
+    }catch {
+      throw new NotFoundException()
     }
   }
 }
