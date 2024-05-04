@@ -24,7 +24,7 @@ export class RefreshTokenService extends BaseToken<
       status,
       payload,
       appSettings.api.JWT_SECRET_KEY,
-      appSettings.api.RECOVERY_TOKEN_EXPIRATION_TIME,
+      appSettings.api.REFRESH_TOKEN_EXPIRATION_TIME,
     );
   }
 
