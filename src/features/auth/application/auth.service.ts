@@ -15,7 +15,7 @@ import {EmailService} from '../../../common/email/email.service';
 import {BcryptAdapter} from '../../../common/adapters/bcrypt.adapter';
 import {EmailConfirmationCodeService} from '../../../common/token.services/email.confirmation.code.service';
 import {AccessTokenService} from '../../../common/token.services/access.token.service';
-import {RefreshTokenService} from '../../../common/token.services/refresh.token.service';
+import {RefreshTokenService} from '../../tokens/refresh.token/application/refresh.token.service';
 import {tokenServiceCommands} from '../../../common/token.services/utils/common';
 import {UserCreateInputModel} from '../../users/api/models/user.create.input.model';
 import {LoginInputModel, UserEmailDto} from '../api/models/login.input.model';

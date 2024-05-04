@@ -1,16 +1,16 @@
 import { Injectable } from '@nestjs/common';
-import { appSettings } from '../../settings/app.settings';
+import { appSettings } from '../../../../settings/app.settings';
 import { JwtPayload } from 'jsonwebtoken';
-import { BaseToken } from '../../base/base.classes/base.token';
+import { BaseToken } from '../../../../base/base.classes/base.token';
 import {
   RefreshTokenDecodedDto,
   RefreshTokenPayloadDto,
-} from './types/refresh.token';
+} from '../../../../common/token.services/types/refresh.token';
 import {
   createTokenStatusesKeysType,
   tokenServiceCommands,
-} from './utils/common';
-import { ConfirmationCodePayload } from './types/email.confirmation.code';
+} from '../../../../common/token.services/utils/common';
+import { ConfirmationCodePayload } from '../../../../common/token.services/types/email.confirmation.code';
 
 export class RefreshTokenService extends BaseToken<
   RefreshTokenPayloadDto,
