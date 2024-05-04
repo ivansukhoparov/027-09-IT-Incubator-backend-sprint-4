@@ -1,5 +1,5 @@
 import { WithId } from 'mongodb';
-import { UserOutputDto, UserType } from './output';
+import {UserOutputDto, UserOutputMeType, UserType} from './output';
 
 export const userMapper = (user: WithId<UserType>): UserOutputDto => {
   return {
@@ -7,5 +7,15 @@ export const userMapper = (user: WithId<UserType>): UserOutputDto => {
     login: user.login,
     email: user.email,
     createdAt: user.createdAt,
+  };
+};
+
+
+
+export const userMeMapper = (user: WithId<UserType>): UserOutputMeType => {
+  return {
+    login: user.login,
+    email: user.email,
+    userId: user._id.toString(),
   };
 };
