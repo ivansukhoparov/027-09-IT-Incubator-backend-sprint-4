@@ -11,6 +11,7 @@ import {
   Put,
   Query,
   UseGuards,
+  Req, BadRequestException
 } from '@nestjs/common';
 import { BlogsService } from '../application/blogs.service';
 import { BlogCreateDto } from '../types/input';
@@ -28,6 +29,10 @@ import {
   CreateBlogInputModel,
   UpdateBlogInputModel,
 } from './models/blogs.input.models';
+import {AccessTokenService} from "../../../common/token.services/access.token.service";
+import {tokenServiceCommands} from "../../../common/token.services/utils/common";
+import {Request} from "express"
+import {CreatePostInputModel, CreatePostInputModelByBlog} from "../../posts/api/models/posts.input.models";
 
 @Controller('blogs')
 export class BlogsController {
@@ -53,9 +58,23 @@ export class BlogsController {
   async getAllBlogPosts(
     @Param('id') id: string,
     @Query() query: QueryUsersRequestType,
+    @Req() req:Request
   ) {
+
     const { sortData, searchData } = createQuery(query);
-    return await this.postsQueryRepository.getAllPosts(sortData, id);
+
+    try{
+      const authHeader = req.header('authorization')?.split(' ');
+      const token = new AccessTokenService(
+          tokenServiceCommands.set,
+          authHeader[1],
+      );
+      const userId = token.decode().userId;
+      return await this.postsQueryRepository.getAllPosts(sortData, id,userId);
+
+    }catch{
+      throw new NotFoundException()
+    }
   }
 
   @Post()
@@ -67,8 +86,11 @@ export class BlogsController {
   @Post(':id/posts')
   @UseGuards(AdminAuthGuard)
   @HttpCode(HttpStatus.CREATED)
-  async createPostToBlog(@Param('id') id: string, @Body() inputModel: any) {
-    const PostCreateDto: PostCreateDto = {
+  async createPostToBlog(
+      @Param('id') id: string,
+      @Body() inputModel: CreatePostInputModelByBlog) {
+
+    const PostCreateDto: CreatePostInputModel = {
       title: inputModel.title,
       shortDescription: inputModel.shortDescription,
       content: inputModel.content,
