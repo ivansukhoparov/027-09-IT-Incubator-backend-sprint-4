@@ -1,6 +1,7 @@
 import { WithId } from 'mongodb';
 import { PostLikeDto, PostOutputDto, PostType } from './output';
-import { LikeStatusType } from '../../comments/types/input';
+
+import {LikeStatusType} from "../../likes/types/input";
 
 export const postMapper = (
   post: WithId<PostType>,

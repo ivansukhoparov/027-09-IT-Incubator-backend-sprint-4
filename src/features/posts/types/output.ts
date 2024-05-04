@@ -1,6 +1,6 @@
 import { Schema } from '@nestjs/mongoose';
-import { LikeStatusType } from '../../comments/types/input';
 import { PostsLikesInfoType } from './mapper';
+import {LikeStatusType} from "../../likes/types/input";
 
 export class PostOutputDto {
   id: string;

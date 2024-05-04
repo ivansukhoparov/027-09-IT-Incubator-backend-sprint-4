@@ -1,4 +1,4 @@
-import { LikeStatusType } from './input';
+import {LikeStatusType} from "../../likes/types/input";
 
 export type CommentOutputDto = {
   id: string;
@@ -28,7 +28,16 @@ export type LikesInfoType = {
   myStatus: LikeStatusType
 }
 
-
+export type OutputCommentType = {
+  id: string
+  content: string
+  commentatorInfo: {
+    userId: string
+    userLogin: string
+  }
+  createdAt: string
+  likesInfo: LikesInfoType
+}
 
 // export type CommentLikeDTO = {
 //   commentId: string;
