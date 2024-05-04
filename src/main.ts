@@ -6,9 +6,14 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { HttpExceptionFilter } from './infrastructure/exception-filters/http.exception.filter';
+import {useContainer} from "class-validator";
+import cookieParser from "cookie-parser";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  useContainer(app.select(AppModule), { fallbackOnErrors: true });
+
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
@@ -26,7 +31,9 @@ async function bootstrap() {
       },
     }),
   );
+
   app.useGlobalFilters(new HttpExceptionFilter());
+  app.use(cookieParser());
   await app.listen(3000);
 }
 
