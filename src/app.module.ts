@@ -36,6 +36,23 @@ import { AuthController } from './features/auth/api/auth.controller';
 import { AuthService } from './features/auth/application/auth.service';
 import {CommentsService} from "./features/comments/application/comments.service";
 import {CommentsRepository} from "./features/comments/infrastructure/comments.repository";
+import {
+  CommentLikes,
+  CommentLikesSchema,
+  PostsLikes,
+  PostsLikesSchema
+} from "./features/likes/infrastructure/likes.schema";
+import {CommentsLikesRepository} from "./features/likes/infrastructure/comments.likes.repository";
+import {CommentsLikesService} from "./features/likes/application/comments.likes.service";
+import {CommentsLikesQueryRepository} from "./features/likes/infrastructure/commets.likes.query.repository";
+import {AuthGuard,} from "./infrastructure/guards/admin-auth-guard.service";
+import {PostsLikesService} from "./features/likes/application/posts.likes.service";
+import {PostsLikesQueryRepository} from "./features/likes/infrastructure/posts.likes.query.repository";
+import {PostsLikesRepository} from "./features/likes/infrastructure/posts.likes.repository";
+import {IsBlogExistConstraint} from "./infrastructure/decorators/validate/is.blog.exist";
+import {ThrottlerModule} from "@nestjs/throttler";
+import {RefreshTokenBlackList, RefreshTokenBlackListSchema} from "./features/auth/infrastructure/auth.schema";
+import {AuthRepository} from "./features/auth/infrastructure/auth.repository";
 
 const controllers = [
   AuthController,
@@ -53,6 +70,8 @@ const services = [
   UsersService,
   TestingService,
   CommentsService,
+  CommentsLikesService,
+  PostsLikesService,
 ];
 const repositories = [
   UsersRepository,
@@ -60,12 +79,17 @@ const repositories = [
   PostsRepository,
   TestingRepository,
   CommentsRepository,
+  CommentsLikesRepository,
+  PostsLikesQueryRepository,
+  PostsLikesRepository,
 ];
 const queryRepositories = [
+  AuthRepository,
   UsersQueryRepository,
   BlogsQueryRepository,
   PostsQueryRepository,
   CommentsQueryRepository,
+  CommentsLikesQueryRepository,
 ];
 const providers = [
   EmailMessagesManager,
@@ -73,6 +97,7 @@ const providers = [
   NodemailerAdapter,
   JwtTokenAdapter,
   BcryptAdapter,
+  IsBlogExistConstraint,
 ];
 
 @Module({
@@ -82,6 +107,10 @@ const providers = [
         '/' +
         appSettings.api.MONGO_DB_NAME,
     ),
+    ThrottlerModule.forRoot([{
+      ttl: 10000,
+      limit: 5,
+    }]),
     MongooseModule.forFeature([
       {
         name: Blog.name,
@@ -99,6 +128,19 @@ const providers = [
         name: User.name,
         schema: UserSchema,
       },
+      {
+        name: CommentLikes.name,
+        schema: CommentLikesSchema,
+      },
+      {
+        name: PostsLikes.name,
+        schema: PostsLikesSchema,
+      },
+      {
+        name: RefreshTokenBlackList.name,
+        schema: RefreshTokenBlackListSchema,
+      },
+
     ]),
   ],
   controllers: [AppController, ...controllers],
