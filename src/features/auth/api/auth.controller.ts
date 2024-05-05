@@ -18,19 +18,20 @@ import {RefreshTokenService} from "../../../common/token.services/refresh.token.
 import {tokenServiceCommands} from "../../../common/token.services/utils/common";
 import {UsersQueryRepository} from "../../users/infrastructure/users.query.repository";
 import {AccessTokenService} from "../../../common/token.services/access.token.service";
+import {SessionInputModel} from "../../security/api/models/session.input.models";
 
 @Controller('auth')
 @UseGuards(ThrottlerGuard)
 export class AuthController {
-    constructor (protected authService: AuthService,
-                protected usersQueryRepository:UsersQueryRepository) {
+    constructor(protected authService: AuthService,
+                protected usersQueryRepository: UsersQueryRepository) {
     }
 
     @SkipThrottle()
     @Get("me")
     @UseGuards(AuthGuard)
     @HttpCode(HttpStatus.OK)
-    async getMe(@Req() req:Request) {
+    async getMe(@Req() req: Request) {
         try {
             const authHeader = req.header('authorization')?.split(' ');
             const token = new AccessTokenService(
@@ -82,8 +83,7 @@ export class AuthController {
     @HttpCode(HttpStatus.OK)
     async getNewRefreshToken(@Req() req: Request, @Res({passthrough: true}) res: Response) {
         try {
-            const {accessToken, refreshToken} =
-                await this.authService.refreshTokens(req.cookies.refreshToken)
+            const {accessToken, refreshToken} = await this.authService.refreshTokens(req.cookies.refreshToken)
             res.cookie('refreshToken', refreshToken.get(), {
                 httpOnly: true,
                 secure: true,
@@ -99,9 +99,14 @@ export class AuthController {
     async login(
         @Res({passthrough: true}) res: Response,
         @Body() loginDto: LoginInputModel,
+        @Req() req: Request,
     ) {
-        const {accessToken, refreshToken} =
-            await this.authService.loginUser(loginDto);
+        const sessionInputModel: SessionInputModel = {
+            deviceTitle: req.header("user-agent")?.split(" ")[1] || "unknown",
+            ip: req.ip || "unknown"
+        }
+
+        const {accessToken, refreshToken} = await this.authService.loginUser(loginDto, sessionInputModel);
         res.cookie('refreshToken', refreshToken.get(), {
             httpOnly: true,
             secure: true,
@@ -112,7 +117,7 @@ export class AuthController {
     @SkipThrottle()
     @Post("logout")
     @HttpCode(HttpStatus.NO_CONTENT)
-    async logout(@Req() req: Request, @Res({passthrough: true}) res: Response) {
+    async logout(@Req() req: Request) {
         try {
             await this.authService.logout(req.cookies.refreshToken)
             return
