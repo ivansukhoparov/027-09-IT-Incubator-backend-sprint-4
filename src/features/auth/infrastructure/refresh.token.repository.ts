@@ -1,14 +1,14 @@
 import {Injectable} from "@nestjs/common";
 import {InjectModel} from "@nestjs/mongoose";
-import {RefreshTokenBlackList, RefreshTokenBlackListDocument} from "./auth.schema";
+import {RefreshTokenBlackList, RefreshTokenBlackListDocument} from "./refresh.token.schema";
 import {Model} from "mongoose";
 
 @Injectable()
-export class AuthRepository{
+export class RefreshTokenRepository {
     constructor(@InjectModel(RefreshTokenBlackList.name) private refreshTokenBlackListModel:Model<RefreshTokenBlackList>) {
     }
 
-    async addRefreshTokenToBlackList(token:string){
+    async addToBlackList(token:string){
         try{
             await this.refreshTokenBlackListModel.create({refreshToken:token})
             return true
@@ -17,10 +17,10 @@ export class AuthRepository{
         }
     }
 
-    async findRefreshTokenInBlackList(token:string){
+    async findInBlackList(token:string){
         try{
             const isInBlackList:RefreshTokenBlackListDocument = await this.refreshTokenBlackListModel.findOne({refreshToken:token})
-            return !!isInBlackList
+            return !!isInBlackList;
         }catch{
             throw new Error()
         }
