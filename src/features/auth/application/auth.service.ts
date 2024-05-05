@@ -15,11 +15,11 @@ import {EmailService} from '../../../common/email/email.service';
 import {BcryptAdapter} from '../../../common/adapters/bcrypt.adapter';
 import {EmailConfirmationCodeService} from '../../../common/token.services/email.confirmation.code.service';
 import {AccessTokenService} from '../../../common/token.services/access.token.service';
-import {RefreshTokenService} from '../../tokens/refresh.token/application/refresh.token.service';
+import {RefreshTokenService} from '../../../common/token.services/refresh.token.service';
 import {tokenServiceCommands} from '../../../common/token.services/utils/common';
 import {UserCreateInputModel} from '../../users/api/models/user.create.input.model';
 import {LoginInputModel, UserEmailDto} from '../api/models/login.input.model';
-import {AuthRepository} from "../infrastructure/auth.repository";
+import {RefreshTokenRepository} from "../infrastructure/refresh.token.repository";
 
 @Injectable()
 export class AuthService {
@@ -27,7 +27,7 @@ export class AuthService {
         private readonly userService: UsersService,
         private readonly emailService: EmailService,
         private readonly cryptAdapter: BcryptAdapter,
-        protected authRepository:AuthRepository,
+        protected refreshTokenRepository: RefreshTokenRepository,
     ) {
     }
 
@@ -138,12 +138,12 @@ export class AuthService {
 
     async refreshTokens(oldRefreshToken: string) {
 
-        const _oldRefreshToken = new RefreshTokenService(tokenServiceCommands.set, oldRefreshToken)
+        const _oldRefreshToken = new RefreshTokenService("set", oldRefreshToken)
+        const isInBlackList = await this.refreshTokenRepository.findInBlackList(oldRefreshToken)
 
-        if (!_oldRefreshToken.verify()) throw new UnauthorizedException()
+        if (!_oldRefreshToken.verify() || isInBlackList) throw new UnauthorizedException()
 
-
-        await this.authRepository.addRefreshTokenToBlackList(oldRefreshToken);
+        await this.refreshTokenRepository.addToBlackList(oldRefreshToken);
 
         const decodedToken = _oldRefreshToken.decode();
 
@@ -223,5 +223,15 @@ export class AuthService {
         // );
         // if (!sessionIsCreate) return null;
         return {accessToken, refreshToken};
+    }
+
+    async logout(oldRefreshToken: string) {
+
+        const _oldRefreshToken = new RefreshTokenService("set", oldRefreshToken)
+        const isInBlackList = await this.refreshTokenRepository.findInBlackList(oldRefreshToken)
+
+        if (!_oldRefreshToken.verify() || isInBlackList) throw new UnauthorizedException()
+
+        await this.refreshTokenRepository.addToBlackList(oldRefreshToken);
     }
 }

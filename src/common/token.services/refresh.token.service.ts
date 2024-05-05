@@ -1,21 +1,25 @@
-import { Injectable } from '@nestjs/common';
-import { appSettings } from '../../../../settings/app.settings';
+import { appSettings } from '../../settings/app.settings';
 import { JwtPayload } from 'jsonwebtoken';
-import { BaseToken } from '../../../../base/base.classes/base.token';
+import { BaseToken } from '../../base/base.classes/base.token';
 import {
   RefreshTokenDecodedDto,
   RefreshTokenPayloadDto,
-} from '../../../../common/token.services/types/refresh.token';
+} from './types/refresh.token';
 import {
   createTokenStatusesKeysType,
   tokenServiceCommands,
-} from '../../../../common/token.services/utils/common';
-import { ConfirmationCodePayload } from '../../../../common/token.services/types/email.confirmation.code';
+} from './utils/common';
+import { ConfirmationCodePayload } from './types/email.confirmation.code';
+import {Inject, Injectable} from "@nestjs/common";
+import {RefreshTokenRepository} from "../../features/auth/infrastructure/refresh.token.repository";
+import {ModulesContainer, NestContainer} from "@nestjs/core";
+import {AuthService} from "../../features/auth/application/auth.service";
 
 export class RefreshTokenService extends BaseToken<
   RefreshTokenPayloadDto,
   RefreshTokenDecodedDto
 > {
+
   constructor(
     status: createTokenStatusesKeysType = tokenServiceCommands.empty,
     payload: RefreshTokenPayloadDto | string | null = null,
@@ -26,7 +30,16 @@ export class RefreshTokenService extends BaseToken<
       appSettings.api.JWT_SECRET_KEY,
       appSettings.api.REFRESH_TOKEN_EXPIRATION_TIME,
     );
+
   }
+
+async addToBLackList(){
+ //   await this.refreshTokenRepository.addToBlackList(this.get())
+}
+
+async isInBlackList(){
+//  return  await this.refreshTokenRepository.findInBlackList(this.get())
+}
 
   tokenMapper(decodedToken: JwtPayload): RefreshTokenDecodedDto {
     return {
@@ -36,7 +49,10 @@ export class RefreshTokenService extends BaseToken<
       exp: decodedToken.exp,
     };
   }
+
   tokenModelMapper(token: string): any {
     return { accessToken: token };
   }
+
+
 }

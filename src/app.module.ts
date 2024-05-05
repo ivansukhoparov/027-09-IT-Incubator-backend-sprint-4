@@ -51,8 +51,11 @@ import {PostsLikesQueryRepository} from "./features/likes/infrastructure/posts.l
 import {PostsLikesRepository} from "./features/likes/infrastructure/posts.likes.repository";
 import {IsBlogExistConstraint} from "./infrastructure/decorators/validate/is.blog.exist";
 import {ThrottlerModule} from "@nestjs/throttler";
-import {RefreshTokenBlackList, RefreshTokenBlackListSchema} from "./features/auth/infrastructure/auth.schema";
-import {AuthRepository} from "./features/auth/infrastructure/auth.repository";
+import {RefreshTokenBlackList, RefreshTokenBlackListSchema} from "./features/auth/infrastructure/refresh.token.schema";
+import {RefreshTokenRepository} from "./features/auth/infrastructure/refresh.token.repository";
+import {RefreshTokenService} from "./common/token.services/refresh.token.service";
+import {BaseToken} from "./base/base.classes/base.token";
+import {TestBaseClass} from "./base/base.classes/base.test";
 
 const controllers = [
   AuthController,
@@ -71,7 +74,7 @@ const services = [
   TestingService,
   CommentsService,
   CommentsLikesService,
-  PostsLikesService,
+  PostsLikesService
 ];
 const repositories = [
   UsersRepository,
@@ -84,7 +87,7 @@ const repositories = [
   PostsLikesRepository,
 ];
 const queryRepositories = [
-  AuthRepository,
+  RefreshTokenRepository,
   UsersQueryRepository,
   BlogsQueryRepository,
   PostsQueryRepository,
@@ -98,6 +101,7 @@ const providers = [
   JwtTokenAdapter,
   BcryptAdapter,
   IsBlogExistConstraint,
+  TestBaseClass
 ];
 
 @Module({

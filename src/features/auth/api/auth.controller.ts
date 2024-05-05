@@ -14,7 +14,7 @@ import {LoginInputModel, UserEmailDto} from './models/login.input.model';
 import {Response, Request} from 'express';
 import {SkipThrottle, ThrottlerGuard} from "@nestjs/throttler";
 import {AuthGuard} from "../../../infrastructure/guards/admin-auth-guard.service";
-import {RefreshTokenService} from "../../tokens/refresh.token/application/refresh.token.service";
+import {RefreshTokenService} from "../../../common/token.services/refresh.token.service";
 import {tokenServiceCommands} from "../../../common/token.services/utils/common";
 import {UsersQueryRepository} from "../../users/infrastructure/users.query.repository";
 import {AccessTokenService} from "../../../common/token.services/access.token.service";
@@ -114,8 +114,7 @@ export class AuthController {
     @HttpCode(HttpStatus.NO_CONTENT)
     async logout(@Req() req: Request, @Res({passthrough: true}) res: Response) {
         try {
-            const refreshToken = new RefreshTokenService(tokenServiceCommands.set, req.cookies.refreshToken)
-            if (!refreshToken.verify())  throw new UnauthorizedException()
+            await this.authService.logout(req.cookies.refreshToken)
             return
         } catch {
             throw new UnauthorizedException()
