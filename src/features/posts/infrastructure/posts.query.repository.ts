@@ -6,15 +6,15 @@ import { PostOutputDto } from '../types/output';
 import { postMapper, PostsLikesInfoType } from '../types/mapper';
 import { QuerySortType } from '../../common/types';
 import { BlogsQueryRepository } from '../../blogs/infrastructure/blogs.query.repository';
-import {LikeStatusType} from "../../likes/types/input";
-import {PostsLikesQueryRepository} from "../../likes/infrastructure/posts.likes.query.repository";
+import { LikeStatusType } from '../../likes/types/input';
+import { PostsLikesQueryRepository } from '../../likes/infrastructure/posts.likes.query.repository';
 
 @Injectable()
 export class PostsQueryRepository {
   constructor(
     @InjectModel(Post.name) private postModel: Model<PostDocument>,
     protected blogsQueryRepository: BlogsQueryRepository,
-    protected  postsLikesQueryRepository: PostsLikesQueryRepository,
+    protected postsLikesQueryRepository: PostsLikesQueryRepository,
   ) {}
 
   async getAllPosts(
@@ -45,7 +45,10 @@ export class PostsQueryRepository {
     const mappedPosts: PostOutputDto[] = [];
 
     for (let i = 0; i < posts.length; i++) {
-      const likes = await this.postsLikesQueryRepository.getLikes(posts[i]._id.toString(), userId);
+      const likes = await this.postsLikesQueryRepository.getLikes(
+        posts[i]._id.toString(),
+        userId,
+      );
       mappedPosts.push(postMapper(posts[i], likes));
     }
 
@@ -82,5 +85,4 @@ export class PostsQueryRepository {
       throw new NotFoundException();
     }
   }
-
 }

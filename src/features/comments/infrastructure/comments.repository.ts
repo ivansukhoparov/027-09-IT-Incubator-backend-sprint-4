@@ -4,7 +4,7 @@ import { CommentDocument, Comments } from './comments.schema';
 import { Model } from 'mongoose';
 import { commentMapper } from '../types/mapper';
 import { ObjectId } from 'mongodb';
-import {UpdateCommentInputModel} from "../api/models/comments.input.models";
+import { UpdateCommentInputModel } from '../api/models/comments.input.models';
 
 @Injectable()
 export class CommentsRepository {
@@ -12,20 +12,19 @@ export class CommentsRepository {
     @InjectModel(Comments.name) private commentModel: Model<Comments>,
   ) {}
 
-
-  async getCommentById(commentId:string) {
-    const comment:CommentDocument = await this.commentModel.findById(commentId);
- if (comment){
-   return comment
+  async getCommentById(commentId: string) {
+    const comment: CommentDocument =
+      await this.commentModel.findById(commentId);
+    if (comment) {
+      return comment;
     } else {
       throw new NotFoundException();
     }
-
   }
 
-  async createComment(commentDto: Comments):Promise<string> {
-      const newComment = await this.commentModel.create(commentDto);
-      return newComment._id.toString();
+  async createComment(commentDto: Comments): Promise<string> {
+    const newComment = await this.commentModel.create(commentDto);
+    return newComment._id.toString();
   }
 
   async updateComment(id: string, updateDto: UpdateCommentInputModel) {
@@ -40,13 +39,12 @@ export class CommentsRepository {
     }
   }
 
-  async deleteComment(id:string){
+  async deleteComment(id: string) {
     try {
-      await this.commentModel.deleteOne({_id: new ObjectId(id)})
+      await this.commentModel.deleteOne({ _id: new ObjectId(id) });
       return true;
     } catch {
       throw new NotFoundException();
     }
-
   }
 }

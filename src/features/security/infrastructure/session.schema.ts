@@ -1,42 +1,39 @@
-import {Prop, Schema, SchemaFactory} from '@nestjs/mongoose';
-import {HydratedDocument} from 'mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { HydratedDocument } from 'mongoose';
 
 export type SessionDocument = HydratedDocument<Session>;
 
 @Schema()
 class RefreshTokenSchema {
-    @Prop()
-    createdAt: number
+  @Prop()
+  createdAt: number;
 
-    @Prop()
-    expiredAt: number
+  @Prop()
+  expiredAt: number;
 }
 
 @Schema()
 export class Session {
-    @Prop()
-    userId: string
+  @Prop()
+  userId: string;
 
-    @Prop()
-    deviceId: string
+  @Prop()
+  deviceId: string;
 
-    @Prop()
-    deviceTitle: string
+  @Prop()
+  deviceTitle: string;
 
-    @Prop()
-    ip: string
+  @Prop()
+  ip: string;
 
-    @Prop()
-    lastActiveDate: number
+  @Prop()
+  lastActiveDate: number;
 
-    @Prop({type: RefreshTokenSchema})
-    refreshToken: {
-        createdAt: number
-        expiredAt: number
-    }
+  @Prop({ type: RefreshTokenSchema })
+  refreshToken: {
+    createdAt: number;
+    expiredAt: number;
+  };
 }
-
-
-
 
 export const SessionSchema = SchemaFactory.createForClass(Session);

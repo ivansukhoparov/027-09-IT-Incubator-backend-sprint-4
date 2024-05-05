@@ -20,7 +20,7 @@ export class Comments {
   @Prop()
   postId: string;
 
-@Prop({type: CommentatorInfo})
+  @Prop({ type: CommentatorInfo })
   commentatorInfo: {
     userId: string;
     userLogin: string;
@@ -31,5 +31,3 @@ export class Comments {
 }
 
 export const CommentSchema = SchemaFactory.createForClass(Comments);
-
-

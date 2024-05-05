@@ -5,8 +5,11 @@ import { Blog } from '../../blogs/infrastructure/blogs.schema';
 import { Post } from '../../posts/infrastructure/posts.schema';
 import { appSettings } from '../../../settings/app.settings';
 import { User } from '../../users/infrastructure/users.schema';
-import {Comments} from "../../comments/infrastructure/comments.schema";
-import {CommentLikes, PostsLikes} from "../../likes/infrastructure/likes.schema";
+import { Comments } from '../../comments/infrastructure/comments.schema';
+import {
+  CommentLikes,
+  PostsLikes,
+} from '../../likes/infrastructure/likes.schema';
 
 @Injectable()
 export class TestingRepository {
@@ -16,7 +19,8 @@ export class TestingRepository {
     @InjectModel(User.name) private userModel: Model<User>,
     @InjectModel(Comments.name) private commentsModel: Model<User>,
     @InjectModel(PostsLikes.name) private postsLikesModel: Model<PostsLikes>,
-    @InjectModel(CommentLikes.name) private commentLikesModel: Model<CommentLikes>,
+    @InjectModel(CommentLikes.name)
+    private commentLikesModel: Model<CommentLikes>,
   ) {}
 
   // async dropDb() {

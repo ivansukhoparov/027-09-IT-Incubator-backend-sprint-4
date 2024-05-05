@@ -12,11 +12,7 @@ export class InterlayerNotice<D = null> {
     this.data = data;
   }
 
-  addError(
-    message: string,
-    key: string,
-    code: number,
-  ) {
+  addError(message: string, key: string, code: number) {
     this.extension.key = key;
     this.extension.msg = message;
     this.code = code;

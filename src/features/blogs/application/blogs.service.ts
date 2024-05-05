@@ -12,13 +12,12 @@ import {
 export class BlogsService {
   constructor(protected blogsRepository: BlogsRepository) {}
 
-  async getBlogById(id:string){
-    return this.blogsRepository.getBlogById(id)
+  async getBlogById(id: string) {
+    return this.blogsRepository.getBlogById(id);
   }
 
-  async isBLogExist(id:string){
-    return await this.blogsRepository.isBlogExist(id)
-
+  async isBLogExist(id: string) {
+    return await this.blogsRepository.isBlogExist(id);
   }
 
   async createNewBlog(inputModel: CreateBlogInputModel) {

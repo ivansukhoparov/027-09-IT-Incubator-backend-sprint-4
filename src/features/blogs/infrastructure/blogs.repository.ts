@@ -20,16 +20,14 @@ export class BlogsRepository {
     return blogs.map(blogMapper);
   }
 
-  async isBlogExist(id:string){
-    try{
+  async isBlogExist(id: string) {
+    try {
       const blog: BlogDocument = await this.blogModel.findById(id);
       return !!blog;
-    }catch {
-      return false
+    } catch {
+      return false;
     }
   }
-
-
 
   async getBlogById(blogId: string): Promise<BlogDocument> {
     const blog: BlogDocument = await this.blogModel.findById(blogId);

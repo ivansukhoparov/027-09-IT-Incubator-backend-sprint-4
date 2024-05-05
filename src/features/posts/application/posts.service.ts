@@ -17,8 +17,8 @@ export class PostsService {
     protected blogsRepository: BlogsRepository,
   ) {}
 
-  async findById(id:string){
-    return await this.postsRepository.getPostById(id)
+  async findById(id: string) {
+    return await this.postsRepository.getPostById(id);
   }
 
   async createNewPost(createPostInputModel: CreatePostInputModel) {
