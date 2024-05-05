@@ -13,12 +13,12 @@ export class InterlayerNotice<D = null> {
   }
 
   addError(
-    // message: string,
-    // key: string,
+    message: string,
+    key: string,
     code: number,
   ) {
-    // this.extension.key = key;
-    // this.extension.msg = message;
+    this.extension.key = key;
+    this.extension.msg = message;
     this.code = code;
   }
 
