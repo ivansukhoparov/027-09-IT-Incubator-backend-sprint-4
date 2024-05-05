@@ -20,6 +20,10 @@ import {tokenServiceCommands} from '../../../common/token.services/utils/common'
 import {UserCreateInputModel} from '../../users/api/models/user.create.input.model';
 import {LoginInputModel, UserEmailDto} from '../api/models/login.input.model';
 import {RefreshTokenRepository} from "../infrastructure/refresh.token.repository";
+import {SessionsService} from "../../security/application/sessions.service";
+import {SessionInputModel, SessionModel} from "../../security/api/models/session.input.models";
+import uuid4 from "uuid4";
+import {UserDocument} from "../../users/infrastructure/users.schema";
 
 @Injectable()
 export class AuthService {
@@ -28,6 +32,7 @@ export class AuthService {
         private readonly emailService: EmailService,
         private readonly cryptAdapter: BcryptAdapter,
         protected refreshTokenRepository: RefreshTokenRepository,
+        protected sessionService: SessionsService,
     ) {
     }
 
@@ -145,25 +150,10 @@ export class AuthService {
 
         await this.refreshTokenRepository.addToBlackList(oldRefreshToken);
 
-        const decodedToken = _oldRefreshToken.decode();
+        const deviceId = _oldRefreshToken.decode().deviceId
+        const userId = _oldRefreshToken.decode().userId
 
-        // const isSessionUpdate = await this.securityService.updateAuthSession(tokens.refreshToken);
-        // if (!isSessionUpdate) return null;
-
-        const deviceId = '100'; //uuidv4();
-        const accessToken = new AccessTokenService(
-            tokenServiceCommands.create,
-            {userId: decodedToken.userId}
-        );
-        const refreshToken = new RefreshTokenService(
-            tokenServiceCommands.create,
-            {
-                userId: decodedToken.userId,
-                deviceId: decodedToken.deviceId,
-            });
-
-        return {accessToken, refreshToken};
-
+        return await this.sessionService.updateSession(userId, deviceId)
     }
 
     // async passwordRecoveryCode(email: string) {
@@ -193,8 +183,8 @@ export class AuthService {
     //
     // }
 
-    async loginUser(loginDto: LoginInputModel) {
-        const user = await this.userService.getUserByLoginOrEmail(
+    async loginUser(loginDto: LoginInputModel, sessionInputModel: SessionInputModel) {
+        const user: UserDocument = await this.userService.getUserByLoginOrEmail(
             loginDto.loginOrEmail,
         );
         if (!user)
@@ -207,31 +197,19 @@ export class AuthService {
         if (!isSuccess)
             throw new HttpException('Bad login or password', HttpStatus.UNAUTHORIZED);
 
-        const deviceId = '100'; //uuidv4();
-        const accessToken = new AccessTokenService();
-        const refreshToken = new RefreshTokenService();
-        accessToken.create({userId: user._id.toString()});
-        refreshToken.create({
-            userId: user._id.toString(),
-            deviceId: deviceId,
-        });
-
-        // const sessionIsCreate = await this.securityService.createAuthSession(
-        //   tokens.refreshToken,
-        //   deviceTitle,
-        //   ip,
-        // );
-        // if (!sessionIsCreate) return null;
-        return {accessToken, refreshToken};
+        return await this.sessionService.createSession(sessionInputModel, user);
     }
 
     async logout(oldRefreshToken: string) {
 
-        const _oldRefreshToken = new RefreshTokenService("set", oldRefreshToken)
+        const refreshToken = new RefreshTokenService("set", oldRefreshToken)
         const isInBlackList = await this.refreshTokenRepository.findInBlackList(oldRefreshToken)
 
-        if (!_oldRefreshToken.verify() || isInBlackList) throw new UnauthorizedException()
+        if (!refreshToken.verify() || isInBlackList) throw new UnauthorizedException()
 
+        const currentDeviceId = refreshToken.decode().deviceId;
         await this.refreshTokenRepository.addToBlackList(oldRefreshToken);
+        await this.sessionService.terminateSession(currentDeviceId, refreshToken.get())
+
     }
 }
