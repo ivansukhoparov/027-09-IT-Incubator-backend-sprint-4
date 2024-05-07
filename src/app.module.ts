@@ -58,7 +58,7 @@ import {
 import { RefreshTokenRepository } from './features/auth/infrastructure/refresh.token.repository';
 import { RefreshTokenService } from './common/token.services/refresh.token.service';
 import { BaseToken } from './base/base.classes/base.token';
-import { TestBaseClass } from './base/base.classes/base.test';
+
 import {
   Session,
   SessionSchema,
@@ -116,7 +116,6 @@ const providers = [
   JwtTokenAdapter,
   BcryptAdapter,
   IsBlogExistConstraint,
-  TestBaseClass,
 ];
 
 @Module({
