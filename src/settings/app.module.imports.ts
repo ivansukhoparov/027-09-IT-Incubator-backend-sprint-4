@@ -36,6 +36,8 @@ import {NodemailerAdapter} from "../common/adapters/nodemailer.adaper";
 import {JwtTokenAdapter} from "../common/adapters/jwt.token.adapter";
 import {BcryptAdapter} from "../common/adapters/bcrypt.adapter";
 import {IsBlogExistConstraint} from "../infrastructure/decorators/validate/is.blog.exist";
+import {CreateUserUseCase} from "../features/users/use.cases/create.user.use.case";
+import {DeleteUserUseCase} from "../features/users/use.cases/delete.user.use.case";
 
 export const controllers = [
     AuthController,
@@ -85,4 +87,9 @@ export const providers = [
     JwtTokenAdapter,
     BcryptAdapter,
     IsBlogExistConstraint,
+];
+
+export const useCases = [
+    CreateUserUseCase,
+    DeleteUserUseCase,
 ];
