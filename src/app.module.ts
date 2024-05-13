@@ -9,7 +9,7 @@ import {
     services,
     useCases
 } from "./settings/app.module.imports";
-import {mongoModels, mongoModule, throttleModule} from "./settings/app.module.for.features";
+import {mongoModels, mongoModule, throttleModule, typeOrm} from "./settings/app.module.for.features";
 import {CqrsModule} from "@nestjs/cqrs";
 
 
@@ -19,6 +19,7 @@ import {CqrsModule} from "@nestjs/cqrs";
         mongoModule,
         throttleModule,
         mongoModels,
+        typeOrm,
     ],
     controllers: [AppController, ...controllers],
     providers: [

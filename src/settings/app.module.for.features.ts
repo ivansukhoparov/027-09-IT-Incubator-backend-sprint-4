@@ -13,6 +13,7 @@ import {RefreshTokenBlackList, RefreshTokenBlackListSchema} from "../features/au
 import {Session, SessionSchema} from "../features/security/infrastructure/session.schema";
 import {appSettings} from "./app.settings";
 import {ThrottlerModule} from "@nestjs/throttler";
+import {TypeOrmModule} from "@nestjs/typeorm";
 
 export const mongoModels =    MongooseModule.forFeature([
     {
@@ -60,3 +61,16 @@ export const throttleModule = ThrottlerModule.forRoot([
             limit: 5000,
         },
     ])
+
+export const typeOrm = TypeOrmModule.forRoot(
+    {
+      type:"postgres",
+        host:"localhost",
+        port:5432,
+        username:"postgres",
+        password:"sa",
+        database:"bloggers",
+        autoLoadEntities:false,
+        synchronize:false
+    },
+)
