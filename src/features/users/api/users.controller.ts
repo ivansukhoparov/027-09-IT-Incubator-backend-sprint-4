@@ -19,21 +19,22 @@ import {AdminAuthGuard} from '../../../infrastructure/guards/admin-auth-guard.se
 import {CommandBus, QueryBus} from "@nestjs/cqrs";
 import {CreateUserCommand} from "../use.cases/create.user.use.case";
 import {DeleteUserCommand} from "../use.cases/delete.user.use.case";
+import {GetAllUsersQuery} from "../use.cases/get.all.users.use.case";
 
 @Controller('sa/users')
 export class UsersController {
     constructor(
         protected commandBus: CommandBus,
         protected queryBus: QueryBus,
-        protected userService: UsersService,
         protected usersQueryRepository: UsersQueryRepository,
     ) {
     }
 
     @Get()
     async getAll(@Query() query: QueryUsersRequestType) {
-        const {sortData, searchData} = createQuery(query);
-        return await this.usersQueryRepository.getAllUsers(sortData, searchData);
+        // const {sortData, searchData} = createQuery(query);
+        // return await this.usersQueryRepository.getAllUsers(sortData, searchData);
+        return await this.queryBus.execute<GetAllUsersQuery>(new GetAllUsersQuery(query))
     }
 
     @Post()
@@ -42,7 +43,7 @@ export class UsersController {
     async createNew(@Body() inputModel: UserCreateInputModel) {
         //   const newUserId = await this.userService.create(inputModel);
         const createdUserId = await this.commandBus.execute<CreateUserCommand, string>(new CreateUserCommand(inputModel))
-        return await this.usersQueryRepository.getUserById(createdUserId);
+        return await this.usersQueryRepository.getById(createdUserId);
     }
 
     @Delete(':id')

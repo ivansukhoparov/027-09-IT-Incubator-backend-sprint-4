@@ -38,6 +38,7 @@ import {BcryptAdapter} from "../common/adapters/bcrypt.adapter";
 import {IsBlogExistConstraint} from "../infrastructure/decorators/validate/is.blog.exist";
 import {CreateUserUseCase} from "../features/users/use.cases/create.user.use.case";
 import {DeleteUserUseCase} from "../features/users/use.cases/delete.user.use.case";
+import {GetAllUsersUseCase} from "../features/users/use.cases/get.all.users.use.case";
 
 export const controllers = [
     AuthController,
@@ -92,4 +93,5 @@ export const providers = [
 export const useCases = [
     CreateUserUseCase,
     DeleteUserUseCase,
+    GetAllUsersUseCase,
 ];

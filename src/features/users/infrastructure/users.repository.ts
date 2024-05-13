@@ -60,4 +60,17 @@ export class UsersRepository {
             return false;
         }
     }
+
+    async getMany(searchKey:any,sortKey:any,skipped:number,pageSize:number) {
+        return this.userModel
+            .find(searchKey)
+            .sort(sortKey)
+            .skip(skipped)
+            .limit(pageSize)
+            .lean();
+    }
+
+    async countOfDocuments (searchKey:any){
+        return this.userModel.countDocuments(searchKey)
+    }
 }
