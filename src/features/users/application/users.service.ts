@@ -1,4 +1,4 @@
-import { UsersRepository } from '../infrastructure/users.repository';
+import { UsersRepository } from '../infrastructure/mongo/users.repository';
 import { Injectable } from '@nestjs/common';
 import { UserType } from '../types/output';
 import { BcryptAdapter } from '../../../common/adapters/bcrypt.adapter';

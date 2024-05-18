@@ -7,7 +7,9 @@ import {userMapper, userMeMapper} from '../types/mapper';
 import {IQueryHandler, QueryHandler} from "@nestjs/cqrs";
 import {User} from "../infrastructure/users.schema";
 import {UsersQueryRepository} from "../infrastructure/users.query.repository";
-import {UsersRepository} from "../infrastructure/users.repository";
+
+
+
 
 export class GetAllUsersQuery {
 
@@ -30,10 +32,11 @@ export class GetAllUsersQuery {
 
 @QueryHandler(GetAllUsersQuery)
 export class GetAllUsersUseCase implements IQueryHandler<GetAllUsersQuery> {
-    constructor(protected usersRepository: UsersRepository) {
+    constructor(protected usersQueryRepository: UsersQueryRepository) {
     }
 
-    async execute(query: GetAllUsersQuery) {
+    async execute(query: GetAllUsersQuery)
+    {
         let sortKey = {};
         let searchKey = {};
 
@@ -56,7 +59,7 @@ export class GetAllUsersUseCase implements IQueryHandler<GetAllUsersQuery> {
             searchKey = {$or: searchKeysArray};
         }
         // calculate limits for DB request
-        const documentsTotalCount = await this.usersRepository.countOfDocuments(searchKey); // Receive total count of blogs
+        const documentsTotalCount = await this.usersQueryRepository.countOfDocuments(searchKey); // Receive total count of blogs
         const pageCount = Math.ceil(documentsTotalCount / +query.sortData.pageSize); // Calculate total pages count according to page size
         const skippedDocuments = (+query.sortData.pageNumber - 1) * +query.sortData.pageSize; // Calculate count of skipped docs before requested page
 
@@ -68,7 +71,7 @@ export class GetAllUsersUseCase implements IQueryHandler<GetAllUsersQuery> {
         else sortKey = {createdAt: query.sortData.sortDirection};
 
         // Get documents from DB
-        const users = await this.usersRepository.getMany(searchKey, sortKey, +skippedDocuments, +query.sortData.pageSize)
+        const users = await this.usersQueryRepository.getMany(searchKey, sortKey, +skippedDocuments, +query.sortData.pageSize)
 
         return {
             pagesCount: pageCount,

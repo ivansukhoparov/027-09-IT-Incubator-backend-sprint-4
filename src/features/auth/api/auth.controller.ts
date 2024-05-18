@@ -19,7 +19,7 @@ import { SkipThrottle, ThrottlerGuard } from '@nestjs/throttler';
 import { AuthGuard } from '../../../infrastructure/guards/admin-auth-guard.service';
 import { RefreshTokenService } from '../../../common/token.services/refresh.token.service';
 import { tokenServiceCommands } from '../../../common/token.services/utils/common';
-import { UsersQueryRepository } from '../../users/infrastructure/users.query.repository';
+import { UsersQueryRepository } from '../../users/infrastructure/mongo/users.query.repository';
 import { AccessTokenService } from '../../../common/token.services/access.token.service';
 import { SessionInputModel } from '../../security/api/models/session.input.models';
 

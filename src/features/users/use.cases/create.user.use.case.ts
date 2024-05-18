@@ -1,10 +1,11 @@
-import {UsersRepository} from '../infrastructure/users.repository';
+
 import {CreateUserDto, UserType} from '../types/output';
 import {BcryptAdapter} from '../../../common/adapters/bcrypt.adapter';
 import {UserCreateInputModel} from '../api/models/user.create.input.model';
 import {CommandHandler, ICommandHandler} from "@nestjs/cqrs";
 import {UsersQueryRepositorySql} from "../infrastructure/sql/users.query.repository.sql";
 import {UsersRepositorySql} from "../infrastructure/sql/users.repository.sql";
+import {UsersRepository} from "../infrastructure/users.repository";
 
 export class CreateUserCommand {
     login: string;
@@ -22,7 +23,7 @@ export class CreateUserCommand {
 @CommandHandler(CreateUserCommand)
 export class CreateUserUseCase implements ICommandHandler<CreateUserCommand> {
     constructor(
-        private readonly usersRepository: UsersRepositorySql,
+        private readonly usersRepository: UsersRepository,
         private readonly cryptAdapter: BcryptAdapter,
     ) {
     }

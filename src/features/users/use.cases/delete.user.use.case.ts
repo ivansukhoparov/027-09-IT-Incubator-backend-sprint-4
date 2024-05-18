@@ -1,9 +1,10 @@
-import { UsersRepository } from '../infrastructure/users.repository';
+
 import { Injectable } from '@nestjs/common';
 import { UserType } from '../types/output';
 import { BcryptAdapter } from '../../../common/adapters/bcrypt.adapter';
 import { UserCreateInputModel } from '../api/models/user.create.input.model';
 import {CommandHandler, ICommandHandler} from "@nestjs/cqrs";
+import {UsersRepository} from "../infrastructure/users.repository";
 
 export class DeleteUserCommand{
   constructor (public userId:string){}

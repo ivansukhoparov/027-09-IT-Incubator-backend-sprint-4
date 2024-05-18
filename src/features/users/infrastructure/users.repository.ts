@@ -1,26 +1,38 @@
 import {Injectable, NotFoundException} from '@nestjs/common';
-import {InjectModel} from '@nestjs/mongoose';
-import {Model} from 'mongoose';
-import {User} from './users.schema';
-import {ObjectId} from 'mongodb';
-import {UserUpdateDto} from '../types/input';
-import {CreateUserDto} from "../types/output";
+
+import {InjectDataSource} from "@nestjs/typeorm";
+import {DataSource} from "typeorm";
 import {IUsersRepository} from "./interfaces/users.repository.interface";
+import {CreateUserDto} from "../types/output";
+import {User} from "./users.schema";
+import {UserUpdateDto} from "../types/input";
 
 @Injectable()
 export class UsersRepository implements IUsersRepository {
-    constructor(@InjectModel(User.name) private userModel: Model<User>) {
+    constructor(@InjectDataSource() protected dataSource: DataSource) {
     }
 
-    async createUser(newUserDto: CreateUserDto | User) {
-        const newUser = {...newUserDto, createdAt: new Date().toISOString(),}
-        const result = await this.userModel.create(newUser);
-        return result._id.toString();
+    async createUser(newUserDto: CreateUserDto | User): Promise<string> {
+        try {
+            const result = await this.dataSource.query(`
+            INSERT INTO "Users"
+            ("login","email","hash","isConfirmed")
+            values('${newUserDto.login}','${newUserDto.email}','${newUserDto.hash}','${newUserDto.isConfirmed}')
+            RETURNING id
+        `)
+            console.log("result ", result[0].id)
+            return result[0].id
+        } catch {
+            throw new NotFoundException();
+        }
     }
 
     async getUserById(id: string) {
         try {
-            return await this.userModel.findById(id);
+            return await this.dataSource.query(`
+            SELECT * FROM "Users"
+            WHERE "id" = '${id}'
+        `)
         } catch {
             throw new NotFoundException();
         }
@@ -28,50 +40,46 @@ export class UsersRepository implements IUsersRepository {
 
     async getUserByLoginOrEmail(loginOrEmail: string) {
         try {
-            const searchKey = {
-                $or: [{login: loginOrEmail}, {email: loginOrEmail}],
-            };
-            const user = await this.userModel.findOne(searchKey);
-            if (!user) return null;
-            return user;
-        } catch (err) {
-            return null;
-        }
-    }
-
-    async deleteUser(id: string) {
-        try {
-            const result = await this.userModel.deleteOne({_id: new ObjectId(id)});
-            if (result.deletedCount !== 1) throw new NotFoundException();
+            return await this.dataSource.query(`
+            SELECT * FROM "Users"
+            WHERE ("login" = '${loginOrEmail}') OR ("email" = '${loginOrEmail}')
+        `)
         } catch {
             throw new NotFoundException();
         }
     }
 
-    async updateUser(id: string, userUpdateDto: UserUpdateDto) {
+    async deleteUser(id: string) {
         try {
-            const isUpdate = await this.userModel.findOneAndUpdate(
-                {_id: new ObjectId(id)},
-                userUpdateDto,
-                {new: true},
-            );
-            if (isUpdate) return true;
-            else return false;
-        } catch (err) {
-            return false;
+            return await this.dataSource.query(`
+            DELETE * FROM "Users"
+            WHERE "id" = '${id}'
+        `)
+        } catch {
+            throw new NotFoundException();
         }
     }
 
-    async getMany(searchKey:any,sortKey:any,skipped:number,pageSize:number) {
-        return this.userModel
-            .find(searchKey)
-            .sort(sortKey)
-            .skip(skipped)
-            .limit(pageSize)
-            .lean();
+    async updateUser(id: string, userUpdateDto: UserUpdateDto): Promise<boolean> {
+        try{
+            const setData = Object.keys(userUpdateDto)
+                .map((key: any) => {
+                    return `"${key}"='${userUpdateDto[key]}'`
+                })
+                .join()
+
+           const result = await this.dataSource.query(`
+            UPDATE "Users"
+            SET ${setData}
+            WHERE "id" = $1
+        `, [id])
+            console.log(result)
+            return !!result[1]
+        } catch (err) {
+            console.log(err)
+            throw new NotFoundException();
+        }
     }
 
-    async countOfDocuments (searchKey:any){
-        return this.userModel.countDocuments(searchKey)
-    }
+
 }

@@ -14,7 +14,7 @@ import {CommentsService} from "../features/comments/application/comments.service
 import {CommentsLikesService} from "../features/likes/application/comments.likes.service";
 import {PostsLikesService} from "../features/likes/application/posts.likes.service";
 import {SessionsService} from "../features/security/application/sessions.service";
-import {UsersRepository} from "../features/users/infrastructure/users.repository";
+import {UsersRepository} from "../features/users/infrastructure/mongo/users.repository";
 import {BlogsRepository} from "../features/blogs/infrastructure/blogs.repository";
 import {PostsRepository} from "../features/posts/infrastructure/posts.repository";
 import {TestingRepository} from "../features/testing/infrastucture/testing.repository";
@@ -24,7 +24,7 @@ import {PostsLikesQueryRepository} from "../features/likes/infrastructure/posts.
 import {PostsLikesRepository} from "../features/likes/infrastructure/posts.likes.repository";
 import {SessionsRepository} from "../features/security/infrastructure/sessions.repository";
 import {RefreshTokenRepository} from "../features/auth/infrastructure/refresh.token.repository";
-import {UsersQueryRepository} from "../features/users/infrastructure/users.query.repository";
+import {UsersQueryRepository} from "../features/users/infrastructure/mongo/users.query.repository";
 import {BlogsQueryRepository} from "../features/blogs/infrastructure/blogs.query.repository";
 import {PostsQueryRepository} from "../features/posts/infrastructure/posts.query.repository";
 import {CommentsQueryRepository} from "../features/comments/infrastructure/comments.query.repository";
@@ -44,7 +44,7 @@ import {UsersRepositorySql} from "../features/users/infrastructure/sql/users.rep
 
 export const controllers = [
     AuthController,
-    UsersController,
+
     BlogsController,
     PostsController,
     CommentsController,
@@ -53,10 +53,9 @@ export const controllers = [
 ];
 export const services = [
     AuthService,
-    UsersService,
+
     BlogsService,
     PostsService,
-    UsersService,
     TestingService,
     CommentsService,
     CommentsLikesService,
@@ -73,12 +72,10 @@ export const repositories = [
     PostsLikesQueryRepository,
     PostsLikesRepository,
     SessionsRepository,
-    UsersQueryRepositorySql,
-    UsersRepositorySql
 ];
 export const queryRepositories = [
     RefreshTokenRepository,
-    UsersQueryRepository,
+
     BlogsQueryRepository,
     PostsQueryRepository,
     CommentsQueryRepository,
