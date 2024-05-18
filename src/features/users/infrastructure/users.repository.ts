@@ -17,9 +17,10 @@ export class UsersRepository implements IUsersRepository {
             const result = await this.dataSource.query(`
             INSERT INTO "Users"
             ("login","email","hash","isConfirmed")
-            values('${newUserDto.login}','${newUserDto.email}','${newUserDto.hash}','${newUserDto.isConfirmed}')
+            values($1,$2,$3,$4')
             RETURNING id
-        `)
+        `,
+                [newUserDto.login,newUserDto.email,newUserDto.hash,newUserDto.isConfirmed])
             console.log("result ", result[0].id)
             return result[0].id
         } catch {
@@ -31,8 +32,9 @@ export class UsersRepository implements IUsersRepository {
         try {
             return await this.dataSource.query(`
             SELECT * FROM "Users"
-            WHERE "id" = '${id}'
-        `)
+                WHERE "id" = $1
+        `,
+                [id])
         } catch {
             throw new NotFoundException();
         }
@@ -42,8 +44,9 @@ export class UsersRepository implements IUsersRepository {
         try {
             return await this.dataSource.query(`
             SELECT * FROM "Users"
-            WHERE ("login" = '${loginOrEmail}') OR ("email" = '${loginOrEmail}')
-        `)
+            WHERE ("login" = $1 OR ("email" = $1)
+        `,
+                [loginOrEmail])
         } catch {
             throw new NotFoundException();
         }
@@ -53,30 +56,30 @@ export class UsersRepository implements IUsersRepository {
         try {
             return await this.dataSource.query(`
             DELETE * FROM "Users"
-            WHERE "id" = '${id}'
-        `)
+             WHERE "id" = $1
+        `,
+                [id])
         } catch {
             throw new NotFoundException();
         }
     }
 
     async updateUser(id: string, userUpdateDto: UserUpdateDto): Promise<boolean> {
-        try{
+        try {
             const setData = Object.keys(userUpdateDto)
                 .map((key: any) => {
                     return `"${key}"='${userUpdateDto[key]}'`
                 })
                 .join()
 
-           const result = await this.dataSource.query(`
+            const result = await this.dataSource.query(`
             UPDATE "Users"
             SET ${setData}
             WHERE "id" = $1
-        `, [id])
-            console.log(result)
+        `,
+                [id])
             return !!result[1]
         } catch (err) {
-            console.log(err)
             throw new NotFoundException();
         }
     }
