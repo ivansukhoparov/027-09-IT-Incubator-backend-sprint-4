@@ -5,7 +5,7 @@ import {User} from './users.schema';
 import {ObjectId} from 'mongodb';
 import {UserUpdateDto} from '../types/input';
 import {CreateUserDto} from "../types/output";
-import {IUsersRepository} from "./users.repository.interface";
+import {IUsersRepository} from "./interfaces/users.repository.interface";
 
 @Injectable()
 export class UsersRepository implements IUsersRepository {
