@@ -1,13 +1,36 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { User } from './users.schema';
+import {User, UserDocument} from './users.schema';
 import { Model } from 'mongoose';
 import { QuerySearchType, QuerySortType } from '../../common/types';
 import { userMapper, userMeMapper } from '../types/mapper';
+import {IUsersQueryRepository} from "./interfaces/users.query.repository.interface";
+import {UserOutputDto, UserOutputMeType} from "../types/output";
 
 @Injectable()
-export class UsersQueryRepository {
+export class UsersQueryRepository implements IUsersQueryRepository {
   constructor(@InjectModel(User.name) private userModel: Model<User>) {}
+
+
+  async getById(id: string):Promise<UserOutputDto> {
+    try {
+      const user:UserDocument = await this.userModel.findById(id);
+      if (!user) throw new NotFoundException();
+      return userMapper(user);
+    } catch {
+      throw new NotFoundException();
+    }
+  }
+
+  async getUserAuthMe(id: string):Promise<UserOutputMeType> {
+    try {
+      const user:UserDocument = await this.userModel.findById(id);
+      if (!user) throw new NotFoundException();
+      return userMeMapper(user);
+    } catch {
+      throw new NotFoundException();
+    }
+  }
 
 
   // async getAllUsers(sortData: QuerySortType, searchData: QuerySearchType) {
@@ -61,26 +84,4 @@ export class UsersQueryRepository {
   //   };
   // }}
 
-
-
-
-  async getById(id: string) {
-    try {
-      const user = await this.userModel.findById(id);
-      if (!user) throw new NotFoundException();
-      return userMapper(user);
-    } catch {
-      throw new NotFoundException();
-    }
-  }
-
-  async getUserAuthMe(id: string) {
-    try {
-      const user = await this.userModel.findById(id);
-      if (!user) throw new NotFoundException();
-      return userMeMapper(user);
-    } catch {
-      throw new NotFoundException();
-    }
-  }
 }
