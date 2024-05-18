@@ -39,6 +39,8 @@ import {IsBlogExistConstraint} from "../infrastructure/decorators/validate/is.bl
 import {CreateUserUseCase} from "../features/users/use.cases/create.user.use.case";
 import {DeleteUserUseCase} from "../features/users/use.cases/delete.user.use.case";
 import {GetAllUsersUseCase} from "../features/users/use.cases/get.all.users.use.case";
+import {UsersQueryRepositorySql} from "../features/users/infrastructure/sql/users.query.repository.sql";
+import {UsersRepositorySql} from "../features/users/infrastructure/sql/users.repository.sql";
 
 export const controllers = [
     AuthController,
@@ -71,6 +73,8 @@ export const repositories = [
     PostsLikesQueryRepository,
     PostsLikesRepository,
     SessionsRepository,
+    UsersQueryRepositorySql,
+    UsersRepositorySql
 ];
 export const queryRepositories = [
     RefreshTokenRepository,

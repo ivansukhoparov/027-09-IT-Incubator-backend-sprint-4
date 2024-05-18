@@ -64,7 +64,7 @@ export const throttleModule = ThrottlerModule.forRoot([
 
 export const typeOrm = TypeOrmModule.forRoot(
     {
-      type:"postgres",
+          type:"postgres",
         host:"localhost",
         port:5432,
         username:"postgres",

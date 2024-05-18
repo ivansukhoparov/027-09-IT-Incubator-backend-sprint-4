@@ -6,7 +6,7 @@ import {
     HttpCode,
     HttpStatus,
     Param,
-    Post,
+    Post, Put,
     Query,
     UseGuards,
 } from '@nestjs/common';
@@ -20,6 +20,8 @@ import {CommandBus, QueryBus} from "@nestjs/cqrs";
 import {CreateUserCommand} from "../use.cases/create.user.use.case";
 import {DeleteUserCommand} from "../use.cases/delete.user.use.case";
 import {GetAllUsersQuery} from "../use.cases/get.all.users.use.case";
+import {UsersQueryRepositorySql} from "../infrastructure/sql/users.query.repository.sql";
+import {UsersRepositorySql} from "../infrastructure/sql/users.repository.sql";
 
 @Controller('sa/users')
 export class UsersController {
@@ -27,6 +29,8 @@ export class UsersController {
         protected commandBus: CommandBus,
         protected queryBus: QueryBus,
         protected usersQueryRepository: UsersQueryRepository,
+        protected usersQueryRepositorySql: UsersQueryRepositorySql,
+        protected userRepo:UsersRepositorySql
     ) {
     }
 
@@ -35,6 +39,11 @@ export class UsersController {
         // const {sortData, searchData} = createQuery(query);
         // return await this.usersQueryRepository.getAllUsers(sortData, searchData);
         return await this.queryBus.execute<GetAllUsersQuery>(new GetAllUsersQuery(query))
+    }
+
+    @Get(":id")
+    async getById(@Param("id") id: string) {
+        return await this.usersQueryRepositorySql.getById(id)
     }
 
     @Post()
@@ -52,6 +61,15 @@ export class UsersController {
     async deleteById(@Param('id') id: string) {
         // await this.userService.delete(id);
         await this.commandBus.execute<DeleteUserCommand, string>(new DeleteUserCommand(id))
+        return;
+    }
+
+    @Put(':id')
+    @UseGuards(AdminAuthGuard)
+    @HttpCode(HttpStatus.NO_CONTENT)
+    async updateUser(@Param('id') id: string) {
+        // await this.userService.delete(id);
+        await this.userRepo.updateUser(id,{login:"newLogin"})
         return;
     }
 }
