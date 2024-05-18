@@ -1,6 +1,6 @@
-import {User} from "./users.schema";
-import {CreateUserDto} from "../types/output";
-import {UserUpdateDto} from "../types/input";
+import {User} from "../users.schema";
+import {CreateUserDto} from "../../types/output";
+import {UserUpdateDto} from "../../types/input";
 
 
 export interface IUsersRepository {
