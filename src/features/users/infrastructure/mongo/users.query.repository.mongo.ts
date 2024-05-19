@@ -2,7 +2,6 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from '../users.schema';
 import { Model } from 'mongoose';
-import { QuerySearchType, QuerySortType } from '../../../common/types';
 import { userMapper, userMeMapper } from '../../types/mapper';
 import { IUsersQueryRepository } from '../interfaces/users.query.repository.interface';
 import { UserOutputDto, UserOutputMeType } from '../../types/output';
@@ -81,4 +80,17 @@ export class UsersQueryRepositoryMongo implements IUsersQueryRepository {
   //     items: users.map(userMapper),
   //   };
   // }}
+
+  async getMany(
+    searchKey: any,
+    sortKey: any,
+    skipped: number,
+    pageSize: number,
+  ) {
+    return [];
+  }
+
+  async countOfDocuments(searchKey: any) {
+    return 0;
+  }
 }

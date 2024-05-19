@@ -1,6 +1,4 @@
 import { LikeStatusType } from '../../types/input';
-import { CONTAINS, Contains, EQUALS, IsIn } from 'class-validator';
-import { Prop } from '@nestjs/mongoose';
 
 export class BaseOutputLikesModel {}
 

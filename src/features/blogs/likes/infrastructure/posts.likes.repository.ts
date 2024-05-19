@@ -1,8 +1,7 @@
 import { ObjectId } from 'mongodb';
-import { Comments } from '../../comments/infrastructure/comments.schema';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { CommentLikes, PostsLikes } from './likes.schema';
+import { PostsLikes } from './likes.schema';
 import { Model } from 'mongoose';
 import { Post } from '../../posts/infrastructure/posts.schema';
 

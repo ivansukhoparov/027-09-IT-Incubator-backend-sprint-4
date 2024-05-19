@@ -8,12 +8,9 @@ import { Model } from 'mongoose';
 import { CommentDocument, Comments } from './comments.schema';
 import { commentMapper } from '../types/mapper';
 import { LikesInfoType, OutputCommentType } from '../types/output';
-
-import { LikeStatusType } from '../../likes/types/input';
 import { CommentsLikesQueryRepository } from '../../likes/infrastructure/commets.likes.query.repository';
-import { SortCommentsType } from '../types/input';
-import { QuerySortType, ViewModelType } from '../../common/types';
 import { PostsService } from '../../posts/application/posts.service';
+import { QuerySortType, ViewModelType } from '../../../common/types';
 
 @Injectable()
 export class CommentsQueryRepository {

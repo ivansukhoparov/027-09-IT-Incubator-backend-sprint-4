@@ -4,10 +4,9 @@ import { Post, PostDocument } from './posts.schema';
 import { Model } from 'mongoose';
 import { PostOutputDto } from '../types/output';
 import { postMapper, PostsLikesInfoType } from '../types/mapper';
-import { QuerySortType } from '../../common/types';
 import { BlogsQueryRepository } from '../../blogs/infrastructure/blogs.query.repository';
-import { LikeStatusType } from '../../likes/types/input';
 import { PostsLikesQueryRepository } from '../../likes/infrastructure/posts.likes.query.repository';
+import { QuerySortType } from '../../../common/types';
 
 @Injectable()
 export class PostsQueryRepository {

@@ -1,10 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { CommentsLikesRepository } from '../infrastructure/comments.likes.repository';
-import { CommentLikes, PostsLikes } from '../infrastructure/likes.schema';
-import { LikeStatusType } from '../types/input';
+import { PostsLikes } from '../infrastructure/likes.schema';
 import { CommentsLikesInputModel } from '../api/models/likes.input.models';
-import { UsersService } from '../../users/application/users.service';
 import { PostsLikesRepository } from '../infrastructure/posts.likes.repository';
+import { UsersService } from '../../../users/application/users.service';
 
 @Injectable()
 export class PostsLikesService {

@@ -3,7 +3,6 @@ import { LikeStatusType } from '../types/input';
 import { InjectModel } from '@nestjs/mongoose';
 import { CommentLikes } from './likes.schema';
 import { Model } from 'mongoose';
-import { Comments } from '../../comments/infrastructure/comments.schema';
 
 export class CommentsLikesQueryRepository {
   constructor(

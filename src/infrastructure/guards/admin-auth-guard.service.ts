@@ -4,13 +4,10 @@ import {
   HttpException,
   HttpStatus,
   Injectable,
-  NotAcceptableException,
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
-import { HttpExceptionFilter } from '../exception-filters/http.exception.filter';
 import { AccessTokenService } from '../../common/token.services/access.token.service';
 import { tokenServiceCommands } from '../../common/token.services/utils/common';
-import { UsersService } from '../../features/users/application/users.service';
 
 export const AUTH_METHODS = {
   base: 'Basic',

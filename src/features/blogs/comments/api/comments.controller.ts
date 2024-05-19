@@ -14,17 +14,16 @@ import {
   ForbiddenException,
 } from '@nestjs/common';
 import { CommentsQueryRepository } from '../infrastructure/comments.query.repository';
-import { AuthGuard } from '../../../infrastructure/guards/admin-auth-guard.service';
 import { Request } from 'express';
 import { CommentsService } from '../application/comments.service';
 import { CommentsLikesService } from '../../likes/application/comments.likes.service';
 import { CommentsLikesInputModel } from '../../likes/api/models/likes.input.models';
-import { AccessTokenService } from '../../../common/token.services/access.token.service';
-import { tokenServiceCommands } from '../../../common/token.services/utils/common';
-import { UsersService } from '../../users/application/users.service';
-import { CreatePostInputModel } from '../../posts/api/models/posts.input.models';
 import { UpdateCommentInputModel } from './models/comments.input.models';
 import { CommentDocument } from '../infrastructure/comments.schema';
+import { UsersService } from '../../../users/application/users.service';
+import { AccessTokenService } from '../../../../common/token.services/access.token.service';
+import { tokenServiceCommands } from '../../../../common/token.services/utils/common';
+import { AuthGuard } from '../../../../infrastructure/guards/admin-auth-guard.service';
 
 @Controller('comments')
 export class CommentsController {

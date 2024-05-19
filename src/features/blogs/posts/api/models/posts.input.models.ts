@@ -1,7 +1,6 @@
-import { IsStringLength } from '../../../../infrastructure/decorators/validate/is.string.length';
-import { IsMongoId, IsNotEmpty, IsString, Length } from 'class-validator';
-import { Trim } from '../../../../infrastructure/decorators/transform/trim';
-import { IsBlogExist } from '../../../../infrastructure/decorators/validate/is.blog.exist';
+import { IsMongoId, IsString, Length } from 'class-validator';
+import { IsStringLength } from '../../../../../infrastructure/decorators/validate/is.string.length';
+import { IsBlogExist } from '../../../../../infrastructure/decorators/validate/is.blog.exist';
 
 export class CreatePostInputModel {
   @IsStringLength(0, 30)

@@ -1,16 +1,10 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-
-import { Model } from 'mongoose';
 import {
-  QueryDto,
   QueryRequestType,
   QuerySearchType,
   QuerySortType,
 } from '../../common/types';
-import { userMapper, userMeMapper } from '../types/mapper';
+import { userMapper } from '../types/mapper';
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
-import { User } from '../infrastructure/users.schema';
 import { UsersQueryRepository } from '../infrastructure/users.query.repository';
 
 export class GetAllUsersQuery {

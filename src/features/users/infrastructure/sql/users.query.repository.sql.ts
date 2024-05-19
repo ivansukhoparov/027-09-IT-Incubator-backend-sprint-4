@@ -21,4 +21,17 @@ export class UsersQueryRepositorySql implements IUsersQueryRepository {
     Select * from "Users"
     `);
   }
+
+  async getMany(
+      searchKey: any,
+      sortKey: any,
+      skipped: number,
+      pageSize: number,
+  ) {
+    return [];
+  }
+
+  async countOfDocuments(searchKey: any) {
+    return 0;
+  }
 }

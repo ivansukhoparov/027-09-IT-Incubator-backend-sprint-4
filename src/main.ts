@@ -1,10 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import {
-  BadRequestException,
-  HttpException,
-  ValidationPipe,
-} from '@nestjs/common';
+import { BadRequestException, ValidationPipe } from '@nestjs/common';
 import { HttpExceptionFilter } from './infrastructure/exception-filters/http.exception.filter';
 import { useContainer } from 'class-validator';
 import cookieParser from 'cookie-parser';

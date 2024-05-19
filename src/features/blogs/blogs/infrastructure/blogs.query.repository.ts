@@ -4,7 +4,7 @@ import { Blog, BlogDocument } from './blogs.schema';
 import { Model } from 'mongoose';
 import { BlogOutputDto } from '../types/output';
 import { blogMapper } from '../types/mapper';
-import { QuerySearchType, QuerySortType } from '../../common/types';
+import { QuerySearchType, QuerySortType } from '../../../common/types';
 
 @Injectable()
 export class BlogsQueryRepository {

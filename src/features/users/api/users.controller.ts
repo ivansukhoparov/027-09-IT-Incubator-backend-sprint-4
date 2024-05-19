@@ -11,18 +11,15 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { UsersService } from '../application/users.service';
 import { QueryUsersRequestType } from '../types/input';
-import { createQuery } from '../../common/create.query';
-import { UsersQueryRepository } from '../infrastructure/mongo/users.query.repository.mongo';
 import { UserCreateInputModel } from './models/user.create.input.model';
 import { AdminAuthGuard } from '../../../infrastructure/guards/admin-auth-guard.service';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { CreateUserCommand } from '../use.cases/create.user.use.case';
 import { DeleteUserCommand } from '../use.cases/delete.user.use.case';
 import { GetAllUsersQuery } from '../use.cases/get.all.users.use.case';
-import { UsersQueryRepositorySql } from '../infrastructure/sql/users.query.repository.sql';
-import { UsersRepositorySql } from '../infrastructure/sql/users.repository.sql';
+import { UsersQueryRepository } from '../infrastructure/users.query.repository';
+import { UsersRepository } from '../infrastructure/users.repository';
 
 @Controller('sa/users')
 export class UsersController {
@@ -30,8 +27,7 @@ export class UsersController {
     protected commandBus: CommandBus,
     protected queryBus: QueryBus,
     protected usersQueryRepository: UsersQueryRepository,
-    protected usersQueryRepositorySql: UsersQueryRepositorySql,
-    protected userRepo: UsersRepositorySql,
+    protected userRepo: UsersRepository,
   ) {}
 
   @Get()
@@ -45,7 +41,7 @@ export class UsersController {
 
   @Get(':id')
   async getById(@Param('id') id: string) {
-    return await this.usersQueryRepositorySql.getById(id);
+    return await this.usersQueryRepository.getById(id);
   }
 
   @Post()

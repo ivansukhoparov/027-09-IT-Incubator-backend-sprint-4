@@ -1,6 +1,5 @@
 import { BlogsRepository } from '../infrastructure/blogs.repository';
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { BlogCreateDto, BlogUpdateDto } from '../types/input';
+import { Injectable } from '@nestjs/common';
 import { Blog } from '../infrastructure/blogs.schema';
 import { blogMapper } from '../types/mapper';
 import {

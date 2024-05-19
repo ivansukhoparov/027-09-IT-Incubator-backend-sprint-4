@@ -1,10 +1,4 @@
 import { Module, Post } from '@nestjs/common';
-import { EmailMessagesManager } from '../../common/email/email.messages.manager';
-import { EmailService } from '../../common/email/email.service';
-import { NodemailerAdapter } from '../../common/adapters/nodemailer.adaper';
-import { JwtTokenAdapter } from '../../common/adapters/jwt.token.adapter';
-import { BcryptAdapter } from '../../common/adapters/bcrypt.adapter';
-import { IsBlogExistConstraint } from '../../infrastructure/decorators/validate/is.blog.exist';
 import { CommentsController } from './comments/api/comments.controller';
 import { BlogsController } from './blogs/api/blogs.controller';
 import { PostsController } from './posts/api/posts.controller';

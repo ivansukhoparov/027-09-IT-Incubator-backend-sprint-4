@@ -1,17 +1,10 @@
-import {
-  Injectable,
-  NotFoundException,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { BlogsQueryRepository } from '../../../blogs/infrastructure/blogs.query.repository';
-import { PostsLikesQueryRepository } from '../../../likes/infrastructure/posts.likes.query.repository';
-import { Session, SessionDocument } from './devices.schema';
+import { Session } from './devices.schema';
 import { securityMapper } from '../types/mapper';
-import { SecurityDevicesOutput } from '../types/output';
-import { DevicesRepository } from './devices.repository';
 import { RefreshTokenService } from '../../../../common/token.services/refresh.token.service';
+import { SecurityDevicesOutput } from '../types/output';
 
 @Injectable()
 export class DevicesQueryRepository {

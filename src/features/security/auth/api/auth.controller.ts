@@ -12,16 +12,15 @@ import {
 } from '@nestjs/common';
 import { UserConfirmationCodeDto } from '../types/input';
 import { AuthService } from '../application/auth.service';
-import { UserCreateInputModel } from '../../users/api/models/user.create.input.model';
 import { LoginInputModel, UserEmailDto } from './models/login.input.model';
 import { Response, Request } from 'express';
 import { SkipThrottle, ThrottlerGuard } from '@nestjs/throttler';
-import { AuthGuard } from '../../../infrastructure/guards/admin-auth-guard.service';
-import { RefreshTokenService } from '../../../common/token.services/refresh.token.service';
-import { tokenServiceCommands } from '../../../common/token.services/utils/common';
-import { UsersQueryRepository } from '../../users/infrastructure/mongo/users.query.repository';
-import { AccessTokenService } from '../../../common/token.services/access.token.service';
-import { SessionInputModel } from '../../security/api/models/session.input.models';
+import { UsersQueryRepository } from '../../../users/infrastructure/users.query.repository';
+import { AuthGuard } from '../../../../infrastructure/guards/admin-auth-guard.service';
+import { AccessTokenService } from '../../../../common/token.services/access.token.service';
+import { tokenServiceCommands } from '../../../../common/token.services/utils/common';
+import { UserCreateInputModel } from '../../../users/api/models/user.create.input.model';
+import { SessionInputModel } from '../../devices/api/models/session.input.models';
 
 @Controller('auth')
 @UseGuards(ThrottlerGuard)

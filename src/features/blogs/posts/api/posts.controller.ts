@@ -16,12 +16,6 @@ import {
 import { PostsService } from '../application/posts.service';
 import { PostsQueryRepository } from '../infrastructure/posts.query.repository';
 import { CommentsQueryRepository } from '../../comments/infrastructure/comments.query.repository';
-import { QueryUsersRequestType } from '../../users/types/input';
-import { createQuery } from '../../common/create.query';
-import {
-  AdminAuthGuard,
-  AuthGuard,
-} from '../../../infrastructure/guards/admin-auth-guard.service';
 import {
   CreatePostInputModel,
   UpdatePostInputModel,
@@ -30,16 +24,18 @@ import { CommentCreateInputModel } from '../../comments/api/models/comments.inpu
 import { CommentCreateDto } from '../../comments/types/input';
 import { Request } from 'express';
 import { CommentsService } from '../../comments/application/comments.service';
-import { AccessTokenService } from '../../../common/token.services/access.token.service';
-import { tokenServiceCommands } from '../../../common/token.services/utils/common';
-import { UsersService } from '../../users/application/users.service';
-import {
-  CommentsLikesInputModel,
-  PostsLikesInputModel,
-} from '../../likes/api/models/likes.input.models';
-import { CommentsLikesService } from '../../likes/application/comments.likes.service';
+import { PostsLikesInputModel } from '../../likes/api/models/likes.input.models';
 import { PostsLikesService } from '../../likes/application/posts.likes.service';
 import { BlogsService } from '../../blogs/application/blogs.service';
+import { UsersService } from '../../../users/application/users.service';
+import { QueryUsersRequestType } from '../../../users/types/input';
+import { createQuery } from '../../../common/create.query';
+import { AccessTokenService } from '../../../../common/token.services/access.token.service';
+import { tokenServiceCommands } from '../../../../common/token.services/utils/common';
+import {
+  AdminAuthGuard,
+  AuthGuard,
+} from '../../../../infrastructure/guards/admin-auth-guard.service';
 
 @Controller('posts')
 export class PostsController {

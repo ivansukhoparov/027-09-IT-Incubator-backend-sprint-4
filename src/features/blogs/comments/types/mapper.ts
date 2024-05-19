@@ -1,4 +1,3 @@
-import { WithId } from 'mongodb';
 import { CommentOutputDto, CommentType, LikesInfoType } from './output';
 import { CommentDocument } from '../infrastructure/comments.schema';
 

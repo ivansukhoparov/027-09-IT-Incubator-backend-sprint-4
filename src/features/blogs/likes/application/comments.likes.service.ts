@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { CommentsLikesRepository } from '../infrastructure/comments.likes.repository';
 import { CommentLikes } from '../infrastructure/likes.schema';
-import { LikeStatusType } from '../types/input';
 import { CommentsLikesInputModel } from '../api/models/likes.input.models';
 
 @Injectable()

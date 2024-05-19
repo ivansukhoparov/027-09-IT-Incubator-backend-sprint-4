@@ -1,5 +1,5 @@
 import { LikeStatusType } from '../../types/input';
-import { CONTAINS, Contains, EQUALS, IsIn } from 'class-validator';
+import { IsIn } from 'class-validator';
 
 export class BaseInputLikesModel {
   @IsIn(['None', 'Like', 'Dislike'])

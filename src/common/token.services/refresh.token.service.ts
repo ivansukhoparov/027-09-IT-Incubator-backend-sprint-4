@@ -10,7 +10,6 @@ import {
   tokenServiceCommands,
 } from './utils/common';
 
-
 export class RefreshTokenService extends BaseToken<
   RefreshTokenPayloadDto,
   RefreshTokenDecodedDto

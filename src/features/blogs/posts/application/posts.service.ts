@@ -1,9 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PostsRepository } from '../infrastructure/posts.repository';
 import { BlogsRepository } from '../../blogs/infrastructure/blogs.repository';
-import { PostCreateDto, PostUpdateDto } from '../types/input';
 import { Post } from '../infrastructure/posts.schema';
-import { postMapper } from '../types/mapper';
 import { BlogDocument } from '../../blogs/infrastructure/blogs.schema';
 import {
   CreatePostInputModel,

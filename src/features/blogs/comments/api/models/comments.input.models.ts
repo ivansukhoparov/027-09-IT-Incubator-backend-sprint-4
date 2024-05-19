@@ -1,5 +1,4 @@
-import { IsStringLength } from '../../../../infrastructure/decorators/validate/is.string.length';
-import { CreatePostInputModel } from '../../../posts/api/models/posts.input.models';
+import { IsStringLength } from '../../../../../infrastructure/decorators/validate/is.string.length';
 
 export class CommentCreateInputModel {
   @IsStringLength(20, 300)

@@ -1,21 +1,15 @@
-import {
-  ForbiddenException,
-  Injectable,
-  NotFoundException,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { DevicesRepository } from '../infrastructure/devices.repository';
-import {
-  SessionInputModel,
-  SessionModel,
-  SessionUpdateModel,
-} from '../../api/models/session.input.models';
 import uuid4 from 'uuid4';
 import { AccessTokenService } from '../../../../common/token.services/access.token.service';
 import { RefreshTokenService } from '../../../../common/token.services/refresh.token.service';
 import { UserDocument } from '../../../users/infrastructure/users.schema';
-import { SessionDocument } from '../infrastructure/devices.schema';
 import { InterlayerNotice } from '../../../../base/models/interlayer.notice';
+import {
+  SessionInputModel,
+  SessionModel,
+  SessionUpdateModel,
+} from '../api/models/session.input.models';
 
 @Injectable()
 export class DevicesService {

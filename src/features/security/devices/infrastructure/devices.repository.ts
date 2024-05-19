@@ -1,18 +1,12 @@
-import {
-  Injectable,
-  NotFoundException,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Session, SessionDocument } from './devices.schema';
+import { Model } from 'mongoose';
+import { InterlayerNotice } from '../../../../base/models/interlayer.notice';
 import {
   SessionModel,
   SessionUpdateModel,
-} from '../../api/models/session.input.models';
-import { Model } from 'mongoose';
-import { RefreshTokenService } from '../../../../common/token.services/refresh.token.service';
-import { DevicesService } from '../application/devices.service';
-import { InterlayerNotice } from '../../../../base/models/interlayer.notice';
+} from '../api/models/session.input.models';
 
 @Injectable()
 export class DevicesRepository {

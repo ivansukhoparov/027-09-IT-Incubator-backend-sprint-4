@@ -10,24 +10,20 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { UsersService } from '../../users/application/users.service';
-
-import { EmailService } from '../../../common/email/email.service';
-import { BcryptAdapter } from '../../../common/adapters/bcrypt.adapter';
-import { EmailConfirmationCodeService } from '../../../common/token.services/email.confirmation.code.service';
-import { AccessTokenService } from '../../../common/token.services/access.token.service';
-import { RefreshTokenService } from '../../../common/token.services/refresh.token.service';
-import { tokenServiceCommands } from '../../../common/token.services/utils/common';
-import { UserCreateInputModel } from '../../users/api/models/user.create.input.model';
-import { LoginInputModel, UserEmailDto } from '../api/models/login.input.model';
+import { UsersService } from '../../../users/application/users.service';
+import { EmailService } from '../../../../common/email/email.service';
+import { BcryptAdapter } from '../../../../common/adapters/bcrypt.adapter';
 import { RefreshTokenRepository } from '../infrastructure/refresh.token.repository';
-import { SessionsService } from '../../security/devices/application/sessions.service';
-import {
-  SessionInputModel,
-  SessionModel,
-} from '../../security/api/models/session.input.models';
-import uuid4 from 'uuid4';
-import { UserDocument } from '../../users/infrastructure/users.schema';
+import { UserCreateInputModel } from '../../../users/api/models/user.create.input.model';
+import { EmailConfirmationCodeService } from '../../../../common/token.services/email.confirmation.code.service';
+import { tokenServiceCommands } from '../../../../common/token.services/utils/common';
+import { LoginInputModel, UserEmailDto } from '../api/models/login.input.model';
+import { RefreshTokenService } from '../../../../common/token.services/refresh.token.service';
+import { SessionInputModel } from '../../devices/api/models/session.input.models';
+import { UserDocument } from '../../../users/infrastructure/users.schema';
+import { DevicesService } from '../../devices/application/devices.service';
+
+class SessionsService {}
 
 @Injectable()
 export class AuthService {
@@ -36,7 +32,7 @@ export class AuthService {
     private readonly emailService: EmailService,
     private readonly cryptAdapter: BcryptAdapter,
     protected refreshTokenRepository: RefreshTokenRepository,
-    protected sessionService: SessionsService,
+    protected sessionService: DevicesService,
   ) {}
 
   async registerUser(registrationDto: UserCreateInputModel) {

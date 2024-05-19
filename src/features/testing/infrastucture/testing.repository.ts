@@ -1,15 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import mongoose, { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
-import { Blog } from '../../blogs/infrastructure/blogs.schema';
-import { Post } from '../../posts/infrastructure/posts.schema';
-import { appSettings } from '../../../settings/app.settings';
+import { Blog } from '../../blogs/blogs/infrastructure/blogs.schema';
+import { Post } from '../../blogs/posts/infrastructure/posts.schema';
 import { User } from '../../users/infrastructure/users.schema';
-import { Comments } from '../../comments/infrastructure/comments.schema';
+import { Comments } from '../../blogs/comments/infrastructure/comments.schema';
 import {
   CommentLikes,
   PostsLikes,
-} from '../../likes/infrastructure/likes.schema';
+} from '../../blogs/likes/infrastructure/likes.schema';
 
 @Injectable()
 export class TestingRepository {
@@ -17,7 +16,7 @@ export class TestingRepository {
     @InjectModel(Blog.name) private blogModel: Model<Blog>,
     @InjectModel(Post.name) private postModel: Model<Post>,
     @InjectModel(User.name) private userModel: Model<User>,
-    @InjectModel(Comments.name) private commentsModel: Model<User>,
+    @InjectModel(Comments.name) private commentsModel: Model<Comments>,
     @InjectModel(PostsLikes.name) private postsLikesModel: Model<PostsLikes>,
     @InjectModel(CommentLikes.name)
     private commentLikesModel: Model<CommentLikes>,

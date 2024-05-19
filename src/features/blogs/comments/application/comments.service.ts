@@ -3,9 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { UpdateCommentInputModel } from '../api/models/comments.input.models';
 import { CommentCreateDto } from '../types/input';
 import { Comments } from '../infrastructure/comments.schema';
-import { Prop } from '@nestjs/mongoose';
 import { PostsService } from '../../posts/application/posts.service';
-import { postMapper } from '../../posts/types/mapper';
 
 @Injectable()
 export class CommentsService {

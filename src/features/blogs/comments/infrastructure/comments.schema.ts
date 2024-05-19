@@ -1,6 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
-import { IsString } from 'class-validator';
 
 export type CommentDocument = HydratedDocument<Comments>;
 

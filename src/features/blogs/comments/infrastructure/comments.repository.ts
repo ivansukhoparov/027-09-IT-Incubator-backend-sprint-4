@@ -2,7 +2,6 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { CommentDocument, Comments } from './comments.schema';
 import { Model } from 'mongoose';
-import { commentMapper } from '../types/mapper';
 import { ObjectId } from 'mongodb';
 import { UpdateCommentInputModel } from '../api/models/comments.input.models';
 

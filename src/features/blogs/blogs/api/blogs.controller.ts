@@ -12,31 +12,25 @@ import {
   Query,
   UseGuards,
   Req,
-  BadRequestException,
 } from '@nestjs/common';
 import { BlogsService } from '../application/blogs.service';
-import { BlogCreateDto } from '../types/input';
 import { BlogsQueryRepository } from '../infrastructure/blogs.query.repository';
-import { createQuery } from '../../common/create.query';
-import { QueryUsersRequestType } from '../../users/types/input';
 import { PostsService } from '../../posts/application/posts.service';
 import { PostsQueryRepository } from '../../posts/infrastructure/posts.query.repository';
-import { PostCreateDto } from '../../posts/types/input';
-import {
-  AdminAuthGuard,
-  AuthGuard,
-} from '../../../infrastructure/guards/admin-auth-guard.service';
 import {
   CreateBlogInputModel,
   UpdateBlogInputModel,
 } from './models/blogs.input.models';
-import { AccessTokenService } from '../../../common/token.services/access.token.service';
-import { tokenServiceCommands } from '../../../common/token.services/utils/common';
 import { Request } from 'express';
 import {
   CreatePostInputModel,
   CreatePostInputModelByBlog,
 } from '../../posts/api/models/posts.input.models';
+import { QueryUsersRequestType } from '../../../users/types/input';
+import { createQuery } from '../../../common/create.query';
+import { AccessTokenService } from '../../../../common/token.services/access.token.service';
+import { tokenServiceCommands } from '../../../../common/token.services/utils/common';
+import { AdminAuthGuard } from '../../../../infrastructure/guards/admin-auth-guard.service';
 
 @Controller('blogs')
 export class BlogsController {

@@ -1,9 +1,7 @@
-import { LikesInfoType } from '../../comments/types/output';
 import { LikeStatusType, NewestLikeType } from '../types/input';
 import { InjectModel } from '@nestjs/mongoose';
-import { CommentLikes, PostsLikes, PostsLikesDocument } from './likes.schema';
+import { PostsLikes, PostsLikesDocument } from './likes.schema';
 import { Model } from 'mongoose';
-import { Comments } from '../../comments/infrastructure/comments.schema';
 import { PostsLikesInfoType } from '../../posts/types/mapper';
 
 export class PostsLikesQueryRepository {
