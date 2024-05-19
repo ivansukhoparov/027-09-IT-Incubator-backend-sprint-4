@@ -10,7 +10,6 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from './infrastructure/users.schema';
 import { BcryptAdapter } from '../../common/adapters/bcrypt.adapter';
 import { CqrsModule } from '@nestjs/cqrs';
-import { SecurityModule } from '../security/security.module';
 
 const useCases = [CreateUserUseCase, DeleteUserUseCase];
 
