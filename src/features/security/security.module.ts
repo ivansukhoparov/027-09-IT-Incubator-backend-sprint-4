@@ -16,9 +16,15 @@ import {
   RefreshTokenBlackList,
   RefreshTokenBlackListSchema,
 } from './auth/infrastructure/refresh.token.schema';
+import { EmailMessagesManager } from '../../common/email/email.messages.manager';
+import { EmailService } from '../../common/email/email.service';
+import { NodemailerAdapter } from '../../common/adapters/nodemailer.adaper';
+import { JwtTokenAdapter } from '../../common/adapters/jwt.token.adapter';
+import { UsersModule } from '../users/users.module';
 
 @Module({
   imports: [
+    UsersModule,
     MongooseModule.forFeature([
       {
         name: RefreshTokenBlackList.name,
@@ -37,6 +43,10 @@ import {
     DevicesRepository,
     DevicesQueryRepository,
     RefreshTokenRepository,
+    EmailMessagesManager,
+    EmailService,
+    NodemailerAdapter,
+    JwtTokenAdapter,
   ],
   exports: [],
 })

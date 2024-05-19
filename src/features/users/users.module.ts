@@ -8,6 +8,9 @@ import { DeleteUserUseCase } from './use.cases/delete.user.use.case';
 import { GetAllUsersUseCase } from './use.cases/get.all.users.use.case';
 import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from './infrastructure/users.schema';
+import { BcryptAdapter } from '../../common/adapters/bcrypt.adapter';
+import { CqrsModule } from '@nestjs/cqrs';
+import { SecurityModule } from '../security/security.module';
 
 const useCases = [CreateUserUseCase, DeleteUserUseCase];
 
@@ -15,6 +18,7 @@ const queryCases = [GetAllUsersUseCase];
 
 @Module({
   imports: [
+    CqrsModule,
     MongooseModule.forFeature([
       {
         name: User.name,
@@ -24,12 +28,13 @@ const queryCases = [GetAllUsersUseCase];
   ],
   controllers: [UsersController],
   providers: [
+    BcryptAdapter,
     UsersService,
     UsersRepository,
     UsersQueryRepository,
     ...useCases,
     ...queryCases,
   ],
-  exports: [UsersService],
+  exports: [UsersService, BcryptAdapter],
 })
 export class UsersModule {}

@@ -23,10 +23,10 @@ export class UsersQueryRepositorySql implements IUsersQueryRepository {
   }
 
   async getMany(
-      searchKey: any,
-      sortKey: any,
-      skipped: number,
-      pageSize: number,
+    searchKey: any,
+    sortKey: any,
+    skipped: number,
+    pageSize: number,
   ) {
     return [];
   }

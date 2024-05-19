@@ -1,4 +1,4 @@
-import { Module, Post } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { CommentsController } from './comments/api/comments.controller';
 import { BlogsController } from './blogs/api/blogs.controller';
 import { PostsController } from './posts/api/posts.controller';
@@ -19,7 +19,7 @@ import { CommentsQueryRepository } from './comments/infrastructure/comments.quer
 import { CommentsLikesQueryRepository } from './likes/infrastructure/commets.likes.query.repository';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Blog, BlogSchema } from './blogs/infrastructure/blogs.schema';
-import { PostSchema } from './posts/infrastructure/posts.schema';
+import { Post, PostSchema } from './posts/infrastructure/posts.schema';
 import {
   Comments,
   CommentSchema,
@@ -30,6 +30,8 @@ import {
   PostsLikes,
   PostsLikesSchema,
 } from './likes/infrastructure/likes.schema';
+import { IsBlogExistConstraint } from '../../infrastructure/decorators/validate/is.blog.exist';
+import { UsersModule } from '../users/users.module';
 
 const controllers = [BlogsController, PostsController, CommentsController];
 
@@ -57,7 +59,7 @@ const queryRepositories = [
   CommentsLikesQueryRepository,
 ];
 
-
+const providers = [IsBlogExistConstraint];
 
 const mongooseImports = [
   MongooseModule.forFeature([
@@ -86,9 +88,9 @@ const mongooseImports = [
 ];
 
 @Module({
-  imports: [...mongooseImports],
+  imports: [UsersModule, ...mongooseImports],
   controllers: [...controllers],
-  providers: [...services, ...repositories, ...queryRepositories],
+  providers: [...services, ...repositories, ...queryRepositories, ...providers],
   exports: [],
 })
 export class BlogsModule {}

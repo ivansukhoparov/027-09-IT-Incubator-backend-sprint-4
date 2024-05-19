@@ -10,12 +10,12 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { appSettings } from './settings/app.settings';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import {EmailMessagesManager} from "./common/email/email.messages.manager";
-import {NodemailerAdapter} from "./common/adapters/nodemailer.adaper";
-import {EmailService} from "./common/email/email.service";
-import {JwtTokenAdapter} from "./common/adapters/jwt.token.adapter";
-import {BcryptAdapter} from "./common/adapters/bcrypt.adapter";
-import {IsBlogExistConstraint} from "./infrastructure/decorators/validate/is.blog.exist";
+import { EmailMessagesManager } from './common/email/email.messages.manager';
+import { NodemailerAdapter } from './common/adapters/nodemailer.adaper';
+import { EmailService } from './common/email/email.service';
+import { JwtTokenAdapter } from './common/adapters/jwt.token.adapter';
+import { BcryptAdapter } from './common/adapters/bcrypt.adapter';
+import { IsBlogExistConstraint } from './infrastructure/decorators/validate/is.blog.exist';
 
 const mongoModule = MongooseModule.forRoot(
   appSettings.api.MONGO_CONNECTION_URI + '/' + appSettings.api.MONGO_DB_NAME,
@@ -39,26 +39,11 @@ const typeOrmModule = TypeOrmModule.forRoot({
   synchronize: false,
 });
 
-export const providers = [
-    EmailMessagesManager,
-    EmailService,
-    NodemailerAdapter,
-    JwtTokenAdapter,
-    BcryptAdapter,
-    IsBlogExistConstraint,
-];
-
 const appModules = [UsersModule, BlogsModule, SecurityModule, TestingModule];
 
 @Module({
-  imports: [
-    CqrsModule,
-    throttleModule,
-    mongoModule,
-    typeOrmModule,
-    ...appModules,
-  ],
+  imports: [throttleModule, mongoModule, typeOrmModule, ...appModules],
   controllers: [AppController],
-  providers: [AppService, ...providers],
+  providers: [AppService],
 })
 export class AppModule {}
