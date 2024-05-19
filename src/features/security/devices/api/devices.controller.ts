@@ -11,13 +11,13 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { Request } from 'express';
-import { SessionsQueryRepository } from '../infrastructure/sessions.query.repository';
-import { SessionsRepository } from '../infrastructure/sessions.repository';
+import { SessionsQueryRepository } from '../devices/infrastructure/sessions.query.repository';
+import { SessionsRepository } from '../devices/infrastructure/sessions.repository';
 import { RefreshTokenService } from '../../../common/token.services/refresh.token.service';
-import { SessionsService } from '../application/sessions.service';
+import { SessionsService } from '../devices/application/sessions.service';
 
 @Controller('security')
-export class SecurityController {
+export class DevicesController {
   constructor(
     protected sessionsQueryRepository: SessionsQueryRepository,
     protected sessionsService: SessionsService,

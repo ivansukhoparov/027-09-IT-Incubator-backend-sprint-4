@@ -4,18 +4,18 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Session, SessionDocument } from './session.schema';
+import { Session, SessionDocument } from './devices.schema';
 import {
   SessionModel,
   SessionUpdateModel,
-} from '../api/models/session.input.models';
+} from '../../api/models/session.input.models';
 import { Model } from 'mongoose';
-import { RefreshTokenService } from '../../../common/token.services/refresh.token.service';
-import { SessionsService } from '../application/sessions.service';
-import { InterlayerNotice } from '../../../base/models/interlayer.notice';
+import { RefreshTokenService } from '../../../../common/token.services/refresh.token.service';
+import { DevicesService } from '../application/devices.service';
+import { InterlayerNotice } from '../../../../base/models/interlayer.notice';
 
 @Injectable()
-export class SessionsRepository {
+export class DevicesRepository {
   constructor(
     @InjectModel(Session.name) protected sessionsModel: Model<Session>,
   ) {}

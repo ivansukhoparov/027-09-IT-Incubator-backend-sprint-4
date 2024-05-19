@@ -21,7 +21,7 @@ import { tokenServiceCommands } from '../../../common/token.services/utils/commo
 import { UserCreateInputModel } from '../../users/api/models/user.create.input.model';
 import { LoginInputModel, UserEmailDto } from '../api/models/login.input.model';
 import { RefreshTokenRepository } from '../infrastructure/refresh.token.repository';
-import { SessionsService } from '../../security/application/sessions.service';
+import { SessionsService } from '../../security/devices/application/sessions.service';
 import {
   SessionInputModel,
   SessionModel,

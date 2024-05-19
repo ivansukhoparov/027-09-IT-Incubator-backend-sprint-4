@@ -36,4 +36,4 @@ export class Session {
   };
 }
 
-export const SessionSchema = SchemaFactory.createForClass(Session);
+export const DevicesSchema = SchemaFactory.createForClass(Session);

@@ -5,16 +5,16 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { BlogsQueryRepository } from '../../blogs/infrastructure/blogs.query.repository';
-import { PostsLikesQueryRepository } from '../../likes/infrastructure/posts.likes.query.repository';
-import { Session, SessionDocument } from './session.schema';
+import { BlogsQueryRepository } from '../../../blogs/infrastructure/blogs.query.repository';
+import { PostsLikesQueryRepository } from '../../../likes/infrastructure/posts.likes.query.repository';
+import { Session, SessionDocument } from './devices.schema';
 import { securityMapper } from '../types/mapper';
 import { SecurityDevicesOutput } from '../types/output';
-import { SessionsRepository } from './sessions.repository';
-import { RefreshTokenService } from '../../../common/token.services/refresh.token.service';
+import { DevicesRepository } from './devices.repository';
+import { RefreshTokenService } from '../../../../common/token.services/refresh.token.service';
 
 @Injectable()
-export class SessionsQueryRepository {
+export class DevicesQueryRepository {
   constructor(
     @InjectModel(Session.name) private sessionModel: Model<Session>,
   ) {}

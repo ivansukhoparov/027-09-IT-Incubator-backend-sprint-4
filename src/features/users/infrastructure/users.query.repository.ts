@@ -15,7 +15,8 @@ export class UsersQueryRepository implements IUsersQueryRepository {
     async getById(id: string): Promise<UserOutputDto> {
         const result = await this.dataSource.query(`
              SELECT * FROM "Users"
-             WHERE "id" =  '${id}'`)
+             WHERE "id" =  $1`,
+            [id])
         return result
     }
 

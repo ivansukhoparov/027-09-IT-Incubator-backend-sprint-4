@@ -13,7 +13,7 @@ import {
 import {UsersService} from '../application/users.service';
 import {QueryUsersRequestType} from '../types/input';
 import {createQuery} from '../../common/create.query';
-import {UsersQueryRepository} from '../infrastructure/mongo/users.query.repository';
+import {UsersQueryRepository} from '../infrastructure/mongo/users.query.repository.mongo';
 import {UserCreateInputModel} from './models/user.create.input.model';
 import {AdminAuthGuard} from '../../../infrastructure/guards/admin-auth-guard.service';
 import {CommandBus, QueryBus} from "@nestjs/cqrs";

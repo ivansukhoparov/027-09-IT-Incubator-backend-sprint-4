@@ -4,22 +4,22 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { SessionsRepository } from '../infrastructure/sessions.repository';
+import { DevicesRepository } from '../infrastructure/devices.repository';
 import {
   SessionInputModel,
   SessionModel,
   SessionUpdateModel,
-} from '../api/models/session.input.models';
+} from '../../api/models/session.input.models';
 import uuid4 from 'uuid4';
-import { AccessTokenService } from '../../../common/token.services/access.token.service';
-import { RefreshTokenService } from '../../../common/token.services/refresh.token.service';
-import { UserDocument } from '../../users/infrastructure/users.schema';
-import { SessionDocument } from '../infrastructure/session.schema';
-import { InterlayerNotice } from '../../../base/models/interlayer.notice';
+import { AccessTokenService } from '../../../../common/token.services/access.token.service';
+import { RefreshTokenService } from '../../../../common/token.services/refresh.token.service';
+import { UserDocument } from '../../../users/infrastructure/users.schema';
+import { SessionDocument } from '../infrastructure/devices.schema';
+import { InterlayerNotice } from '../../../../base/models/interlayer.notice';
 
 @Injectable()
-export class SessionsService {
-  constructor(protected sessionsRepository: SessionsRepository) {}
+export class DevicesService {
+  constructor(protected sessionsRepository: DevicesRepository) {}
 
   async createSession(
     sessionInputModel: SessionInputModel,

@@ -1,5 +1,5 @@
 import { SecurityDevicesOutput, SecuritySessionType } from './output';
-import { SessionDocument } from '../infrastructure/session.schema';
+import { SessionDocument } from '../infrastructure/devices.schema';
 import { WithId } from 'mongodb';
 
 export const securityMapper = (
