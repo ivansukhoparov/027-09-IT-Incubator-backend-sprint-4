@@ -57,14 +57,7 @@ const queryRepositories = [
   CommentsLikesQueryRepository,
 ];
 
-// export const providers = [
-//     EmailMessagesManager,
-//     EmailService,
-//     NodemailerAdapter,
-//     JwtTokenAdapter,
-//     BcryptAdapter,
-//     IsBlogExistConstraint,
-// ];
+
 
 const mongooseImports = [
   MongooseModule.forFeature([
