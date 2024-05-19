@@ -1,20 +1,19 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import {User, UserDocument} from '../users.schema';
+import { User, UserDocument } from '../users.schema';
 import { Model } from 'mongoose';
 import { QuerySearchType, QuerySortType } from '../../../common/types';
 import { userMapper, userMeMapper } from '../../types/mapper';
-import {IUsersQueryRepository} from "../interfaces/users.query.repository.interface";
-import {UserOutputDto, UserOutputMeType} from "../../types/output";
+import { IUsersQueryRepository } from '../interfaces/users.query.repository.interface';
+import { UserOutputDto, UserOutputMeType } from '../../types/output';
 
 @Injectable()
 export class UsersQueryRepositoryMongo implements IUsersQueryRepository {
   constructor(@InjectModel(User.name) private userModel: Model<User>) {}
 
-
-  async getById(id: string):Promise<UserOutputDto> {
+  async getById(id: string): Promise<UserOutputDto> {
     try {
-      const user:UserDocument = await this.userModel.findById(id);
+      const user: UserDocument = await this.userModel.findById(id);
       if (!user) throw new NotFoundException();
       return userMapper(user);
     } catch {
@@ -22,16 +21,15 @@ export class UsersQueryRepositoryMongo implements IUsersQueryRepository {
     }
   }
 
-  async getUserAuthMe(id: string):Promise<UserOutputMeType> {
+  async getUserAuthMe(id: string): Promise<UserOutputMeType> {
     try {
-      const user:UserDocument = await this.userModel.findById(id);
+      const user: UserDocument = await this.userModel.findById(id);
       if (!user) throw new NotFoundException();
       return userMeMapper(user);
     } catch {
       throw new NotFoundException();
     }
   }
-
 
   // async getAllUsers(sortData: QuerySortType, searchData: QuerySearchType) {
   //   let sortKey = {};
@@ -83,5 +81,4 @@ export class UsersQueryRepositoryMongo implements IUsersQueryRepository {
   //     items: users.map(userMapper),
   //   };
   // }}
-
 }

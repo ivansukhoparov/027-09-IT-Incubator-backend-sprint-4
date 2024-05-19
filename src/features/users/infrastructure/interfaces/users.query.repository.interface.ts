@@ -1,12 +1,16 @@
-import {UserOutputDto, UserOutputMeType} from "../../types/output";
+import { UserOutputDto, UserOutputMeType } from '../../types/output';
 
 export interface IUsersQueryRepository {
+  getById(id: string): Promise<UserOutputDto>;
 
-  getById(id: string) :Promise<UserOutputDto>
+  getUserAuthMe(id: string): Promise<UserOutputMeType>;
 
-  getUserAuthMe(id: string) :Promise<UserOutputMeType>
+  getMany(
+    searchKey: any,
+    sortKey: any,
+    skipped: number,
+    pageSize: number,
+  ): Promise<any>;
 
-  getMany(searchKey:any,sortKey:any,skipped:number,pageSize:number) :Promise<any>
-
-  countOfDocuments (searchKey:any):Promise<number>
+  countOfDocuments(searchKey: any): Promise<number>;
 }

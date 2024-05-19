@@ -10,7 +10,6 @@ export type EnvironmentsTypes =
   | 'TESTING';
 export const Environments = ['DEVELOPMENT', 'STAGING', 'PRODUCTION', 'TESTING'];
 
-
 export class EnvironmentSettings {
   constructor(private env: EnvironmentsTypes) {}
 
@@ -40,7 +39,7 @@ class APISettings {
   public readonly APP_PORT: number;
 
   // Database
-  public readonly DB_TYPE:string;
+  public readonly DB_TYPE: string;
   public readonly MONGO_CONNECTION_URI: string;
   public readonly MONGO_DB_NAME: string;
 
@@ -62,7 +61,7 @@ class APISettings {
     this.APP_PORT = this.getNumberOrDefault(envVariables.APP_PORT, 7840);
 
     // Database
-    this.DB_TYPE = envVariables.DB_TYPE
+    this.DB_TYPE = envVariables.DB_TYPE;
     this.MONGO_CONNECTION_URI = envVariables.MONGO_CONNECTION_URI; //?? 'mongodb://0.0.0.0:27017';
     this.MONGO_DB_NAME = envVariables.MONGO_DB_NAME;
     // Email sender
@@ -97,5 +96,3 @@ const env = new EnvironmentSettings(
 
 const api = new APISettings(process.env);
 export const appSettings = new AppSettings(env, api);
-
-
