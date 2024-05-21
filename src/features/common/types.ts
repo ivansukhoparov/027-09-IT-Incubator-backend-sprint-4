@@ -22,11 +22,16 @@ export type QuerySortType = {
   pageNumber: number;
   pageSize: number;
 };
-
 export type QuerySearchType = {
   searchLoginTerm?: string | null;
   searchEmailTerm?: string | null;
   searchNameTerm?: string | null;
+};
+
+export type SearchType = {
+  login?: string | null;
+  email?: string | null;
+  name?: string | null;
 };
 
 export type QueryDto = {

@@ -16,7 +16,7 @@ export class UsersRepository implements IUsersRepository {
         `
             INSERT INTO "Users"
             ("login","email","hash","isConfirmed")
-            values($1,$2,$3,$4')
+            values($1,$2,$3,$4)
             RETURNING id
         `,
         [
@@ -26,7 +26,6 @@ export class UsersRepository implements IUsersRepository {
           newUserDto.isConfirmed,
         ],
       );
-      console.log('result ', result[0].id);
       return result[0].id;
     } catch {
       throw new NotFoundException();
@@ -35,13 +34,14 @@ export class UsersRepository implements IUsersRepository {
 
   async getUserById(id: string) {
     try {
-      return await this.dataSource.query(
+      const result = await this.dataSource.query(
         `
             SELECT * FROM "Users"
                 WHERE "id" = $1
         `,
         [id],
       );
+      return result[0];
     } catch {
       throw new NotFoundException();
     }
@@ -49,13 +49,11 @@ export class UsersRepository implements IUsersRepository {
 
   async getUserByLoginOrEmail(loginOrEmail: string) {
     try {
-      return await this.dataSource.query(
-        `
-            SELECT * FROM "Users"
-            WHERE ("login" = $1 OR ("email" = $1)
-        `,
-        [loginOrEmail],
+      const result = await this.dataSource.query(
+        `SELECT * FROM "Users"
+               WHERE "login" = '${loginOrEmail}' OR "email" = '${loginOrEmail}'`,
       );
+      return result[0];
     } catch {
       throw new NotFoundException();
     }
@@ -63,13 +61,15 @@ export class UsersRepository implements IUsersRepository {
 
   async deleteUser(id: string) {
     try {
-      return await this.dataSource.query(
-        `
-            DELETE * FROM "Users"
-             WHERE "id" = $1
-        `,
+      const result = await this.dataSource.query(
+        `DELETE FROM "Users"
+             WHERE "id" = $1 `,
         [id],
       );
+      if (result[1] === 0) {
+        throw new NotFoundException();
+      }
+      return;
     } catch {
       throw new NotFoundException();
     }

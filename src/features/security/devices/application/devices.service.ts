@@ -21,15 +21,15 @@ export class DevicesService {
   ) {
     const deviceId = uuid4();
     const accessToken = new AccessTokenService('create', {
-      userId: user._id.toString(),
+      userId: user.id,
     });
     const refreshToken = new RefreshTokenService('create', {
-      userId: user._id.toString(),
+      userId: user.id,
       deviceId: deviceId,
     });
 
     const sessionModel: SessionModel = {
-      userId: user._id.toString(),
+      userId: user.id,
       deviceId: deviceId,
       deviceTitle: sessionInputModel.deviceTitle,
       ip: sessionInputModel.ip,

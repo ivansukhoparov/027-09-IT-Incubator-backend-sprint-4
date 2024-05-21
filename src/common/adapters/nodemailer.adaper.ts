@@ -27,7 +27,6 @@ export class NodemailerAdapter implements IEmailAdapter {
         from: this.sendFrom,
         to: mailTo,
       });
-      console.log(s.accepted);
       return true;
     } catch (err) {
       console.log(err);

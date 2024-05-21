@@ -1,12 +1,12 @@
 import { WithId } from 'mongodb';
 import { UserOutputDto, UserOutputMeType, UserType } from './output';
 
-export const userMapper = (user: WithId<UserType>): UserOutputDto => {
+export const userMapper = (user: any): UserOutputDto => {
   return {
-    id: user._id.toString(),
+    id: user.id,
     login: user.login,
     email: user.email,
-    createdAt: user.createdAt,
+    createdAt: new Date(user.createdAt).toISOString(),
   };
 };
 

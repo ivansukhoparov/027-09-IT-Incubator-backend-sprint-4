@@ -14,7 +14,7 @@ export class EmailService {
   async sendEmailConfirmationEmail(user: UserType, confirmationCode: string) {
     return await this.emailAdapter.sendEmail(
       user.email,
-      this.messageManager.confirmationEmail(confirmationCode, user.email),
+      this.messageManager.confirmationEmail(confirmationCode, user.login),
     );
   }
 

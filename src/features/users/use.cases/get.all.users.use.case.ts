@@ -1,14 +1,14 @@
 import {
   QueryRequestType,
-  QuerySearchType,
   QuerySortType,
+  SearchType,
 } from '../../common/types';
 import { userMapper } from '../types/mapper';
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { UsersQueryRepository } from '../infrastructure/users.query.repository';
 
 export class GetAllUsersQuery {
-  public searchData: QuerySearchType = {};
+  public searchData: SearchType = {};
   public sortData: QuerySortType;
 
   constructor(query: QueryRequestType) {
@@ -19,12 +19,9 @@ export class GetAllUsersQuery {
       pageSize: query.pageSize ? query.pageSize : 10,
     };
 
-    if (query.searchLoginTerm)
-      this.searchData.searchLoginTerm = query.searchLoginTerm;
-    if (query.searchEmailTerm)
-      this.searchData.searchEmailTerm = query.searchEmailTerm;
-    if (query.searchNameTerm)
-      this.searchData.searchNameTerm = query.searchNameTerm;
+    if (query.searchLoginTerm) this.searchData.login = query.searchLoginTerm;
+    if (query.searchEmailTerm) this.searchData.email = query.searchEmailTerm;
+    if (query.searchNameTerm) this.searchData.name = query.searchNameTerm;
   }
 }
 
@@ -33,45 +30,37 @@ export class GetAllUsersUseCase implements IQueryHandler<GetAllUsersQuery> {
   constructor(protected usersQueryRepository: UsersQueryRepository) {}
 
   async execute(query: GetAllUsersQuery) {
-    let sortKey = {};
-    let searchKey = {};
+    // const searchKey = {};
 
     // check have search terms create search keys array
-    const searchKeysArray: any[] = [];
-    if (query.searchData.searchLoginTerm)
-      searchKeysArray.push({
-        login: { $regex: query.searchData.searchLoginTerm, $options: 'i' },
-      });
-    if (query.searchData.searchEmailTerm)
-      searchKeysArray.push({
-        email: { $regex: query.searchData.searchEmailTerm, $options: 'i' },
-      });
-
-    if (searchKeysArray.length === 0) {
-      searchKey = {};
-    } else if (searchKeysArray.length === 1) {
-      searchKey = searchKeysArray[0];
-    } else if (searchKeysArray.length > 1) {
-      searchKey = { $or: searchKeysArray };
-    }
+    // const searchKeysArray: any[] = [];
+    // if (query.searchData.login)
+    //   searchKeysArray.push({
+    //     login: { $regex: query.searchData.login, $options: 'i' },
+    //   });
+    // if (query.searchData.email)
+    //   searchKeysArray.push({
+    //     email: { $regex: query.searchData.email, $options: 'i' },
+    //   });
+    //
+    // if (searchKeysArray.length === 0) {
+    //   searchKey = {};
+    // } else if (searchKeysArray.length === 1) {
+    //   searchKey = searchKeysArray[0];
+    // } else if (searchKeysArray.length > 1) {
+    //   searchKey = { $or: searchKeysArray };
+    // }
     // calculate limits for DB request
     const documentsTotalCount =
-      await this.usersQueryRepository.countOfDocuments(searchKey); // Receive total count of blogs
+      await this.usersQueryRepository.countOfDocuments(query.searchData); // Receive total count of blogs
     const pageCount = Math.ceil(documentsTotalCount / +query.sortData.pageSize); // Calculate total pages count according to page size
     const skippedDocuments =
       (+query.sortData.pageNumber - 1) * +query.sortData.pageSize; // Calculate count of skipped docs before requested page
 
-    // check have fields exists assign the same one else assign "createdAt" value
-    if (query.sortData.sortBy === 'login')
-      sortKey = { login: query.sortData.sortDirection };
-    else if (query.sortData.sortBy === 'email')
-      sortKey = { email: query.sortData.sortDirection };
-    else sortKey = { createdAt: query.sortData.sortDirection };
-
     // Get documents from DB
     const users = await this.usersQueryRepository.getMany(
-      searchKey,
-      sortKey,
+      query.searchData,
+      query.sortData,
       +skippedDocuments,
       +query.sortData.pageSize,
     );

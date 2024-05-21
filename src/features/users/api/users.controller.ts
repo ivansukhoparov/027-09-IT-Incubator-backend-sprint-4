@@ -20,6 +20,7 @@ import { DeleteUserCommand } from '../use.cases/delete.user.use.case';
 import { GetAllUsersQuery } from '../use.cases/get.all.users.use.case';
 import { UsersQueryRepository } from '../infrastructure/users.query.repository';
 import { UsersRepository } from '../infrastructure/users.repository';
+import { createQuery, createQueryS } from '../../common/create.query';
 
 @Controller('sa/users')
 export class UsersController {
@@ -32,7 +33,7 @@ export class UsersController {
 
   @Get()
   async getAll(@Query() query: QueryUsersRequestType) {
-    // const {sortData, searchData} = createQuery(query);
+    // const { sortData, searchData } = createQueryS(query);
     // return await this.usersQueryRepository.getAllUsers(sortData, searchData);
     return await this.queryBus.execute<GetAllUsersQuery>(
       new GetAllUsersQuery(query),

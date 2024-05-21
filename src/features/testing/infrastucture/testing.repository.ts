@@ -1,12 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import mongoose, { Model } from 'mongoose';
 import { appSettings } from '../../../settings/app.settings';
+import { InjectDataSource } from '@nestjs/typeorm';
+import { DataSource } from 'typeorm';
 
 @Injectable()
 export class TestingRepository {
-  constructor() {}
+  constructor(@InjectDataSource() protected dataSource: DataSource) {}
 
-  async dropDb() {
+  async dropMongoDb() {
     try {
       const db =
         appSettings.api.MONGO_CONNECTION_URI +
@@ -21,6 +23,26 @@ export class TestingRepository {
   }
 
   async deleteAll() {
-    await this.dropDb();
+    const tables = await this.dataSource.query(
+      `SELECT "table_name" FROM information_schema.tables  where table_schema='public'`,
+    );
+    const deleteAllQuery = tables
+      .map((table: any) => {
+        return `DELETE FROM "${table.table_name}"`;
+      })
+      .join(';');
+
+    await this.dataSource.query(deleteAllQuery);
   }
 }
+//
+// [
+//   { table_name: 'Blogs' },
+//   { table_name: 'Posts' },
+//   { table_name: 'Posts Content' },
+//   { table_name: 'Posts Likes' },
+//   { table_name: 'Users' },
+//   { table_name: 'Posts Comments' },
+//   { table_name: 'Post Comments Likes' }
+// ]
+//

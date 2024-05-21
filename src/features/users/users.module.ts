@@ -34,6 +34,6 @@ const queryCases = [GetAllUsersUseCase];
     ...useCases,
     ...queryCases,
   ],
-  exports: [UsersService, BcryptAdapter],
+  exports: [UsersService, UsersQueryRepository, BcryptAdapter],
 })
 export class UsersModule {}
